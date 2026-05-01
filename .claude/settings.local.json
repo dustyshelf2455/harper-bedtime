@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl:*)",
+      "Bash(bash)",
+      "Bash(export NVM_DIR=\"$HOME/.nvm\")",
+      "Bash(. \"$NVM_DIR/nvm.sh\")",
+      "Bash(npm install)",
+      "Bash(file:*)",
+      "Bash(ls:*)",
+      "Bash(export PATH=\"/opt/homebrew/bin:/usr/local/bin:$PATH\":*)",
+      "Bash(node:*)",
+      "Bash(export PATH=\"/Users/benjaminernst/.nvm/versions/node/v24.14.0/bin:$PATH\")",
+      "Bash(npx vite:*)",
+      "Bash(PATH=\"/Users/benjaminernst/.nvm/versions/node/v24.14.0/bin:$PATH\":*)",
+      "Bash(lsof:*)",
+      "Bash(npm run dev:*)",
+      "Bash(identify:*)",
+      "Bash(sips:*)",
+      "Bash(kill:*)",
+      "Bash(export PATH=\"$HOME/.nvm/versions/node/v24.14.0/bin:$PATH\")",
+      "Bash(npm run build:*)",
+      "Bash(export PATH=\"/usr/local/bin:/opt/homebrew/bin:$HOME/.nvm/versions/node/*/bin:$PATH\")",
+      "Bash(mdfind:*)",
+      "Bash(source:*)",
+      "Bash(source ~/.bashrc)",
+      "Bash(source ~/.nvm/nvm.sh)",
+      "WebFetch(domain:dev.to)",
+      "WebFetch(domain:gist.github.com)",
+      "WebFetch(domain:github.com)",
+      "Bash(export PATH=\"/usr/bin:/bin:/usr/sbin:/sbin:$HOME/.nvm/versions/node/v24.14.0/bin:$PATH\")",
+      "Bash(pkill -f 'vite preview')",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(ls -la .github)",
+      "Bash(ls -la .gitignore)",
+      "Bash(git init *)",
+      "Bash(git add *)"
+    ]
+  }
+}

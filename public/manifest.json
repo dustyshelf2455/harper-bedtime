@@ -1,0 +1,10 @@
+{
+  "name": "Harper's Bedtime Adventure",
+  "short_name": "Bedtime",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#1a0a2e",
+  "theme_color": "#1a0a2e"
+}
