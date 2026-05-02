@@ -384,6 +384,7 @@ _Add items here as Harper and Ben test the app:_
 - [ ] (example) Colors need adjustment?
 - [x] Removed visible scene/room name text labels from task screens (data retained for internal use)
 - [x] Fixed iOS standalone PWA bottom gap caused by `black-translucent` status bar style (see "iOS PWA Viewport Setup" section)
+- [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 
 ---
 

@@ -42,11 +42,11 @@ const THEMES = {
     textMuted: "#C9A0D4",
     shadowColor: "rgba(142, 36, 100, 0.5)",
     glowColor: "#E84B8A44",
-    guide: ASSETS + "princess-character.png",
-    guideVictory: ASSETS + "princess-victory.png",
-    guideSleep: ASSETS + "princess-sleep.png",
+    guide: ASSETS + "princess-character.webp",
+    guideVictory: ASSETS + "princess-victory.webp",
+    guideSleep: ASSETS + "princess-sleep.webp",
     progressIcon: "💎",
-    progressIconImg: ASSETS + "princess-gem.png",
+    progressIconImg: ASSETS + "princess-gem.webp",
     progressIconEmpty: "◇",
     particle: "✨",
     dreamMsg: "Sweet dreams, Princess Harper!",
@@ -74,11 +74,11 @@ const THEMES = {
     textMuted: "#7FBCD2",
     shadowColor: "rgba(10, 50, 80, 0.5)",
     glowColor: "#1AACA844",
-    guide: ASSETS + "mermaid-character.png",
-    guideVictory: ASSETS + "mermaid-victory.png",
-    guideSleep: ASSETS + "mermaid-sleep.png",
+    guide: ASSETS + "mermaid-character.webp",
+    guideVictory: ASSETS + "mermaid-victory.webp",
+    guideSleep: ASSETS + "mermaid-sleep.webp",
     progressIcon: "🐚",
-    progressIconImg: ASSETS + "mermaid-shell.png",
+    progressIconImg: ASSETS + "mermaid-shell.webp",
     progressIconEmpty: "○",
     particle: "💎",
     dreamMsg: "Sleep tight, little mermaid!",
@@ -92,107 +92,6 @@ const THEMES = {
   },
 };
 
-// ==================== CSS KEYFRAMES ====================
-const GLOBAL_STYLES = `
-  @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap');
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html { height: 100%; min-height: calc(100% + env(safe-area-inset-top)); overflow: hidden; }
-  body, #root { height: 100%; overflow: hidden; }
-
-  @keyframes floatUp {
-    0% { transform: translateY(0) rotate(0deg); opacity: 0; }
-    15% { opacity: 0.8; }
-    85% { opacity: 0.8; }
-    100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
-  }
-  @keyframes floatUpSlow {
-    0% { transform: translateY(0) scale(1); opacity: 0; }
-    10% { opacity: 0.4; }
-    90% { opacity: 0.4; }
-    100% { transform: translateY(-110vh) scale(0.6); opacity: 0; }
-  }
-  @keyframes fallDown {
-    0% { transform: translateY(0); opacity: 1; }
-    100% { transform: translateY(40px); opacity: 0; }
-  }
-  @keyframes floatGentle {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-  @keyframes pulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.06); }
-  }
-  @keyframes softPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
-  }
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  @keyframes countPop {
-    0% { transform: scale(0.3); opacity: 0; }
-    50% { transform: scale(1.15); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes gemPop {
-    0% { transform: scale(0); opacity: 0; }
-    50% { transform: scale(1.25); opacity: 1; }
-    75% { transform: scale(0.9); }
-    100% { transform: scale(1); opacity: 1; }
-  }
-  @keyframes gemGlow {
-    0%, 100% { filter: brightness(1) drop-shadow(0 0 3px currentColor); }
-    50% { filter: brightness(1.2) drop-shadow(0 0 8px currentColor); }
-  }
-  @keyframes shimmer {
-    0% { background-position: -200% center; }
-    100% { background-position: 200% center; }
-  }
-  @keyframes crossfadeIn {
-    0% { opacity: 0; }
-    100% { opacity: 1; }
-  }
-  @keyframes twinkle {
-    0%, 100% { opacity: 0.3; transform: scale(0.8); }
-    50% { opacity: 1; transform: scale(1.2); }
-  }
-  @keyframes bubbleRise {
-    0% { transform: translateY(0) translateX(0) scale(1); opacity: 0.3; }
-    25% { transform: translateY(-25vh) translateX(8px) scale(0.9); opacity: 0.5; }
-    50% { transform: translateY(-50vh) translateX(-5px) scale(0.8); opacity: 0.4; }
-    75% { transform: translateY(-75vh) translateX(6px) scale(0.7); opacity: 0.3; }
-    100% { transform: translateY(-100vh) translateX(-3px) scale(0.5); opacity: 0; }
-  }
-  @keyframes victoryTwirl {
-    0%   { transform: rotateY(0deg) scale(1); }
-    60%  { transform: rotateY(1080deg) scale(1); }
-    75%  { transform: rotateY(1080deg) scale(1.18); }
-    88%  { transform: rotateY(1080deg) scale(0.95); }
-    100% { transform: rotateY(1080deg) scale(1); }
-  }
-  @keyframes victoryBurst {
-    0%   { opacity: 0; transform: scale(0.3); }
-    25%  { opacity: 0; transform: scale(0.3); }
-    38%  { opacity: 1; transform: scale(1.2); }
-    55%  { opacity: 0.8; transform: scale(2); }
-    75%  { opacity: 0.3; transform: scale(2.8); }
-    100% { opacity: 0; transform: scale(3.2); }
-  }
-  @keyframes sleepDrift {
-    0% { transform: translateY(-20px) scale(1.05); opacity: 0; }
-    60% { transform: translateY(5px) scale(0.98); opacity: 0.8; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-  }
-  .safe-top { padding-top: env(safe-area-inset-top, 0px); }
-  .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
-`;
-
 // ==================== PNG CASTLE FRAME (PRINCESS) ====================
 function CastleFrame({ taskIndex = 0 }) {
   const dim = 1 - ((taskIndex || 0) / TASKS.length) * 0.2;
@@ -204,7 +103,7 @@ function CastleFrame({ taskIndex = 0 }) {
       zIndex: 1,
     }}>
       <img
-        src={ASSETS + "princess-frame.png"}
+        src={ASSETS + "princess-frame.webp"}
         alt=""
         style={{
           position: "absolute",
@@ -230,7 +129,7 @@ function UnderwaterFrame({ taskIndex = 0 }) {
       zIndex: 1,
     }}>
       <img
-        src={ASSETS + "mermaid-frame.png"}
+        src={ASSETS + "mermaid-frame.webp"}
         alt=""
         style={{
           position: "absolute",
@@ -336,7 +235,7 @@ function AmbientParticles({ theme }) {
     <>
       {particles.map(p => (
         <div key={p.id} style={{
-          position: "fixed", fontSize: p.size, left: `${p.x}%`, bottom: "-5%",
+          position: "absolute", fontSize: p.size, left: `${p.x}%`, bottom: "-5%",
           animation: `floatUpSlow ${p.duration}s linear ${p.delay}s infinite`,
           opacity: 0, pointerEvents: "none", zIndex: 3,
         }}>{p.emoji}</div>
@@ -401,6 +300,7 @@ function LudoButton({ children, onClick, theme, size = "large", disabled = false
       onPointerDown={() => !disabled && setPressed(true)}
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
+      onPointerCancel={() => setPressed(false)}
       style={{
         ...s, fontFamily: "'Fredoka', sans-serif", fontWeight: 700,
         color: disabled ? "#ffffff66" : "#FFFDF5", letterSpacing: 1,
@@ -414,6 +314,7 @@ function LudoButton({ children, onClick, theme, size = "large", disabled = false
         width: "100%", textAlign: "center",
         opacity: disabled ? 0.4 : 1,
         animation: (!disabled && !pressed) ? "pulse 2.5s ease-in-out infinite" : "none",
+        touchAction: "manipulation",
         ...style,
       }}
     >
@@ -464,12 +365,14 @@ function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate }) {
               <button
                 key={task.id}
                 onClick={() => done ? onNavigate(i) : undefined}
+                aria-label={`${task.label}${done ? " — done" : isCurrent ? " — current" : ""}`}
                 style={{
                   width: slotSize, height: slotSize,
                   borderRadius: 14,
                   display: "flex", alignItems: "center", justifyContent: "center",
                   padding: 0, lineHeight: 1,
                   cursor: done ? "pointer" : "default",
+                  touchAction: "manipulation",
                   transition: "all 0.3s ease",
                   border: done
                     ? `3px solid ${t.accent}`
@@ -536,13 +439,15 @@ function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate }) {
 function SandTimer({ seconds, theme, running, paused, onComplete, onTogglePause }) {
   const [timeLeft, setTimeLeft] = useState(seconds);
   const intervalRef = useRef(null);
+  const onCompleteRef = useRef(onComplete);
   const t = THEMES[theme];
+  useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
   useEffect(() => { setTimeLeft(seconds); }, [seconds]);
   useEffect(() => {
     if (running && !paused && timeLeft > 0) {
       intervalRef.current = setInterval(() => {
         setTimeLeft(prev => {
-          if (prev <= 1) { clearInterval(intervalRef.current); onComplete?.(); return 0; }
+          if (prev <= 1) { clearInterval(intervalRef.current); onCompleteRef.current?.(); return 0; }
           return prev - 1;
         });
       }, 1000);
@@ -586,9 +491,9 @@ function BabyDollSetup({ onStart, theme }) {
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: 24, background: `${t.primary}15`, borderRadius: 28, border: `3px dashed ${t.primary}44` }}>
       <div style={{ fontSize: 24, fontFamily: "'Fredoka', sans-serif", color: t.textSecondary }}>Mom or Dad: Set timer!</div>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <button onClick={() => setMinutes(m => Math.max(1, m - 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow }}>−</button>
+        <button onClick={() => setMinutes(m => Math.max(1, m - 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow, touchAction: "manipulation" }}>−</button>
         <span style={{ fontSize: 44, fontWeight: 700, fontFamily: "'Fredoka', sans-serif", color: t.textPrimary, minWidth: 110, textAlign: "center" }}>{minutes} min</span>
-        <button onClick={() => setMinutes(m => Math.min(10, m + 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow }}>+</button>
+        <button onClick={() => setMinutes(m => Math.min(10, m + 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow, touchAction: "manipulation" }}>+</button>
       </div>
       <LudoButton theme={theme} size="medium" onClick={() => onStart(minutes * 60)}>Start Baby Doll Time! 👶</LudoButton>
     </div>
@@ -674,7 +579,12 @@ function TrophyShelf({ stickers, onClose, theme }) {
         {count === 0 ? (
           <div style={{ fontSize: 26, color: t.textMuted, marginTop: 40 }}>No stickers yet! Complete your bedtime routine to earn one. ✨</div>
         ) : (
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 12, width: "100%", padding: 20, background: `${t.primary}12`, borderRadius: 28, border: `3px solid ${t.primary}33` }}>
+          <div style={{
+            display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 12,
+            width: "100%", padding: 20,
+            background: `${t.primary}12`, borderRadius: 28, border: `3px solid ${t.primary}33`,
+            maxHeight: "calc(55dvh - 100px)", overflowY: "auto", WebkitOverflowScrolling: "touch",
+          }}>
             {stickers.map((s, i) => (
               <div key={i} style={{ fontSize: 40, textAlign: "center", padding: 8, borderRadius: 16, background: `${t.primary}10`, animation: `fadeInUp 0.3s ease ${i * 0.05}s both` }}>{s}</div>
             ))}
@@ -689,6 +599,7 @@ function TrophyShelf({ stickers, onClose, theme }) {
 // ==================== STICKER PICK ====================
 function StickerPick({ theme, onPick }) {
   const t = THEMES[theme];
+  const [pressedIdx, setPressedIdx] = useState(null);
   const [options] = useState(() => {
     const set = STICKER_SETS[Math.floor(Math.random() * STICKER_SETS.length)];
     return [...set].sort(() => Math.random() - 0.5).slice(0, 3);
@@ -702,12 +613,23 @@ function StickerPick({ theme, onPick }) {
         <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 40, animation: "fadeInUp 0.5s ease 0.2s both" }}>Pick a sticker for your shelf!</div>
         <div style={{ display: "flex", gap: 20, justifyContent: "center", animation: "fadeInUp 0.5s ease 0.4s both" }}>
           {options.map((sticker, i) => (
-            <button key={i} onClick={() => onPick(sticker)} style={{
-              fontSize: 64, padding: 20, borderRadius: 28,
-              border: `4px solid ${t.primary}66`, background: `${t.primary}18`,
-              cursor: "pointer", transition: "all 0.2s ease", boxShadow: t.insetShadow,
-              animation: `fadeInUp 0.4s ease ${0.5 + i * 0.15}s both`,
-            }}>{sticker}</button>
+            <button
+              key={i}
+              onClick={() => onPick(sticker)}
+              onPointerDown={() => setPressedIdx(i)}
+              onPointerUp={() => setPressedIdx(null)}
+              onPointerLeave={() => setPressedIdx(null)}
+              onPointerCancel={() => setPressedIdx(null)}
+              style={{
+                fontSize: 64, padding: 20, borderRadius: 28,
+                border: `4px solid ${t.primary}66`, background: `${t.primary}18`,
+                cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.secondary}` : t.insetShadow,
+                transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
+                animation: `fadeInUp 0.4s ease ${0.5 + i * 0.15}s both`,
+                touchAction: "manipulation",
+              }}
+            >{sticker}</button>
           ))}
         </div>
       </div>
@@ -728,7 +650,9 @@ function Countdown({ theme, onDone }) {
       <div style={{ textAlign: "center" }}>
         <div style={{ marginBottom: 20 }}><GuideCharacter theme={theme} size={120} variant="sleep" /></div>
         <div style={{ fontSize: 28, fontFamily: "'Fredoka', sans-serif", color: t.textSecondary, marginBottom: 24, animation: "softPulse 1.2s ease-in-out infinite" }}>Sleepy time in...</div>
-        <div key={count} style={{ fontSize: 130, fontWeight: 700, fontFamily: "'Fredoka', sans-serif", color: t.accent, textShadow: `0 0 40px ${t.primary}, 0 0 80px ${t.primary}66`, animation: "countPop 1s ease-out" }}>{count}</div>
+        {count > 0 && (
+          <div key={count} style={{ fontSize: 130, fontWeight: 700, fontFamily: "'Fredoka', sans-serif", color: t.accent, textShadow: `0 0 40px ${t.primary}, 0 0 80px ${t.primary}66`, animation: "countPop 1s ease-out" }}>{count}</div>
+        )}
       </div>
     </FullScreenBackdrop>
   );
@@ -738,11 +662,20 @@ function Countdown({ theme, onDone }) {
 function DreamScreen({ theme }) {
   const t = THEMES[theme];
   const emojis = theme === "princess" ? ["⭐", "✨", "🌟", "💫", "🌙"] : ["🫧", "💙", "🌊", "✨", "🌙"];
+  const floaters = useMemo(() =>
+    Array.from({ length: 40 }, (_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      size: Math.random() * 20 + 12,
+      duration: Math.random() * 6 + 4,
+      delay: Math.random() * 3,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+    })), []);
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
-      {Array.from({ length: 40 }, (_, i) => (
-        <div key={i} style={{ position: "absolute", left: `${Math.random() * 100}%`, bottom: "-10%", fontSize: Math.random() * 20 + 12, zIndex: 3, animation: `floatUp ${Math.random() * 6 + 4}s ease-out ${Math.random() * 3}s infinite`, opacity: 0 }}>
-          {emojis[Math.floor(Math.random() * emojis.length)]}
+      {floaters.map(f => (
+        <div key={f.id} style={{ position: "absolute", left: `${f.left}%`, bottom: "-10%", fontSize: f.size, zIndex: 3, animation: `floatUp ${f.duration}s ease-out ${f.delay}s infinite`, opacity: 0 }}>
+          {f.emoji}
         </div>
       ))}
       <div style={{ textAlign: "center", padding: "0 24px" }}>
@@ -775,6 +708,7 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
                 fontSize: "clamp(18px, 3dvh, 24px)", fontWeight: 600, fontFamily: "'Fredoka', sans-serif",
                 cursor: "pointer", boxShadow: active ? tc.insetShadow : "none",
                 transition: "all 0.3s ease", position: "relative", overflow: "hidden",
+                touchAction: "manipulation",
               }}>
                 {active && <div style={{ position: "absolute", top: 4, left: 8, width: "35%", height: "30%", borderRadius: "50%", background: `radial-gradient(ellipse, ${tc.specularHighlight} 0%, transparent 70%)`, pointerEvents: "none" }} />}
                 {th === "princess" ? "👸 Princess" : "🧜‍♀️ Mermaid"}
@@ -810,7 +744,6 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
   const isBabyDoll = task.type === "babydoll";
   return (
     <SceneWrapper theme={theme} taskIndex={taskIndex}>
-      <style>{GLOBAL_STYLES}</style>
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px", position: "relative", zIndex: 10, gap: 16 }}>
         <div key={done ? "victory" : "normal"} style={{ animation: done ? undefined : "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={112} variant={done ? "victory" : "normal"} /></div>
         <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{theme === "princess" ? task.princessIcon : task.mermaidIcon}</div>
@@ -874,6 +807,7 @@ export default function HarpersBedtimeApp() {
   useEffect(() => { try { localStorage.setItem("harper-stickers", JSON.stringify(stickers)); } catch {} }, [stickers]);
 
   const handleComplete = useCallback((taskId) => {
+    if (completedTasks[taskId]) return;
     setCompletedTasks(prev => ({ ...prev, [taskId]: true }));
     setShowCelebration(true);
     setTimeout(() => setShowCelebration(false), 2500);
@@ -899,15 +833,15 @@ export default function HarpersBedtimeApp() {
   const handleTimerPause = () => { setTimerState(prev => ({ ...prev, paused: !prev.paused })); setBabyDollState(prev => prev.running ? { ...prev, paused: !prev.paused } : prev); };
   const handleBabyDollStart = (action, seconds) => { if (action === "setup") setBabyDollState(prev => ({ ...prev, setup: true })); else if (action === "start") setBabyDollState({ setup: true, running: true, paused: false, duration: seconds }); };
 
-  if (showShelf) return (<><style>{GLOBAL_STYLES}</style><TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} /></>);
-  if (screen === "splash") return (<><style>{GLOBAL_STYLES}</style><SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} /></>);
-  if (screen === "stickerPick") return (<><style>{GLOBAL_STYLES}</style><StickerPick theme={theme} onPick={handleStickerPick} /></>);
-  if (screen === "countdown") return (<><style>{GLOBAL_STYLES}</style><Countdown theme={theme} onDone={() => setScreen("dream")} /></>);
-  if (screen === "dream") return (<><style>{GLOBAL_STYLES}</style><DreamScreen theme={theme} /></>);
+  if (showShelf) return <TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} />;
+  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} />;
+  if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} />;
+  if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
+  if (screen === "dream") return <DreamScreen theme={theme} />;
 
   const currentTask = TASKS[viewingIndex];
   return (
-    <><style>{GLOBAL_STYLES}</style>
+    <>
       <CelebrationParticles theme={theme} active={showCelebration} />
       <TaskScene key={viewingIndex} task={currentTask} taskIndex={viewingIndex} theme={theme} completedTasks={completedTasks} currentIndex={currentIndex} onComplete={handleComplete} onNavigate={handleNavigate} timerState={timerState} onTimerStart={handleTimerStart} onTimerPause={handleTimerPause} babyDollState={babyDollState} onBabyDollStart={handleBabyDollStart} />
     </>
