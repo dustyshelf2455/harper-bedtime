@@ -248,6 +248,21 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 | **Dream screen timeout** | None — stays up until parent resets |
 | **Orientation** | **Portrait only** |
 | **Sound (v1)** | Silent — no audio. Sound design is a future phase. |
+| **Family Preview mode** | Activated via `?family` URL parameter. No localStorage reads or writes — Harper's stickers and progress are invisible and untouched. Trophy Shelf button is hidden; a "👨‍👩‍👧 Family Preview" label appears in its place. Everything else (theme picker, full routine, animations, sticker pick, dream screen) works normally. |
+
+---
+
+## Family Preview URL
+
+To share a view-only link with family that doesn't expose Harper's trophy shelf or affect her progress:
+
+```
+https://dustyshelf2455.github.io/harper-bedtime/?family
+```
+
+- Family members can pick a theme, walk through all 11 tasks, and see the full experience
+- Harper's stickers and in-progress routine are never read or written
+- Sticker picks during a family session are discarded (not saved)
 
 ---
 
@@ -385,6 +400,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Removed visible scene/room name text labels from task screens (data retained for internal use)
 - [x] Fixed iOS standalone PWA bottom gap caused by `black-translucent` status bar style (see "iOS PWA Viewport Setup" section)
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
+- [x] Added Family Preview mode (`?family` URL param): hides Trophy Shelf button, skips all localStorage reads/writes so Harper's stickers and progress are never exposed or affected. Family gets a shareable link; Harper's URL is unchanged.
 
 ---
 

@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 
 const ASSETS = import.meta.env.BASE_URL + "assets/";
+const FAMILY_MODE = new URLSearchParams(window.location.search).has("family");
 
 // ==================== TASK LIST (Fixed Order per Spec) ====================
 const TASKS = [
@@ -720,7 +721,7 @@ function DreamScreen({ theme }) {
 }
 
 // ==================== SPLASH SCREEN ====================
-function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress }) {
+function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode }) {
   const t = THEMES[theme];
   const [showResume, setShowResume] = useState(hasSavedProgress);
   return (
@@ -760,9 +761,13 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
         {!showResume && (
           <div style={{ marginBottom: "clamp(8px, 1.5dvh, 20px)" }}><LudoButton theme={theme} size="large" onClick={() => onStart(false)}>Start Bedtime! 🌙</LudoButton></div>
         )}
-        <div style={{ marginTop: "clamp(12px, 3dvh, 32px)" }}>
-          <LudoButton theme={theme} size="small" onClick={onOpenShelf} style={{ animation: "none", background: "linear-gradient(180deg, #9B7ED8 0%, #7B5EB0 100%)", border: "4px solid #6B4E9E", boxShadow: "inset 0 -4px 0 #5A3D8A" }}>🏆 Trophy Shelf ({stickers.length})</LudoButton>
-        </div>
+        {familyMode ? (
+          <div style={{ marginTop: "clamp(12px, 3dvh, 32px)", fontSize: 20, color: t.textMuted, fontFamily: "'Fredoka', sans-serif", letterSpacing: 0.5 }}>👨‍👩‍👧 Family Preview</div>
+        ) : (
+          <div style={{ marginTop: "clamp(12px, 3dvh, 32px)" }}>
+            <LudoButton theme={theme} size="small" onClick={onOpenShelf} style={{ animation: "none", background: "linear-gradient(180deg, #9B7ED8 0%, #7B5EB0 100%)", border: "4px solid #6B4E9E", boxShadow: "inset 0 -4px 0 #5A3D8A" }}>🏆 Trophy Shelf ({stickers.length})</LudoButton>
+          </div>
+        )}
       </div>
     </FullScreenBackdrop>
   );
@@ -827,16 +832,17 @@ export default function HarpersBedtimeApp() {
   const [showShelf, setShowShelf] = useState(false);
   const [timerState, setTimerState] = useState({ running: false, paused: false });
   const [babyDollState, setBabyDollState] = useState({ setup: false, running: false, paused: false, duration: 0 });
-  const [stickers, setStickers] = useState(() => { try { return JSON.parse(localStorage.getItem("harper-stickers") || "[]"); } catch { return []; } });
-  const [savedProgress] = useState(() => { try { const s = localStorage.getItem("harper-progress"); return s ? JSON.parse(s) : null; } catch { return null; } });
+  const [stickers, setStickers] = useState(() => { if (FAMILY_MODE) return []; try { return JSON.parse(localStorage.getItem("harper-stickers") || "[]"); } catch { return []; } });
+  const [savedProgress] = useState(() => { if (FAMILY_MODE) return null; try { const s = localStorage.getItem("harper-progress"); return s ? JSON.parse(s) : null; } catch { return null; } });
   const completedCount = Object.values(completedTasks).filter(Boolean).length;
 
   useEffect(() => {
+    if (FAMILY_MODE) return;
     if (screen === "routine" && completedCount > 0) {
       try { localStorage.setItem("harper-progress", JSON.stringify({ completedTasks, currentIndex, theme, viewingIndex })); } catch {}
     }
   }, [completedTasks, currentIndex, screen]);
-  useEffect(() => { try { localStorage.setItem("harper-stickers", JSON.stringify(stickers)); } catch {} }, [stickers]);
+  useEffect(() => { if (FAMILY_MODE) return; try { localStorage.setItem("harper-stickers", JSON.stringify(stickers)); } catch {} }, [stickers]);
 
   const handleComplete = useCallback((taskId) => {
     if (completedTasks[taskId]) return;
@@ -859,14 +865,14 @@ export default function HarpersBedtimeApp() {
     if (resume && savedProgress) { setCompletedTasks(savedProgress.completedTasks || {}); setCurrentIndex(savedProgress.currentIndex || 0); setViewingIndex(savedProgress.viewingIndex || savedProgress.currentIndex || 0); setTheme(savedProgress.theme || "princess"); }
     setThemeLocked(true); setScreen("routine");
   };
-  const handleReset = () => { setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); setShowCelebration(false); setThemeLocked(false); setScreen("splash"); try { localStorage.removeItem("harper-progress"); } catch {} };
-  const handleStickerPick = (sticker) => { setStickers(prev => [...prev, sticker]); try { localStorage.removeItem("harper-progress"); } catch {} setScreen("countdown"); };
+  const handleReset = () => { setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); setShowCelebration(false); setThemeLocked(false); setScreen("splash"); if (!FAMILY_MODE) { try { localStorage.removeItem("harper-progress"); } catch {} } };
+  const handleStickerPick = (sticker) => { if (!FAMILY_MODE) { setStickers(prev => [...prev, sticker]); try { localStorage.removeItem("harper-progress"); } catch {} } setScreen("countdown"); };
   const handleTimerStart = () => setTimerState({ running: true, paused: false });
   const handleTimerPause = () => { setTimerState(prev => ({ ...prev, paused: !prev.paused })); setBabyDollState(prev => prev.running ? { ...prev, paused: !prev.paused } : prev); };
   const handleBabyDollStart = (action, seconds) => { if (action === "setup") setBabyDollState(prev => ({ ...prev, setup: true })); else if (action === "start") setBabyDollState({ setup: true, running: true, paused: false, duration: seconds }); };
 
   if (showShelf) return <TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} />;
-  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} />;
+  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} />;
   if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
   if (screen === "dream") return <DreamScreen theme={theme} />;
