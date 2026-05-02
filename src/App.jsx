@@ -161,6 +161,7 @@ function Starfield({ count = 30, taskIndex = 0 }) {
           background: "rgba(240, 194, 57, 0.7)",
           boxShadow: `0 0 ${s.size * 2}px rgba(240, 194, 57, 0.4)`,
           animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+          willChange: "transform, opacity",
         }} />
       ))}
     </div>
@@ -184,6 +185,7 @@ function BubbleField({ count = 12, taskIndex = 0 }) {
           border: "1px solid rgba(26, 172, 168, 0.25)",
           boxShadow: `inset -1px -1px 2px rgba(180, 220, 255, 0.15), 0 0 ${b.size}px rgba(26, 172, 168, 0.1)`,
           animation: `bubbleRise ${b.duration}s ease-in-out ${b.delay}s infinite`,
+          willChange: "transform, opacity",
         }} />
       ))}
     </div>
@@ -213,11 +215,14 @@ function PatternOverlay({ theme }) {
 }
 
 // ==================== VIGNETTE ====================
-function Vignette({ intensity = 0.5 }) {
+function Vignette({ intensity = 0.5, theme = "princess" }) {
+  const color = theme === "princess"
+    ? `rgba(45, 10, 60, ${intensity})`
+    : `rgba(5, 15, 40, ${intensity})`;
   return (
     <div style={{
       position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2,
-      background: `radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,${intensity}) 100%)`,
+      background: `radial-gradient(ellipse at center, transparent 40%, ${color} 100%)`,
     }} />
   );
 }
@@ -237,7 +242,7 @@ function AmbientParticles({ theme }) {
         <div key={p.id} style={{
           position: "absolute", fontSize: p.size, left: `${p.x}%`, bottom: "-5%",
           animation: `floatUpSlow ${p.duration}s linear ${p.delay}s infinite`,
-          opacity: 0, pointerEvents: "none", zIndex: 3,
+          opacity: 0, pointerEvents: "none", zIndex: 3, willChange: "transform, opacity",
         }}>{p.emoji}</div>
       ))}
     </>
@@ -486,14 +491,39 @@ function SandTimer({ seconds, theme, running, paused, onComplete, onTogglePause 
 // ==================== BABY DOLL SETUP ====================
 function BabyDollSetup({ onStart, theme }) {
   const [minutes, setMinutes] = useState(5);
+  const [pressed, setPressed] = useState(null);
   const t = THEMES[theme];
+  const adjBtnStyle = (which) => ({
+    width: 64, height: 64, borderRadius: 20,
+    border: `3px solid ${t.secondary}`, fontSize: 28,
+    cursor: "pointer", fontWeight: 700,
+    background: t.gradientBtn, color: "#FFFDF5",
+    boxShadow: pressed === which ? `inset 0 2px 0 ${t.secondary}` : t.insetShadow,
+    transform: pressed === which ? "scale(0.92) translateY(2px)" : "scale(1)",
+    transition: "transform 0.1s ease, box-shadow 0.1s ease",
+    touchAction: "manipulation",
+  });
   return (
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 20, padding: 24, background: `${t.primary}15`, borderRadius: 28, border: `3px dashed ${t.primary}44` }}>
       <div style={{ fontSize: 24, fontFamily: "'Fredoka', sans-serif", color: t.textSecondary }}>Mom or Dad: Set timer!</div>
       <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-        <button onClick={() => setMinutes(m => Math.max(1, m - 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow, touchAction: "manipulation" }}>−</button>
+        <button
+          onClick={() => setMinutes(m => Math.max(1, m - 1))}
+          onPointerDown={() => setPressed("minus")}
+          onPointerUp={() => setPressed(null)}
+          onPointerLeave={() => setPressed(null)}
+          onPointerCancel={() => setPressed(null)}
+          style={adjBtnStyle("minus")}
+        >−</button>
         <span style={{ fontSize: 44, fontWeight: 700, fontFamily: "'Fredoka', sans-serif", color: t.textPrimary, minWidth: 110, textAlign: "center" }}>{minutes} min</span>
-        <button onClick={() => setMinutes(m => Math.min(10, m + 1))} style={{ width: 64, height: 64, borderRadius: 20, border: `3px solid ${t.secondary}`, fontSize: 28, cursor: "pointer", fontWeight: 700, background: t.gradientBtn, color: "#FFFDF5", boxShadow: t.insetShadow, touchAction: "manipulation" }}>+</button>
+        <button
+          onClick={() => setMinutes(m => Math.min(10, m + 1))}
+          onPointerDown={() => setPressed("plus")}
+          onPointerUp={() => setPressed(null)}
+          onPointerLeave={() => setPressed(null)}
+          onPointerCancel={() => setPressed(null)}
+          style={adjBtnStyle("plus")}
+        >+</button>
       </div>
       <LudoButton theme={theme} size="medium" onClick={() => onStart(minutes * 60)}>Start Baby Doll Time! 👶</LudoButton>
     </div>
@@ -538,7 +568,7 @@ function SceneWrapper({ theme, children, taskIndex }) {
     }}>
       <PatternOverlay theme={theme} />
       {theme === "princess" ? <><Starfield count={35} taskIndex={taskIndex} /><CastleFrame taskIndex={taskIndex} /></> : <><BubbleField count={15} taskIndex={taskIndex} /><UnderwaterFrame taskIndex={taskIndex} /></>}
-      <Vignette intensity={0.3 + (taskIndex / TASKS.length) * 0.15} />
+      <Vignette intensity={0.3 + (taskIndex / TASKS.length) * 0.15} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column" }}>{children}</div>
     </div>
@@ -560,7 +590,7 @@ function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 
       <PatternOverlay theme={theme} />
       {theme === "princess" ? <Starfield count={25} taskIndex={taskIndex} /> : <BubbleField count={10} taskIndex={taskIndex} />}
       {showFrame && (theme === "princess" ? <CastleFrame taskIndex={0} /> : <UnderwaterFrame taskIndex={0} />)}
-      <Vignette intensity={0.35} />
+      <Vignette intensity={0.35} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>{children}</div>
     </div>
@@ -601,8 +631,10 @@ function StickerPick({ theme, onPick }) {
   const t = THEMES[theme];
   const [pressedIdx, setPressedIdx] = useState(null);
   const [options] = useState(() => {
-    const set = STICKER_SETS[Math.floor(Math.random() * STICKER_SETS.length)];
-    return [...set].sort(() => Math.random() - 0.5).slice(0, 3);
+    // 2-in-3 chance of the themed set, 1-in-3 of any set for variety
+    const preferredIdx = theme === "princess" ? 0 : 1;
+    const idx = Math.random() < 0.67 ? preferredIdx : Math.floor(Math.random() * STICKER_SETS.length);
+    return [...STICKER_SETS[idx]].sort(() => Math.random() - 0.5).slice(0, 3);
   });
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
@@ -772,7 +804,7 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
             )}
           </div>
         )}
-        {done && <div style={{ fontSize: 48, marginTop: 8, animation: "fadeIn 0.3s ease" }}>✅</div>}
+        {done && <div style={{ fontSize: 48, marginTop: 8, animation: "fadeIn 0.3s ease" }}>{theme === "princess" ? "👑" : "🐚"}</div>}
       </div>
       <div style={{ padding: "20px 24px 8px", position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: 12 }}>
         {!done && task.type === "check" && <LudoButton theme={theme} size="large" onClick={() => onComplete(task.id)}>Done! ✨</LudoButton>}
