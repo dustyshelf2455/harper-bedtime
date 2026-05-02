@@ -441,6 +441,54 @@ function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate }) {
   );
 }
 
+// ==================== FAST FORWARD BUTTON ====================
+function FastForwardIcon() {
+  return (
+    <svg width="20" height="14" viewBox="0 0 20 14" fill="currentColor" aria-hidden="true">
+      <polygon points="0,0 0,14 9,7" />
+      <polygon points="11,0 11,14 20,7" />
+    </svg>
+  );
+}
+
+function FastForwardButton({ theme, onPress }) {
+  const t = THEMES[theme];
+  const [pressed, setPressed] = useState(false);
+  return (
+    <button
+      onClick={onPress}
+      onPointerDown={() => setPressed(true)}
+      onPointerUp={() => setPressed(false)}
+      onPointerLeave={() => setPressed(false)}
+      onPointerCancel={() => setPressed(false)}
+      aria-label="Fast-forward timer"
+      style={{
+        position: "fixed",
+        top: "calc(env(safe-area-inset-top, 0px) + 10px)",
+        right: 14,
+        width: 48,
+        height: 48,
+        borderRadius: 14,
+        background: pressed ? `${t.primary}66` : `${t.primary}28`,
+        border: `2px solid ${t.primary}55`,
+        color: t.textPrimary,
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        cursor: "pointer",
+        zIndex: 9999,
+        opacity: pressed ? 1 : 0.65,
+        transform: pressed ? "scale(0.92)" : "scale(1)",
+        transition: "transform 0.1s ease, background 0.1s ease, opacity 0.1s ease",
+        touchAction: "manipulation",
+        padding: 0,
+      }}
+    >
+      <FastForwardIcon />
+    </button>
+  );
+}
+
 // ==================== SAND TIMER WITH PAUSE ====================
 function SandTimer({ seconds, theme, running, paused, onComplete, onTogglePause }) {
   const [timeLeft, setTimeLeft] = useState(seconds);
@@ -779,8 +827,10 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
   const done = completedTasks[task.id];
   const isTimer = task.type === "timer";
   const isBabyDoll = task.type === "babydoll";
+  const showFastForward = !done && ((isTimer && timerState.running) || (isBabyDoll && babyDollState.running));
   return (
     <SceneWrapper theme={theme} taskIndex={taskIndex}>
+      {showFastForward && <FastForwardButton theme={theme} onPress={() => onComplete(task.id)} />}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px", position: "relative", zIndex: 10, gap: 16 }}>
         <div key={done ? "victory" : "normal"} style={{ animation: done ? undefined : "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={112} variant={done ? "victory" : "normal"} /></div>
         <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{theme === "princess" ? task.princessIcon : task.mermaidIcon}</div>

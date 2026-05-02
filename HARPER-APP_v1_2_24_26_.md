@@ -216,7 +216,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - One clear action per screen (checkmark button, timer, etc.)
 - Progress tracker (gem/shell row) at top
 - Large "Done!" button fills bottom third of screen
-- For timer tasks: sand timer + **pause button** + start/stop controls
+- For timer tasks: sand timer + **pause button** + **fast-forward button** (upper-right, discreet, parent-only) + start/stop controls
 - Harper can navigate back to completed tasks freely
 - Each task has a themed scene name (e.g., "Royal Throne Room" / "Coral Greeting Hall") stored in data for internal reference and background styling — **these names are not displayed as visible text on screen**
 
@@ -274,7 +274,7 @@ These are explicit decisions to prevent well-intentioned but wrong implementatio
 - **Do NOT** use pure black (`#000000`) anywhere — outlines, text, borders, shadows
 - **Do NOT** use neutral gray shadows — always warm or cool tinted per theme
 - **Do NOT** show more than one task at a time during the routine
-- **Do NOT** put parent controls on routine screens — splash screen only
+- **Do NOT** put parent controls on routine screens — splash screen only. **Exception:** timer-specific controls (pause, fast-forward) are allowed on timer task screens; they must be discreet and not compete with Harper's experience.
 - **Do NOT** allow theme switching after the routine has started
 - **Do NOT** auto-reset the routine — parent must manually reset
 - **Do NOT** use streak counters or anything that implies "breaking a streak" pressure
@@ -401,6 +401,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Fixed iOS standalone PWA bottom gap caused by `black-translucent` status bar style (see "iOS PWA Viewport Setup" section)
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 - [x] Added Family Preview mode (`?family` URL param): hides Trophy Shelf button, skips all localStorage reads/writes so Harper's stickers and progress are never exposed or affected. Family gets a shareable link; Harper's URL is unchanged.
+- [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
 
 ---
 
