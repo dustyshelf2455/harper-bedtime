@@ -336,7 +336,7 @@ function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate }) {
   const slotSize = 44;
 
   return (
-    <div className="safe-bottom" style={{ padding: "10px 14px 6px", position: "relative", zIndex: 10 }}>
+    <div style={{ paddingTop: 10, paddingLeft: 14, paddingRight: 14, paddingBottom: "calc(6px + env(safe-area-inset-bottom, 0px))", position: "relative", zIndex: 10 }}>
       {/* Treasure tray background */}
       <div style={{
         background: t.treasuryBg,
