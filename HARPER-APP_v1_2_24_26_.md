@@ -152,10 +152,11 @@ These rules apply to ALL tappable elements — task completion buttons, timer co
 | 5 | Mouthwash | Checkmark | |
 | 6 | Comb hair | Checkmark | |
 | 7 | Try to go pee | Checkmark | Simple check — no pressure, it's a "try" |
-| 8 | Turn on nightlight/sound machine | Checkmark | |
-| 9 | Baby doll bedtime | **Parent-set timer (1–10 min)** | Includes feeding salad + tucking dolls into bed. Parent taps +/− to set minutes before starting |
-| 10 | Read Book 1 | Checkmark | Shows "1 of 2" counter |
-| 11 | Read Book 2 | Checkmark | Shows "2 of 2" counter |
+| 8 | Put on Cream | Checkmark | Nightly lotion; icon 🧴 (tube-style cream bottle) |
+| 9 | Turn on nightlight/sound machine | Checkmark | |
+| 10 | Baby doll bedtime | **Parent-set timer (1–10 min)** | Includes feeding salad + tucking dolls into bed. Parent taps +/− to set minutes before starting |
+| 11 | Read Book 1 | Checkmark | Shows "1 of 2" counter |
+| 12 | Read Book 2 | Checkmark | Shows "2 of 2" counter |
 
 **Order is fixed** but navigation is free — Harper can tap back to revisit any completed task. The current task is visually prominent; future (incomplete) tasks are dimmed/locked.
 
@@ -169,7 +170,7 @@ These rules apply to ALL tappable elements — task completion buttons, timer co
 - No separate jingle or sound in v1 (silent app for now)
 
 ### Progress Tracker
-- **Horizontal row at the top of each scene** showing one icon per task (11 total)
+- **Horizontal row at the top of each scene** showing one icon per task (12 total)
 - Icons: **💎 gems for princess** / **🐚 shells for mermaid**
 - Completed tasks show a filled, glowing icon; incomplete tasks show a dimmed/empty outline
 - This is purely a progress indicator — the *reward* is the sticker system below
@@ -211,7 +212,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - **Parent controls**: reset routine, future settings
 - Start button to begin the routine
 
-### 2. Task Scenes (×11)
+### 2. Task Scenes (×12)
 - Full-screen immersive scene per task (not a scrollable list)
 - One clear action per screen (checkmark button, timer, etc.)
 - Progress tracker (gem/shell row) at top
@@ -384,6 +385,7 @@ _Add items here as Harper and Ben test the app:_
 - [ ] (example) Colors need adjustment?
 - [x] Removed visible scene/room name text labels from task screens (data retained for internal use)
 - [x] Fixed iOS standalone PWA bottom gap caused by `black-translucent` status bar style (see "iOS PWA Viewport Setup" section)
+- [x] Added "Put on Cream" task (step 8, checkmark type) after "Try to Go Pee" — nightly lotion Harper applies every night; icon 🧴, princess variant 🌸, mermaid variant 💧; routine grows from 11 to 12 tasks
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 
 ---

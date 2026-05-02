@@ -11,6 +11,7 @@ const TASKS = [
   { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs" }, bgHue: { princess: 275, mermaid: 215 } },
   { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror" }, bgHue: { princess: 295, mermaid: 190 } },
   { id: "pee", label: "Try to Go Pee", icon: "🚽", princessIcon: "🏰", mermaidIcon: "🐠", type: "check", scene: { princess: "🏰 Castle Restroom", mermaid: "🐠 Quiet Lagoon" }, bgHue: { princess: 270, mermaid: 220 } },
+  { id: "cream", label: "Put on Cream", icon: "🧴", princessIcon: "🌸", mermaidIcon: "💧", type: "check", scene: { princess: "🌸 Royal Spa Nook", mermaid: "💧 Sea Bloom Grotto" }, bgHue: { princess: 265, mermaid: 222 } },
   { id: "nightlight", label: "Nightlight & Sound", icon: "🌙", princessIcon: "⭐", mermaidIcon: "🌊", type: "check", scene: { princess: "⭐ Starlit Tower", mermaid: "🌙 Moonlit Grotto" }, bgHue: { princess: 260, mermaid: 225 } },
   { id: "babydolls", label: "Baby Doll Bedtime", icon: "🎎", princessIcon: "👶", mermaidIcon: "👶", type: "babydoll", scene: { princess: "👶 Royal Nursery", mermaid: "🍼 Sea Cradle Cove" }, bgHue: { princess: 310, mermaid: 200 } },
   { id: "book1", label: "Read Book 1", icon: "📖", princessIcon: "📖", mermaidIcon: "📖", type: "check", counter: "1 of 2", scene: { princess: "📖 Castle Library", mermaid: "📚 Sunken Library" }, bgHue: { princess: 265, mermaid: 218 } },
