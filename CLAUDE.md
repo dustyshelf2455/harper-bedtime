@@ -48,10 +48,12 @@ what changed and why.
 
 ## Workflow
 
-- Develop on a feature branch (`claude/...`). Push the branch, then
-  fast-forward merge to `main`. The `.github/workflows/deploy.yml`
-  workflow auto-deploys to Pages on every push to `main`.
-- Don't push directly to `main` without telling me first.
+- Develop on a feature branch (`claude/...`), then fast-forward merge
+  to `main` and push. The `.github/workflows/deploy.yml` workflow
+  auto-deploys to Pages on every push to `main`.
+- **Default: merge and push to `main` when the work is done.** No need
+  to wait for review. If Ben wants to hold a change for review first,
+  he'll say so explicitly for that task.
 - Harper tests on the deployed site via her iPhone home-screen tile.
   There is no local dev step in her loop — assume "merged to main"
   means "live for Harper."
