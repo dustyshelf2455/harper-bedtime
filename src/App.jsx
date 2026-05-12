@@ -676,7 +676,7 @@ function TrophyShelf({ stickers, onClose, theme }) {
 }
 
 // ==================== STICKER PICK ====================
-function StickerPick({ theme, onPick }) {
+function StickerPick({ theme, onPick, stickers, onOpenShelf }) {
   const t = THEMES[theme];
   const [pressedIdx, setPressedIdx] = useState(null);
   const [options] = useState(() => {
@@ -713,6 +713,13 @@ function StickerPick({ theme, onPick }) {
             >{sticker}</button>
           ))}
         </div>
+        {onOpenShelf && (
+          <div style={{ marginTop: 32, animation: "fadeInUp 0.5s ease 0.7s both" }}>
+            <LudoButton theme={theme} size="small" onClick={onOpenShelf} style={{ animation: "none", background: "linear-gradient(180deg, #9B7ED8 0%, #7B5EB0 100%)", border: "4px solid #6B4E9E", boxShadow: "inset 0 -4px 0 #5A3D8A", width: "auto", minWidth: 220 }}>
+              🏆 My Trophies ({stickers?.length ?? 0})
+            </LudoButton>
+          </div>
+        )}
       </div>
     </FullScreenBackdrop>
   );
@@ -923,7 +930,7 @@ export default function HarpersBedtimeApp() {
 
   if (showShelf) return <TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} />;
   if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} />;
-  if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} />;
+  if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={stickers} onOpenShelf={!FAMILY_MODE ? () => setShowShelf(true) : undefined} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
   if (screen === "dream") return <DreamScreen theme={theme} />;
 

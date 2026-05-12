@@ -224,6 +224,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - Appears after task 11 is completed
 - Shows 2–3 sticker options for Harper to choose from
 - Selected sticker animates onto the shelf
+- **"My Trophies" button** — secondary button below the sticker options lets Harper browse her trophy shelf before picking; hidden in Family Preview mode
 
 ### 4. Countdown
 - "Sleepy time in 5... 4... 3... 2... 1..." with big glowing numbers
@@ -402,6 +403,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 - [x] Added Family Preview mode (`?family` URL param): hides Trophy Shelf button, skips all localStorage reads/writes so Harper's stickers and progress are never exposed or affected. Family gets a shareable link; Harper's URL is unchanged.
 - [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
+- [x] Added "My Trophies" button to the Sticker Pick screen: secondary Ludo-style button (purple, below the three sticker choices) that opens the Trophy Shelf so Harper can browse her collection before picking her new sticker. Hidden in Family Preview mode. Closes back to the Sticker Pick screen when dismissed.
 
 ---
 
