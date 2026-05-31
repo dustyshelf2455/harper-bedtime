@@ -1030,7 +1030,6 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
               <BabyDollSetup onStart={(secs) => onBabyDollStart("start", secs)} theme={theme} />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                <div style={{ fontSize: 24, color: t.textSecondary }}>🍼 Feed salad & tuck dolls in!</div>
                 <SandTimer seconds={babyDollState.duration} theme={theme} running={true} paused={babyDollState.paused} onComplete={() => onComplete("babydolls")} onTogglePause={onTimerPause} />
               </div>
             )}
