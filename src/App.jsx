@@ -556,12 +556,31 @@ function FastForwardIcon() {
   );
 }
 
+const FF_CLICKS_REQUIRED = 4;
+
 function FastForwardButton({ theme, onPress }) {
   const t = THEMES[theme];
   const [pressed, setPressed] = useState(false);
+  const [clickCount, setClickCount] = useState(0);
+  const resetRef = useRef(null);
+
+  const handleClick = () => {
+    const next = clickCount + 1;
+    clearTimeout(resetRef.current);
+    if (next >= FF_CLICKS_REQUIRED) {
+      setClickCount(0);
+      onPress();
+    } else {
+      setClickCount(next);
+      resetRef.current = setTimeout(() => setClickCount(0), 2000);
+    }
+  };
+
+  useEffect(() => () => clearTimeout(resetRef.current), []);
+
   return (
     <button
-      onClick={onPress}
+      onClick={handleClick}
       onPointerDown={() => setPressed(true)}
       onPointerUp={() => setPressed(false)}
       onPointerLeave={() => setPressed(false)}
@@ -572,24 +591,37 @@ function FastForwardButton({ theme, onPress }) {
         top: "calc(env(safe-area-inset-top, 0px) + 10px)",
         right: 14,
         width: 48,
-        height: 48,
+        height: clickCount > 0 ? 58 : 48,
         borderRadius: 14,
-        background: pressed ? `${t.primary}66` : `${t.primary}28`,
-        border: `2px solid ${t.primary}55`,
+        background: clickCount > 0 ? `${t.primary}55` : (pressed ? `${t.primary}66` : `${t.primary}28`),
+        border: `2px solid ${t.primary}${clickCount > 0 ? "88" : "55"}`,
         color: t.textPrimary,
         display: "flex",
+        flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
+        gap: 4,
         cursor: "pointer",
         zIndex: 9999,
-        opacity: pressed ? 1 : 0.65,
+        opacity: pressed ? 1 : 0.55 + clickCount * 0.12,
         transform: pressed ? "scale(0.92)" : "scale(1)",
-        transition: "transform 0.1s ease, background 0.1s ease, opacity 0.1s ease",
+        transition: "transform 0.1s ease, background 0.15s ease, opacity 0.15s ease, height 0.15s ease",
         touchAction: "manipulation",
         padding: 0,
       }}
     >
       <FastForwardIcon />
+      {clickCount > 0 && (
+        <div style={{ display: "flex", gap: 3 }}>
+          {Array.from({ length: FF_CLICKS_REQUIRED - 1 }, (_, i) => (
+            <div key={i} style={{
+              width: 5, height: 5, borderRadius: "50%",
+              background: i < clickCount ? t.textPrimary : `${t.textPrimary}30`,
+              transition: "background 0.1s ease",
+            }} />
+          ))}
+        </div>
+      )}
     </button>
   );
 }
