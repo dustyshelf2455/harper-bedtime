@@ -1,22 +1,24 @@
 # Harper's Bedtime Adventure — App Spec
 
 ## Overview
-A bedtime routine app for Harper (almost 5 years old) with dual themes: **Princess Castle** and **Mermaid World**. The app guides her through her nightly tasks with themed full-screen scenes, animated celebrations, and a sticker collection reward system.
+A bedtime routine app for Harper (almost 5 years old) with three themes: **Princess Castle**, **Mermaid World**, and **Demon Hunter** (K-pop Demon Hunters inspired). The app guides her through her nightly tasks with themed full-screen scenes, animated celebrations, and a sticker collection reward system.
 
 ---
 
 ## Themes
 
-| | Princess Castle | Mermaid World |
-|---|---|---|
-| **Colors** | Pink, purple, gold | Teal, blue, silver |
-| **Guide character** | Princess 👸 | Mermaid 🧜‍♀️ |
-| **Timer particles** | Sparkles ✨ | Gems 💎 |
-| **Progress tracker icon** | Gems 💎 | Shells 🐚 |
-| **Dream screen message** | "Sweet dreams, Princess Harper!" | "Sleep tight, little mermaid!" |
-| **Selection** | Harper picks on the splash screen each night. **Locked once routine starts.** |
+| | Princess Castle | Mermaid World | Demon Hunter |
+|---|---|---|---|
+| **Colors** | Pink, purple, gold | Teal, blue, silver | Electric purple, magenta, cyan |
+| **Guide character** | Princess 👸 | Mermaid 🧜‍♀️ | K-pop Demon Hunter 🎤 (Rumi-inspired) |
+| **Timer particles** | Sparkles ✨ | Gems 💎 | Purple hearts 💜 |
+| **Progress tracker icon** | Gems 💎 | Shells 🐚 | Magic mic 🎤 |
+| **Dream screen message** | "Sweet dreams, Princess Harper!" | "Sleep tight, little mermaid!" | "Couch! Couch! Couch! Sleep well, Hunter!" |
+| **Selection** | Harper picks on the splash screen each night. **Locked once routine starts.** Splash uses a 2+1 layout (Princess/Mermaid on top row, Demon Hunter full-width below). |
 
-Both themes share the same task list, timers, and logic — only visuals/colors/icons change.
+All three themes share the same task list, timers, and logic — only visuals/colors/icons change.
+
+**Demon Hunter tone:** K-pop concert + magical-girl energy. Saja Boys / Jinu / Gwi-Ma references are welcome as flavor; explicit scary demon imagery is not. Internal code key is `kpop`; visible label is "Demon Hunter."
 
 ---
 
@@ -402,6 +404,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 - [x] Added Family Preview mode (`?family` URL param): hides Trophy Shelf button, skips all localStorage reads/writes so Harper's stickers and progress are never exposed or affected. Family gets a shareable link; Harper's URL is unchanged.
 - [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
+- [x] Added **Demon Hunter** mode (K-pop Demon Hunters inspired, Rumi-styled guide character) as a third theme alongside Princess and Mermaid. Internal code key `kpop`, button label "🎤 Demon Hunter". Includes: Rumi-inspired guide character (normal/victory/sleep poses), Gothic neon stage frame, purple-mic progress-tracker icon, dedicated `NeonField` magenta/cyan starfield ambient layer, kpop-themed celebration & ambient particle sets, a 4th sticker set (`🎤⚡✨🎵💜🌟🐯💖🎀🦋`), per-task kpop icons, dream message "Couch! Couch! Couch! Sleep well, Hunter!". Splash screen theme picker reflows to a 2+1 grid (Princess/Mermaid top, Demon Hunter full-width below). Palette: electric purple `#9D4EDD` primary, magenta `#FF6EC7` accent, dark purple backgrounds.
 
 ---
 

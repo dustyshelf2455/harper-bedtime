@@ -5,17 +5,17 @@ const FAMILY_MODE = new URLSearchParams(window.location.search).has("family");
 
 // ==================== TASK LIST (Fixed Order per Spec) ====================
 const TASKS = [
-  { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall" }, bgHue: { princess: 280, mermaid: 210 } },
-  { id: "pajamas", label: "Put on Pajamas", icon: "👗", princessIcon: "👸", mermaidIcon: "🧜‍♀️", type: "check", scene: { princess: "👗 Royal Dressing Chamber", mermaid: "🐠 Underwater Wardrobe" }, bgHue: { princess: 290, mermaid: 200 } },
-  { id: "clothes", label: "Pick Out Clothes", icon: "👚", princessIcon: "👗", mermaidIcon: "👚", type: "check", scene: { princess: "✨ Princess Closet", mermaid: "🌊 Shell Wardrobe" }, bgHue: { princess: 300, mermaid: 195 } },
-  { id: "teeth", label: "Brush Teeth", icon: "🪥", princessIcon: "✨", mermaidIcon: "💎", type: "timer", duration: 60, scene: { princess: "🪥 Royal Bathroom", mermaid: "🫧 Coral Cave Bathroom" }, bgHue: { princess: 285, mermaid: 205 } },
-  { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs" }, bgHue: { princess: 275, mermaid: 215 } },
-  { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror" }, bgHue: { princess: 295, mermaid: 190 } },
-  { id: "pee", label: "Try to Go Pee", icon: "🚽", princessIcon: "🏰", mermaidIcon: "🐠", type: "check", scene: { princess: "🏰 Castle Restroom", mermaid: "🐠 Quiet Lagoon" }, bgHue: { princess: 270, mermaid: 220 } },
-  { id: "nightlight", label: "Nightlight & Sound", icon: "🌙", princessIcon: "⭐", mermaidIcon: "🌊", type: "check", scene: { princess: "⭐ Starlit Tower", mermaid: "🌙 Moonlit Grotto" }, bgHue: { princess: 260, mermaid: 225 } },
-  { id: "babydolls", label: "Baby Doll Bedtime", icon: "🎎", princessIcon: "👶", mermaidIcon: "👶", type: "babydoll", scene: { princess: "👶 Royal Nursery", mermaid: "🍼 Sea Cradle Cove" }, bgHue: { princess: 310, mermaid: 200 } },
-  { id: "book1", label: "Read Book 1", icon: "📖", princessIcon: "📖", mermaidIcon: "📖", type: "check", counter: "1 of 2", scene: { princess: "📖 Castle Library", mermaid: "📚 Sunken Library" }, bgHue: { princess: 265, mermaid: 218 } },
-  { id: "book2", label: "Read Book 2", icon: "📚", princessIcon: "📚", mermaidIcon: "📚", type: "check", counter: "2 of 2", scene: { princess: "📚 Enchanted Reading Nook", mermaid: "🌟 Deep Sea Story Cave" }, bgHue: { princess: 255, mermaid: 230 } },
+  { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", kpopIcon: "💜", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall", kpop: "🎤 Magic Stage Entry" }, bgHue: { princess: 280, mermaid: 210, kpop: 285 } },
+  { id: "pajamas", label: "Put on Pajamas", icon: "👗", princessIcon: "👸", mermaidIcon: "🧜‍♀️", kpopIcon: "🎀", type: "check", scene: { princess: "👗 Royal Dressing Chamber", mermaid: "🐠 Underwater Wardrobe", kpop: "🌟 Hunter Dressing Room" }, bgHue: { princess: 290, mermaid: 200, kpop: 290 } },
+  { id: "clothes", label: "Pick Out Clothes", icon: "👚", princessIcon: "👗", mermaidIcon: "👚", kpopIcon: "✨", type: "check", scene: { princess: "✨ Princess Closet", mermaid: "🌊 Shell Wardrobe", kpop: "✨ Stage Closet" }, bgHue: { princess: 300, mermaid: 195, kpop: 295 } },
+  { id: "teeth", label: "Brush Teeth", icon: "🪥", princessIcon: "✨", mermaidIcon: "💎", kpopIcon: "⚡", type: "timer", duration: 60, scene: { princess: "🪥 Royal Bathroom", mermaid: "🫧 Coral Cave Bathroom", kpop: "⚡ Lightning Bathroom" }, bgHue: { princess: 285, mermaid: 205, kpop: 280 } },
+  { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", kpopIcon: "💫", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs", kpop: "💫 Sparkle Vanity" }, bgHue: { princess: 275, mermaid: 215, kpop: 275 } },
+  { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", kpopIcon: "💖", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror", kpop: "💖 Idol Mirror" }, bgHue: { princess: 295, mermaid: 190, kpop: 300 } },
+  { id: "pee", label: "Try to Go Pee", icon: "🚽", princessIcon: "🏰", mermaidIcon: "🐠", kpopIcon: "🌙", type: "check", scene: { princess: "🏰 Castle Restroom", mermaid: "🐠 Quiet Lagoon", kpop: "🌙 Backstage Restroom" }, bgHue: { princess: 270, mermaid: 220, kpop: 270 } },
+  { id: "nightlight", label: "Nightlight & Sound", icon: "🌙", princessIcon: "⭐", mermaidIcon: "🌊", kpopIcon: "🌠", type: "check", scene: { princess: "⭐ Starlit Tower", mermaid: "🌙 Moonlit Grotto", kpop: "🌠 Honmoon Tower" }, bgHue: { princess: 260, mermaid: 225, kpop: 265 } },
+  { id: "babydolls", label: "Baby Doll Bedtime", icon: "🎎", princessIcon: "👶", mermaidIcon: "👶", kpopIcon: "🐯", type: "babydoll", scene: { princess: "👶 Royal Nursery", mermaid: "🍼 Sea Cradle Cove", kpop: "🐯 Tiger Cub Nursery" }, bgHue: { princess: 310, mermaid: 200, kpop: 310 } },
+  { id: "book1", label: "Read Book 1", icon: "📖", princessIcon: "📖", mermaidIcon: "📖", kpopIcon: "📖", type: "check", counter: "1 of 2", scene: { princess: "📖 Castle Library", mermaid: "📚 Sunken Library", kpop: "📖 Honmoon Library" }, bgHue: { princess: 265, mermaid: 218, kpop: 260 } },
+  { id: "book2", label: "Read Book 2", icon: "📚", princessIcon: "📚", mermaidIcon: "📚", kpopIcon: "📚", type: "check", counter: "2 of 2", scene: { princess: "📚 Enchanted Reading Nook", mermaid: "🌟 Deep Sea Story Cave", kpop: "📚 Hunter Bedtime Story" }, bgHue: { princess: 255, mermaid: 230, kpop: 255 } },
 ];
 
 // ==================== STICKER OPTIONS ====================
@@ -23,6 +23,7 @@ const STICKER_SETS = [
   ["🦄", "🌈", "🎀", "🦋", "🌸", "💖", "🍓", "🐱", "🎠", "🧸"],
   ["🐬", "🦀", "🐙", "🐳", "🦩", "🌺", "🍉", "🐰", "🎪", "🧁"],
   ["⭐", "🌙", "🎵", "🎨", "🎭", "🏖️", "🎈", "🦊", "🐝", "🍭"],
+  ["🎤", "⚡", "✨", "🎵", "💜", "🌟", "🐯", "💖", "🎀", "🦋"],
 ];
 
 // ==================== THEME COLORS ====================
@@ -91,6 +92,38 @@ const THEMES = {
     treasuryBg: "linear-gradient(180deg, rgba(10, 30, 61, 0.88) 0%, rgba(10, 22, 40, 0.92) 100%)",
     treasuryBorder: "rgba(26, 172, 168, 0.35)",
   },
+  kpop: {
+    primary: "#9D4EDD",
+    secondary: "#6B2FA8",
+    accent: "#FF6EC7",
+    accentDark: "#D44BA0",
+    highlight: "#C9A0F0",
+    bg1: "#1f0a3a",
+    bg2: "#07021a",
+    bg3: "#2a0d4a",
+    softBg: "#F3E6FF",
+    softBorder: "#C9A0F0",
+    textPrimary: "#F0E0FF",
+    textSecondary: "#D4B5F0",
+    textMuted: "#A88FC7",
+    shadowColor: "rgba(60, 20, 100, 0.5)",
+    glowColor: "#9D4EDD44",
+    guide: ASSETS + "kpop-character.webp",
+    guideVictory: ASSETS + "kpop-victory.webp",
+    guideSleep: ASSETS + "kpop-sleep.webp",
+    progressIcon: "🎤",
+    progressIconImg: ASSETS + "kpop-mic.webp",
+    progressIconEmpty: "○",
+    particle: "💜",
+    dreamMsg: "Couch! Couch! Couch! Sleep well, Hunter!",
+    timerParticle: "💜",
+    gradientBtn: "linear-gradient(180deg, #9D4EDD 0%, #6B2FA8 100%)",
+    insetShadow: "inset 0 -4px 0 #4F1B8A",
+    specularHighlight: "rgba(230, 200, 255, 0.5)",
+    progressGlow: "rgba(157, 78, 221, 0.5)",
+    treasuryBg: "linear-gradient(180deg, rgba(31, 10, 58, 0.88) 0%, rgba(7, 2, 26, 0.92) 100%)",
+    treasuryBorder: "rgba(157, 78, 221, 0.35)",
+  },
 };
 
 // ==================== PNG CASTLE FRAME (PRINCESS) ====================
@@ -131,6 +164,32 @@ function UnderwaterFrame({ taskIndex = 0 }) {
     }}>
       <img
         src={ASSETS + "mermaid-frame.webp"}
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "fill",
+          opacity: dim,
+        }}
+      />
+    </div>
+  );
+}
+
+// ==================== PNG NEON STAGE FRAME (KPOP) ====================
+function KpopFrame({ taskIndex = 0 }) {
+  const dim = 1 - ((taskIndex || 0) / TASKS.length) * 0.2;
+  return (
+    <div style={{
+      position: "absolute",
+      inset: 0,
+      pointerEvents: "none",
+      zIndex: 1,
+    }}>
+      <img
+        src={ASSETS + "kpop-frame.webp"}
         alt=""
         style={{
           position: "absolute",
@@ -193,33 +252,74 @@ function BubbleField({ count = 12, taskIndex = 0 }) {
   );
 }
 
+// ==================== NEON STARFIELD (KPOP) ====================
+function NeonField({ count = 30, taskIndex = 0 }) {
+  const stars = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i, x: Math.random() * 100, y: Math.random() * 80,
+      size: Math.random() * 3 + 1.5, delay: Math.random() * 5, duration: Math.random() * 3 + 2,
+      tint: i % 2 === 0 ? "rgba(255, 110, 199, 0.75)" : "rgba(157, 78, 221, 0.7)",
+    })), [count]);
+  const visibleCount = Math.floor(count * (0.4 + ((taskIndex || 0) / TASKS.length) * 0.6));
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+      {stars.slice(0, visibleCount).map(s => (
+        <div key={s.id} style={{
+          position: "absolute", left: `${s.x}%`, top: `${s.y}%`,
+          width: s.size, height: s.size, borderRadius: "50%",
+          background: s.tint,
+          boxShadow: `0 0 ${s.size * 3}px ${s.tint}`,
+          animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+          willChange: "transform, opacity",
+        }} />
+      ))}
+    </div>
+  );
+}
+
 // ==================== PATTERN OVERLAY ====================
 function PatternOverlay({ theme }) {
-  const isPrincess = theme === "princess";
+  const patterns = {
+    princess: {
+      image: `radial-gradient(circle at 20% 30%, #F0C239 1px, transparent 1px),
+              radial-gradient(circle at 70% 60%, #E84B8A 1px, transparent 1px),
+              radial-gradient(circle at 40% 80%, #F0C239 0.8px, transparent 0.8px),
+              radial-gradient(circle at 85% 15%, #E84B8A 0.8px, transparent 0.8px)`,
+      size: "80px 80px, 120px 100px, 60px 90px, 100px 70px",
+    },
+    mermaid: {
+      image: `radial-gradient(circle at 25% 25%, #1AACA8 1.2px, transparent 1.2px),
+              radial-gradient(circle at 65% 55%, #7FBCD2 1px, transparent 1px),
+              radial-gradient(circle at 45% 85%, #1AACA8 0.8px, transparent 0.8px),
+              radial-gradient(circle at 80% 10%, #7FBCD2 0.8px, transparent 0.8px)`,
+      size: "90px 90px, 110px 110px, 70px 100px, 100px 80px",
+    },
+    kpop: {
+      image: `radial-gradient(circle at 22% 28%, #FF6EC7 1.2px, transparent 1.2px),
+              radial-gradient(circle at 68% 58%, #9D4EDD 1px, transparent 1px),
+              radial-gradient(circle at 42% 82%, #FF6EC7 0.8px, transparent 0.8px),
+              radial-gradient(circle at 82% 12%, #9D4EDD 0.8px, transparent 0.8px)`,
+      size: "85px 85px, 115px 105px, 65px 95px, 105px 75px",
+    },
+  };
+  const p = patterns[theme] || patterns.princess;
   return (
     <div style={{
       position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0, opacity: 0.04,
-      backgroundImage: isPrincess
-        ? `radial-gradient(circle at 20% 30%, #F0C239 1px, transparent 1px),
-           radial-gradient(circle at 70% 60%, #E84B8A 1px, transparent 1px),
-           radial-gradient(circle at 40% 80%, #F0C239 0.8px, transparent 0.8px),
-           radial-gradient(circle at 85% 15%, #E84B8A 0.8px, transparent 0.8px)`
-        : `radial-gradient(circle at 25% 25%, #1AACA8 1.2px, transparent 1.2px),
-           radial-gradient(circle at 65% 55%, #7FBCD2 1px, transparent 1px),
-           radial-gradient(circle at 45% 85%, #1AACA8 0.8px, transparent 0.8px),
-           radial-gradient(circle at 80% 10%, #7FBCD2 0.8px, transparent 0.8px)`,
-      backgroundSize: isPrincess
-        ? "80px 80px, 120px 100px, 60px 90px, 100px 70px"
-        : "90px 90px, 110px 110px, 70px 100px, 100px 80px",
+      backgroundImage: p.image,
+      backgroundSize: p.size,
     }} />
   );
 }
 
 // ==================== VIGNETTE ====================
 function Vignette({ intensity = 0.5, theme = "princess" }) {
-  const color = theme === "princess"
-    ? `rgba(45, 10, 60, ${intensity})`
-    : `rgba(5, 15, 40, ${intensity})`;
+  const tints = {
+    princess: `rgba(45, 10, 60, ${intensity})`,
+    mermaid:  `rgba(5, 15, 40, ${intensity})`,
+    kpop:     `rgba(25, 5, 55, ${intensity})`,
+  };
+  const color = tints[theme] || tints.princess;
   return (
     <div style={{
       position: "absolute", inset: 0, pointerEvents: "none", zIndex: 2,
@@ -230,7 +330,12 @@ function Vignette({ intensity = 0.5, theme = "princess" }) {
 
 // ==================== AMBIENT PARTICLES ====================
 function AmbientParticles({ theme }) {
-  const emojis = theme === "princess" ? ["✨", "⭐", "🌟"] : ["🫧", "✨", "🌊"];
+  const sets = {
+    princess: ["✨", "⭐", "🌟"],
+    mermaid:  ["🫧", "✨", "🌊"],
+    kpop:     ["💜", "✨", "🎵"],
+  };
+  const emojis = sets[theme] || sets.princess;
   const particles = useMemo(() =>
     Array.from({ length: 8 }, (_, i) => ({
       id: i, x: Math.random() * 100, size: Math.random() * 12 + 8,
@@ -513,7 +618,11 @@ function SandTimer({ seconds, theme, running, paused, onComplete, onTogglePause 
     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
       <div style={{
         width: 100, height: 160, position: "relative",
-        background: theme === "princess" ? "linear-gradient(180deg, #FFF5F5 0%, #FFE4EC 100%)" : "linear-gradient(180deg, #E0FFFF 0%, #B0E0E6 100%)",
+        background: theme === "princess"
+          ? "linear-gradient(180deg, #FFF5F5 0%, #FFE4EC 100%)"
+          : theme === "mermaid"
+            ? "linear-gradient(180deg, #E0FFFF 0%, #B0E0E6 100%)"
+            : "linear-gradient(180deg, #F8EEFF 0%, #E8D4FF 100%)",
         borderRadius: "42% 42% 42% 42% / 22% 22% 22% 22%",
         border: `4px solid ${t.secondary}`, overflow: "hidden",
         boxShadow: `0 0 24px ${t.glowColor}, ${t.insetShadow}`,
@@ -584,7 +693,12 @@ function CelebrationParticles({ theme, active }) {
   const [particles, setParticles] = useState([]);
   useEffect(() => {
     if (!active) { setParticles([]); return; }
-    const emojis = theme === "princess" ? ["✨", "⭐", "💖", "🌟", "👑", "💎"] : ["💎", "🫧", "🐚", "🌊", "💙", "✨"];
+    const emojiSets = {
+      princess: ["✨", "⭐", "💖", "🌟", "👑", "💎"],
+      mermaid:  ["💎", "🫧", "🐚", "🌊", "💙", "✨"],
+      kpop:     ["🎤", "⚡", "✨", "🎵", "💜", "🌟", "💖"],
+    };
+    const emojis = emojiSets[theme] || emojiSets.princess;
     setParticles(Array.from({ length: 30 }, (_, i) => ({
       id: i, x: Math.random() * 100, y: Math.random() * 100,
       size: Math.random() * 18 + 10, delay: Math.random() * 1.5,
@@ -606,17 +720,22 @@ function CelebrationParticles({ theme, active }) {
 function SceneWrapper({ theme, children, taskIndex }) {
   const task = TASKS[taskIndex];
   const hue = task?.bgHue?.[theme] || 280;
+  const bgGradients = {
+    princess: `linear-gradient(170deg, hsl(${hue}, 45%, 18%) 0%, hsl(${hue}, 50%, 10%) 35%, hsl(${hue + 10}, 40%, 14%) 65%, hsl(${hue}, 55%, 8%) 100%)`,
+    mermaid:  `linear-gradient(170deg, hsl(${hue}, 55%, 14%) 0%, hsl(${hue}, 60%, 8%) 35%, hsl(${hue + 10}, 50%, 12%) 65%, hsl(${hue}, 65%, 5%) 100%)`,
+    kpop:     `linear-gradient(170deg, hsl(${hue}, 60%, 16%) 0%, hsl(${hue}, 65%, 9%) 35%, hsl(${hue + 15}, 55%, 13%) 65%, hsl(${hue}, 70%, 6%) 100%)`,
+  };
   return (
     <div style={{
       height: "100%", minHeight: "100%", display: "flex", flexDirection: "column",
-      background: theme === "princess"
-        ? `linear-gradient(170deg, hsl(${hue}, 45%, 18%) 0%, hsl(${hue}, 50%, 10%) 35%, hsl(${hue + 10}, 40%, 14%) 65%, hsl(${hue}, 55%, 8%) 100%)`
-        : `linear-gradient(170deg, hsl(${hue}, 55%, 14%) 0%, hsl(${hue}, 60%, 8%) 35%, hsl(${hue + 10}, 50%, 12%) 65%, hsl(${hue}, 65%, 5%) 100%)`,
+      background: bgGradients[theme] || bgGradients.princess,
       fontFamily: "'Fredoka', sans-serif", position: "relative", overflow: "hidden",
       animation: "crossfadeIn 0.5s ease-out",
     }}>
       <PatternOverlay theme={theme} />
-      {theme === "princess" ? <><Starfield count={35} taskIndex={taskIndex} /><CastleFrame taskIndex={taskIndex} /></> : <><BubbleField count={15} taskIndex={taskIndex} /><UnderwaterFrame taskIndex={taskIndex} /></>}
+      {theme === "princess" && <><Starfield count={35} taskIndex={taskIndex} /><CastleFrame taskIndex={taskIndex} /></>}
+      {theme === "mermaid"  && <><BubbleField count={15} taskIndex={taskIndex} /><UnderwaterFrame taskIndex={taskIndex} /></>}
+      {theme === "kpop"     && <><NeonField count={40} taskIndex={taskIndex} /><KpopFrame taskIndex={taskIndex} /></>}
       <Vignette intensity={0.3 + (taskIndex / TASKS.length) * 0.15} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column" }}>{children}</div>
@@ -626,19 +745,26 @@ function SceneWrapper({ theme, children, taskIndex }) {
 
 // ==================== FULL-SCREEN BACKDROP (splash, sticker, dream, etc) ====================
 function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 }) {
+  const bgGradients = {
+    princess: "radial-gradient(ellipse at 50% 30%, #3d2660 0%, #1a0a2e 60%, #0d0521 100%)",
+    mermaid:  "radial-gradient(ellipse at 50% 30%, #0d2847 0%, #0a1628 60%, #050d1a 100%)",
+    kpop:     "radial-gradient(ellipse at 50% 30%, #3a1265 0%, #1a0533 60%, #0a0220 100%)",
+  };
   return (
     <div style={{
       height: "100%", minHeight: "100%", display: "flex", flexDirection: "column",
       alignItems: "center", justifyContent: "center",
-      background: theme === "princess"
-        ? "radial-gradient(ellipse at 50% 30%, #3d2660 0%, #1a0a2e 60%, #0d0521 100%)"
-        : "radial-gradient(ellipse at 50% 30%, #0d2847 0%, #0a1628 60%, #050d1a 100%)",
+      background: bgGradients[theme] || bgGradients.princess,
       fontFamily: "'Fredoka', sans-serif", position: "relative", overflow: "hidden",
       animation: "fadeIn 0.6s ease",
     }}>
       <PatternOverlay theme={theme} />
-      {theme === "princess" ? <Starfield count={25} taskIndex={taskIndex} /> : <BubbleField count={10} taskIndex={taskIndex} />}
-      {showFrame && (theme === "princess" ? <CastleFrame taskIndex={0} /> : <UnderwaterFrame taskIndex={0} />)}
+      {theme === "princess" && <Starfield count={25} taskIndex={taskIndex} />}
+      {theme === "mermaid"  && <BubbleField count={10} taskIndex={taskIndex} />}
+      {theme === "kpop"     && <NeonField count={30} taskIndex={taskIndex} />}
+      {showFrame && theme === "princess" && <CastleFrame taskIndex={0} />}
+      {showFrame && theme === "mermaid"  && <UnderwaterFrame taskIndex={0} />}
+      {showFrame && theme === "kpop"     && <KpopFrame taskIndex={0} />}
       <Vignette intensity={0.35} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>{children}</div>
@@ -681,8 +807,8 @@ function StickerPick({ theme, onPick }) {
   const [pressedIdx, setPressedIdx] = useState(null);
   const [options] = useState(() => {
     // 2-in-3 chance of the themed set, 1-in-3 of any set for variety
-    const preferredIdx = theme === "princess" ? 0 : 1;
-    const idx = Math.random() < 0.67 ? preferredIdx : Math.floor(Math.random() * STICKER_SETS.length);
+    const themedIdx = { princess: 0, mermaid: 1, kpop: 3 }[theme] ?? 0;
+    const idx = Math.random() < 0.67 ? themedIdx : Math.floor(Math.random() * STICKER_SETS.length);
     return [...STICKER_SETS[idx]].sort(() => Math.random() - 0.5).slice(0, 3);
   });
   return (
@@ -742,7 +868,12 @@ function Countdown({ theme, onDone }) {
 // ==================== DREAM SCREEN ====================
 function DreamScreen({ theme }) {
   const t = THEMES[theme];
-  const emojis = theme === "princess" ? ["⭐", "✨", "🌟", "💫", "🌙"] : ["🫧", "💙", "🌊", "✨", "🌙"];
+  const sets = {
+    princess: ["⭐", "✨", "🌟", "💫", "🌙"],
+    mermaid:  ["🫧", "💙", "🌊", "✨", "🌙"],
+    kpop:     ["💜", "✨", "🎵", "🌟", "🌙"],
+  };
+  const emojis = sets[theme] || sets.princess;
   const floaters = useMemo(() =>
     Array.from({ length: 40 }, (_, i) => ({
       id: i,
@@ -776,23 +907,28 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
     <FullScreenBackdrop theme={theme} showFrame={true}>
       <div style={{ padding: "clamp(12px, 3dvh, 40px) 24px", textAlign: "center", width: "100%", maxWidth: 400 }}>
         <div style={{ marginBottom: "clamp(12px, 2.5dvh, 32px)", animation: "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={144} splashMode={true} /></div>
-        <div style={{ display: "flex", gap: "clamp(6px, 1dvh, 12px)", marginBottom: "clamp(12px, 2.5dvh, 32px)", justifyContent: "center" }}>
-          {["princess", "mermaid"].map(th => {
+        <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1dvh, 12px)", marginBottom: "clamp(12px, 2.5dvh, 32px)", justifyItems: "stretch" }}>
+          {[
+            { key: "princess", label: "👸 Princess" },
+            { key: "mermaid",  label: "🧜‍♀️ Mermaid" },
+            { key: "kpop",     label: "🎤 Demon Hunter", full: true },
+          ].map(({ key: th, label, full }) => {
             const active = theme === th;
             const tc = THEMES[th];
             return (
               <button key={th} onClick={() => setTheme(th)} style={{
-                padding: "clamp(8px, 1.5dvh, 14px) clamp(16px, 3dvh, 24px)", borderRadius: 22,
+                gridColumn: full ? "1 / -1" : "auto",
+                padding: "clamp(8px, 1.5dvh, 14px) clamp(12px, 2.5dvh, 20px)", borderRadius: 22,
                 border: `4px solid ${active ? tc.primary : tc.primary + "44"}`,
                 background: active ? tc.gradientBtn : `${tc.primary}15`,
                 color: active ? "#FFFDF5" : tc.textSecondary,
-                fontSize: "clamp(18px, 3dvh, 24px)", fontWeight: 600, fontFamily: "'Fredoka', sans-serif",
+                fontSize: "clamp(17px, 2.8dvh, 22px)", fontWeight: 600, fontFamily: "'Fredoka', sans-serif",
                 cursor: "pointer", boxShadow: active ? tc.insetShadow : "none",
                 transition: "all 0.3s ease", position: "relative", overflow: "hidden",
                 touchAction: "manipulation",
               }}>
                 {active && <div style={{ position: "absolute", top: 4, left: 8, width: "35%", height: "30%", borderRadius: "50%", background: `radial-gradient(ellipse, ${tc.specularHighlight} 0%, transparent 70%)`, pointerEvents: "none" }} />}
-                {th === "princess" ? "👸 Princess" : "🧜‍♀️ Mermaid"}
+                {label}
               </button>
             );
           })}
@@ -833,7 +969,7 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
       {showFastForward && <FastForwardButton theme={theme} onPress={() => onComplete(task.id)} />}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px", position: "relative", zIndex: 10, gap: 16 }}>
         <div key={done ? "victory" : "normal"} style={{ animation: done ? undefined : "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={112} variant={done ? "victory" : "normal"} /></div>
-        <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{theme === "princess" ? task.princessIcon : task.mermaidIcon}</div>
+        <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{task[`${theme}Icon`] || task.icon}</div>
         <div style={{ fontSize: 36, fontWeight: 700, color: t.textPrimary, textAlign: "center", animation: "fadeInUp 0.3s ease 0.2s both", textShadow: `0 2px 12px ${t.shadowColor}` }}>{task.label}</div>
         {task.counter && <div style={{ fontSize: 26, color: t.textSecondary, animation: "fadeInUp 0.3s ease 0.25s both" }}>📚 {task.counter}</div>}
         {isTimer && !done && (
@@ -859,7 +995,7 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
             )}
           </div>
         )}
-        {done && <div style={{ fontSize: 48, marginTop: 8, animation: "fadeIn 0.3s ease" }}>{theme === "princess" ? "👑" : "🐚"}</div>}
+        {done && <div style={{ fontSize: 48, marginTop: 8, animation: "fadeIn 0.3s ease" }}>{ { princess: "👑", mermaid: "🐚", kpop: "🎤" }[theme] || "✨" }</div>}
       </div>
       <div style={{ padding: "20px 24px 8px", position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: 12 }}>
         {!done && task.type === "check" && <LudoButton theme={theme} size="large" onClick={() => onComplete(task.id)}>Done! ✨</LudoButton>}
