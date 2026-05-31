@@ -18,13 +18,24 @@ const TASKS = [
   { id: "book2", label: "Read Book 2", icon: "📚", princessIcon: "📚", mermaidIcon: "📚", kpopIcon: "📚", type: "check", counter: "2 of 2", scene: { princess: "📚 Enchanted Reading Nook", mermaid: "🌟 Deep Sea Story Cave", kpop: "📚 Hunter Bedtime Story" }, bgHue: { princess: 255, mermaid: 230, kpop: 255 } },
 ];
 
-// ==================== STICKER OPTIONS ====================
-const STICKER_SETS = [
-  ["🦄", "🌈", "🎀", "🦋", "🌸", "💖", "🍓", "🐱", "🎠", "🧸"],
-  ["🐬", "🦀", "🐙", "🐳", "🦩", "🌺", "🍉", "🐰", "🎪", "🧁"],
-  ["⭐", "🌙", "🎵", "🎨", "🎭", "🏖️", "🎈", "🦊", "🐝", "🍭"],
-  ["🎤", "⚡", "✨", "🎵", "💜", "🌟", "🐯", "💖", "🎀", "🦋"],
-];
+// ==================== STICKER IMAGES ====================
+// 20 per theme (princess-00..19, mermaid-00..19, kpop-00..19)
+// 15 super stickers in one sheet: rows 0/1/2 → princess/mermaid/kpop (super-00..14)
+const STICKER_IMAGES = {
+  princess: Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/princess-${String(i).padStart(2, "0")}.png`),
+  mermaid:  Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/mermaid-${String(i).padStart(2, "0")}.png`),
+  kpop:     Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/kpop-${String(i).padStart(2, "0")}.png`),
+};
+
+const SUPER_STICKER_IMAGES = {
+  princess: Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i).padStart(2, "0")}.png`),
+  mermaid:  Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 5).padStart(2, "0")}.png`),
+  kpop:     Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 10).padStart(2, "0")}.png`),
+};
+
+// True for new image stickers; false for legacy emoji strings already on Harper's shelf
+const isImageSticker = (s) => typeof s === "string" && s.startsWith("/");
+const isSuperSticker = (s) => isImageSticker(s) && s.includes("/super-");
 
 // ==================== THEME COLORS ====================
 const THEMES = {
@@ -823,7 +834,19 @@ function TrophyShelf({ stickers, onClose, theme }) {
             maxHeight: "calc(55dvh - 100px)", overflowY: "auto", WebkitOverflowScrolling: "touch",
           }}>
             {stickers.map((s, i) => (
-              <div key={i} style={{ fontSize: 40, textAlign: "center", padding: 8, borderRadius: 16, background: `${t.primary}10`, animation: `fadeInUp 0.3s ease ${i * 0.05}s both` }}>{s}</div>
+              <div key={i} style={{
+                textAlign: "center", padding: 8, borderRadius: 16,
+                background: isSuperSticker(s) ? `${t.accent}22` : `${t.primary}10`,
+                border: isSuperSticker(s) ? `2px solid ${t.accent}88` : "none",
+                boxShadow: isSuperSticker(s) ? `0 0 10px ${t.accent}44` : "none",
+                animation: `fadeInUp 0.3s ease ${i * 0.05}s both`,
+                display: "flex", alignItems: "center", justifyContent: "center",
+              }}>
+                {isImageSticker(s)
+                  ? <img src={s} alt="sticker" style={{ width: 52, height: 52, objectFit: "contain", display: "block" }} />
+                  : <span style={{ fontSize: 40 }}>{s}</span>
+                }
+              </div>
             ))}
           </div>
         )}
@@ -838,10 +861,8 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
   const t = THEMES[theme];
   const [pressedIdx, setPressedIdx] = useState(null);
   const [options] = useState(() => {
-    // 2-in-3 chance of the themed set, 1-in-3 of any set for variety
-    const themedIdx = { princess: 0, mermaid: 1, kpop: 3 }[theme] ?? 0;
-    const idx = Math.random() < 0.67 ? themedIdx : Math.floor(Math.random() * STICKER_SETS.length);
-    return [...STICKER_SETS[idx]].sort(() => Math.random() - 0.5).slice(0, 3);
+    const pool = STICKER_IMAGES[theme] || STICKER_IMAGES.princess;
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   });
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
@@ -860,7 +881,7 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
               onPointerLeave={() => setPressedIdx(null)}
               onPointerCancel={() => setPressedIdx(null)}
               style={{
-                fontSize: 64, padding: 20, borderRadius: 28,
+                padding: 16, borderRadius: 28,
                 border: `4px solid ${t.primary}66`, background: `${t.primary}18`,
                 cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
                 boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.secondary}` : t.insetShadow,
@@ -868,7 +889,9 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
                 animation: `fadeInUp 0.4s ease ${0.5 + i * 0.15}s both`,
                 touchAction: "manipulation",
               }}
-            >{sticker}</button>
+            >
+              <img src={sticker} alt="sticker" style={{ width: 80, height: 80, objectFit: "contain", display: "block" }} />
+            </button>
           ))}
         </div>
         {!FAMILY_MODE && onOpenShelf && (
@@ -878,6 +901,53 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
             </LudoButton>
           </div>
         )}
+      </div>
+    </FullScreenBackdrop>
+  );
+}
+
+// ==================== SUPER STICKER PICK ====================
+function SuperStickerPick({ theme, onPick }) {
+  const t = THEMES[theme];
+  const [pressedIdx, setPressedIdx] = useState(null);
+  const [options] = useState(() => {
+    const pool = SUPER_STICKER_IMAGES[theme] || SUPER_STICKER_IMAGES.princess;
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
+  });
+  return (
+    <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
+      <CelebrationParticles theme={theme} active={true} />
+      <div style={{ padding: 24, textAlign: "center" }}>
+        <div style={{ marginBottom: 16 }}><GuideCharacter theme={theme} size={120} variant="victory" /></div>
+        <div style={{ fontSize: 36, fontWeight: 700, color: t.accent, fontFamily: "'Fredoka', sans-serif", marginBottom: 8, animation: "fadeInUp 0.5s ease", textShadow: `0 0 24px ${t.primary}` }}>
+          3 of a kind! ⭐
+        </div>
+        <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 40, animation: "fadeInUp 0.5s ease 0.15s both" }}>
+          Pick a SUPER sticker!
+        </div>
+        <div style={{ display: "flex", gap: 20, justifyContent: "center", animation: "fadeInUp 0.5s ease 0.35s both" }}>
+          {options.map((sticker, i) => (
+            <button
+              key={i}
+              onClick={() => onPick(sticker)}
+              onPointerDown={() => setPressedIdx(i)}
+              onPointerUp={() => setPressedIdx(null)}
+              onPointerLeave={() => setPressedIdx(null)}
+              onPointerCancel={() => setPressedIdx(null)}
+              style={{
+                padding: 16, borderRadius: 28,
+                border: `4px solid ${t.accent}88`, background: `${t.accent}18`,
+                cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.accentDark}` : `inset 0 -4px 0 ${t.accentDark}`,
+                transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
+                animation: `fadeInUp 0.4s ease ${0.4 + i * 0.15}s both`,
+                touchAction: "manipulation",
+              }}
+            >
+              <img src={sticker} alt="super sticker" style={{ width: 96, height: 96, objectFit: "contain", display: "block" }} />
+            </button>
+          ))}
+        </div>
       </div>
     </FullScreenBackdrop>
   );
@@ -1091,7 +1161,27 @@ export default function HarpersBedtimeApp() {
     setThemeLocked(true); setScreen("routine");
   };
   const handleReset = () => { setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); setShowCelebration(false); setThemeLocked(false); setScreen("splash"); if (!FAMILY_MODE) { try { localStorage.removeItem("harper-progress"); } catch {} } };
-  const handleStickerPick = (sticker) => { if (!FAMILY_MODE) { setStickers(prev => [...prev, sticker]); try { localStorage.removeItem("harper-progress"); } catch {} } setScreen("countdown"); };
+  const handleStickerPick = (sticker) => {
+    if (!FAMILY_MODE) {
+      setStickers(prev => {
+        const next = [...prev, sticker];
+        // Trigger super sticker unlock on every 3rd copy of the same image sticker
+        if (isImageSticker(sticker) && next.filter(s => s === sticker).length % 3 === 0) {
+          setTimeout(() => setScreen("superStickerPick"), 0);
+        } else {
+          setTimeout(() => setScreen("countdown"), 0);
+        }
+        return next;
+      });
+      try { localStorage.removeItem("harper-progress"); } catch {}
+    } else {
+      setScreen("countdown");
+    }
+  };
+  const handleSuperStickerPick = (sticker) => {
+    if (!FAMILY_MODE) setStickers(prev => [...prev, sticker]);
+    setScreen("countdown");
+  };
   const handleTimerStart = () => setTimerState({ running: true, paused: false });
   const handleTimerPause = () => { setTimerState(prev => ({ ...prev, paused: !prev.paused })); setBabyDollState(prev => prev.running ? { ...prev, paused: !prev.paused } : prev); };
   const handleBabyDollStart = (action, seconds) => { if (action === "setup") setBabyDollState(prev => ({ ...prev, setup: true })); else if (action === "start") setBabyDollState({ setup: true, running: true, paused: false, duration: seconds }); };
@@ -1099,6 +1189,7 @@ export default function HarpersBedtimeApp() {
   if (showShelf) return <TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} />;
   if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} />;
   if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={stickers} onOpenShelf={() => setShowShelf(true)} />;
+  if (screen === "superStickerPick") return <SuperStickerPick theme={theme} onPick={handleSuperStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
   if (screen === "dream") return <DreamScreen theme={theme} />;
 
