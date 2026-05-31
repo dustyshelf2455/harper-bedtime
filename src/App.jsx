@@ -20,7 +20,7 @@ const TASKS = [
 
 // ==================== STICKER IMAGES ====================
 // 20 per theme (princess-00..19, mermaid-00..19, kpop-00..19)
-// 15 super stickers in one sheet: rows 0/1/2 → princess/mermaid/kpop (super-00..14)
+// 15 super stickers: rows 0/1/2 → princess/mermaid/kpop (super-00..14)
 const STICKER_IMAGES = {
   princess: Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/princess-${String(i).padStart(2, "0")}.png`),
   mermaid:  Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/mermaid-${String(i).padStart(2, "0")}.png`),
@@ -36,6 +36,16 @@ const SUPER_STICKER_IMAGES = {
 // True for new image stickers; false for legacy emoji strings already on Harper's shelf
 const isImageSticker = (s) => typeof s === "string" && s.startsWith("/");
 const isSuperSticker = (s) => isImageSticker(s) && s.includes("/super-");
+
+// ==================== DEMO STICKERS (Dad Mode) ====================
+// Emoji stickers for the splash-screen trophy shelf preview.
+// When the routine starts in Dad Mode, these are replaced with 2 copies of each
+// theme image sticker so the first pick always triggers the super-sticker screen.
+const DEMO_STICKERS = [
+  "🦄","🌈","🎀","🦋","🌸","💖","🍓","🐱","🎠","🧸",
+  "🐬","🦀","🐙","🐳","🦩","🌺","🍉","🐰","🎪","🧁",
+  "⭐","🌙","🎵","🎨","🎭","🎤","⚡","💜","🐯",
+];
 
 // ==================== THEME COLORS ====================
 const THEMES = {
@@ -1009,7 +1019,7 @@ function DreamScreen({ theme }) {
 }
 
 // ==================== SPLASH SCREEN ====================
-function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode }) {
+function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode, demoMode, onEnterDemo, onExitDemo }) {
   const t = THEMES[theme];
   const [showResume, setShowResume] = useState(hasSavedProgress);
   return (
@@ -1056,9 +1066,16 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
         )}
         {familyMode ? (
           <div style={{ marginTop: "clamp(12px, 3dvh, 32px)", fontSize: 20, color: t.textMuted, fontFamily: "'Fredoka', sans-serif", letterSpacing: 0.5 }}>👨‍👩‍👧 Family Preview</div>
-        ) : (
-          <div style={{ marginTop: "clamp(12px, 3dvh, 32px)" }}>
+        ) : demoMode ? (
+          <div style={{ marginTop: "clamp(12px, 3dvh, 32px)", display: "flex", flexDirection: "column", gap: 10, alignItems: "stretch" }}>
+            <div style={{ fontSize: 24, color: t.accent, fontFamily: "'Fredoka', sans-serif", textAlign: "center", background: `${t.primary}22`, borderRadius: 14, padding: "8px 12px", border: `2px solid ${t.primary}44` }}>🎭 Dad Mode — changes not saved</div>
             <LudoButton theme={theme} size="small" onClick={onOpenShelf} style={{ animation: "none", background: "linear-gradient(180deg, #9B7ED8 0%, #7B5EB0 100%)", border: "4px solid #6B4E9E", boxShadow: "inset 0 -4px 0 #5A3D8A" }}>🏆 Trophy Shelf ({stickers.length})</LudoButton>
+            <LudoButton theme={theme} size="small" onClick={onExitDemo} style={{ animation: "none", background: `${t.primary}18`, border: `3px solid ${t.primary}44`, boxShadow: "none" }}>✕ Exit Dad Mode</LudoButton>
+          </div>
+        ) : (
+          <div style={{ marginTop: "clamp(12px, 3dvh, 32px)", display: "flex", flexDirection: "column", gap: 10, alignItems: "stretch" }}>
+            <LudoButton theme={theme} size="small" onClick={onOpenShelf} style={{ animation: "none", background: "linear-gradient(180deg, #9B7ED8 0%, #7B5EB0 100%)", border: "4px solid #6B4E9E", boxShadow: "inset 0 -4px 0 #5A3D8A" }}>🏆 Trophy Shelf ({stickers.length})</LudoButton>
+            <LudoButton theme={theme} size="small" onClick={onEnterDemo} style={{ animation: "none", background: `${t.primary}18`, border: `3px solid ${t.primary}33`, boxShadow: "none" }}>🎭 Dad Mode</LudoButton>
           </div>
         )}
       </div>
@@ -1130,15 +1147,18 @@ export default function HarpersBedtimeApp() {
   const [babyDollState, setBabyDollState] = useState({ setup: false, running: false, paused: false, duration: 0 });
   const [stickers, setStickers] = useState(() => { if (FAMILY_MODE) return []; try { return JSON.parse(localStorage.getItem("harper-stickers") || "[]"); } catch { return []; } });
   const [savedProgress] = useState(() => { if (FAMILY_MODE) return null; try { const s = localStorage.getItem("harper-progress"); return s ? JSON.parse(s) : null; } catch { return null; } });
+  const [demoMode, setDemoMode] = useState(false);
+  const [demoStickers, setDemoStickers] = useState(() => [...DEMO_STICKERS]);
+  const effectiveStickers = demoMode ? demoStickers : stickers;
   const completedCount = Object.values(completedTasks).filter(Boolean).length;
 
   useEffect(() => {
-    if (FAMILY_MODE) return;
+    if (FAMILY_MODE || demoMode) return;
     if (screen === "routine" && completedCount > 0) {
       try { localStorage.setItem("harper-progress", JSON.stringify({ completedTasks, currentIndex, theme, viewingIndex })); } catch {}
     }
-  }, [completedTasks, currentIndex, screen]);
-  useEffect(() => { if (FAMILY_MODE) return; try { localStorage.setItem("harper-stickers", JSON.stringify(stickers)); } catch {} }, [stickers]);
+  }, [completedTasks, currentIndex, screen, demoMode]);
+  useEffect(() => { if (FAMILY_MODE || demoMode) return; try { localStorage.setItem("harper-stickers", JSON.stringify(stickers)); } catch {} }, [stickers, demoMode]);
 
   const handleComplete = useCallback((taskId) => {
     if (completedTasks[taskId]) return;
@@ -1158,15 +1178,29 @@ export default function HarpersBedtimeApp() {
 
   const handleNavigate = (idx) => { setViewingIndex(idx); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); };
   const handleStartRoutine = (resume) => {
-    if (resume && savedProgress) { setCompletedTasks(savedProgress.completedTasks || {}); setCurrentIndex(savedProgress.currentIndex || 0); setViewingIndex(savedProgress.viewingIndex || savedProgress.currentIndex || 0); setTheme(savedProgress.theme || "princess"); }
+    if (resume && savedProgress && !demoMode) { setCompletedTasks(savedProgress.completedTasks || {}); setCurrentIndex(savedProgress.currentIndex || 0); setViewingIndex(savedProgress.viewingIndex || savedProgress.currentIndex || 0); setTheme(savedProgress.theme || "princess"); }
+    if (demoMode) {
+      // Pre-load 2 copies of each theme sticker so the first pick is always the 3rd copy → super sticker triggers
+      const pool = STICKER_IMAGES[theme] || STICKER_IMAGES.princess;
+      setDemoStickers([...pool, ...pool]);
+    }
     setThemeLocked(true); setScreen("routine");
   };
-  const handleReset = () => { setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); setShowCelebration(false); setThemeLocked(false); setScreen("splash"); if (!FAMILY_MODE) { try { localStorage.removeItem("harper-progress"); } catch {} } };
+  const handleReset = () => { setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0); setTimerState({ running: false, paused: false }); setBabyDollState({ setup: false, running: false, paused: false, duration: 0 }); setShowCelebration(false); setThemeLocked(false); setScreen("splash"); if (!FAMILY_MODE && !demoMode) { try { localStorage.removeItem("harper-progress"); } catch {} } };
   const handleStickerPick = (sticker) => {
-    if (!FAMILY_MODE) {
+    if (demoMode) {
+      setDemoStickers(prev => {
+        const next = [...prev, sticker];
+        if (isImageSticker(sticker) && next.filter(s => s === sticker).length % 3 === 0) {
+          setTimeout(() => setScreen("superStickerPick"), 0);
+        } else {
+          setTimeout(() => setScreen("countdown"), 0);
+        }
+        return next;
+      });
+    } else if (!FAMILY_MODE) {
       setStickers(prev => {
         const next = [...prev, sticker];
-        // Trigger super sticker unlock on every 3rd copy of the same image sticker
         if (isImageSticker(sticker) && next.filter(s => s === sticker).length % 3 === 0) {
           setTimeout(() => setScreen("superStickerPick"), 0);
         } else {
@@ -1180,16 +1214,25 @@ export default function HarpersBedtimeApp() {
     }
   };
   const handleSuperStickerPick = (sticker) => {
-    if (!FAMILY_MODE) setStickers(prev => [...prev, sticker]);
+    if (demoMode) { setDemoStickers(prev => [...prev, sticker]); }
+    else if (!FAMILY_MODE) { setStickers(prev => [...prev, sticker]); }
     setScreen("countdown");
   };
   const handleTimerStart = () => setTimerState({ running: true, paused: false });
   const handleTimerPause = () => { setTimerState(prev => ({ ...prev, paused: !prev.paused })); setBabyDollState(prev => prev.running ? { ...prev, paused: !prev.paused } : prev); };
   const handleBabyDollStart = (action, seconds) => { if (action === "setup") setBabyDollState(prev => ({ ...prev, setup: true })); else if (action === "start") setBabyDollState({ setup: true, running: true, paused: false, duration: seconds }); };
+  const handleEnterDemo = () => { setDemoMode(true); setDemoStickers([...DEMO_STICKERS]); };
+  const handleExitDemo = () => {
+    setDemoMode(false); setDemoStickers([...DEMO_STICKERS]);
+    setCompletedTasks({}); setCurrentIndex(0); setViewingIndex(0);
+    setTimerState({ running: false, paused: false });
+    setBabyDollState({ setup: false, running: false, paused: false, duration: 0 });
+    setShowCelebration(false); setThemeLocked(false); setScreen("splash");
+  };
 
-  if (showShelf) return <TrophyShelf stickers={stickers} onClose={() => setShowShelf(false)} theme={theme} />;
-  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={stickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} />;
-  if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={stickers} onOpenShelf={() => setShowShelf(true)} />;
+  if (showShelf) return <TrophyShelf stickers={effectiveStickers} onClose={() => setShowShelf(false)} theme={theme} />;
+  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!demoMode && !!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} demoMode={demoMode} onEnterDemo={handleEnterDemo} onExitDemo={handleExitDemo} />;
+  if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} />;
   if (screen === "superStickerPick") return <SuperStickerPick theme={theme} onPick={handleSuperStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
   if (screen === "dream") return <DreamScreen theme={theme} />;

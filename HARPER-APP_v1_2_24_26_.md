@@ -251,6 +251,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 | **Orientation** | **Portrait only** |
 | **Sound (v1)** | Silent — no audio. Sound design is a future phase. |
 | **Family Preview mode** | Activated via `?family` URL parameter. No localStorage reads or writes — Harper's stickers and progress are invisible and untouched. Trophy Shelf button is hidden; a "👨‍👩‍👧 Family Preview" label appears in its place. Everything else (theme picker, full routine, animations, sticker pick, dream screen) works normally. |
+| **Dad Mode (demo)** | Activated from the splash screen "🎭 Dad Mode" button. Pre-loads 29 fake stickers (all sets) so the full trophy shelf, sticker pick, and end-of-routine flow are all previewable. No localStorage reads or writes — Harper's data is never touched. A "🎭 Dad Mode — changes not saved" badge replaces the normal Trophy Shelf row; a "✕ Exit Dad Mode" button returns to normal mode. Exiting resets all routine state without touching localStorage. The "Start Bedtime" resume prompt is suppressed in Dad Mode. |
 
 ---
 
@@ -265,6 +266,20 @@ https://dustyshelf2455.github.io/harper-bedtime/?family
 - Family members can pick a theme, walk through all 11 tasks, and see the full experience
 - Harper's stickers and in-progress routine are never read or written
 - Sticker picks during a family session are discarded (not saved)
+
+---
+
+## Dad Mode
+
+Accessible from the splash screen via the "🎭 Dad Mode" button (below the Trophy Shelf button). No URL parameter needed.
+
+- Pre-loads 29 fake stickers across all three sticker sets so the trophy shelf looks full
+- Trophy Shelf button is visible and shows the fake stickers
+- The full routine (all 11 tasks, timers, sticker pick, countdown, dream screen) works normally
+- Any sticker picked during a Dad Mode run is added in-memory only and lost on exit
+- A "🎭 Dad Mode — changes not saved" badge and "✕ Exit Dad Mode" button appear on the splash screen
+- Exiting resets all routine state cleanly without touching localStorage
+- Harper's real stickers, progress, and seed data are never read or written
 
 ---
 
@@ -403,6 +418,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Fixed iOS standalone PWA bottom gap caused by `black-translucent` status bar style (see "iOS PWA Viewport Setup" section)
 - [x] Fit-and-finish batch 1: compressed artwork PNGs to WebP (22 MB → 1 MB, 92% reduction); moved GLOBAL_STYLES and Google Fonts to `index.html` (single injection, preconnect + wght@600;700 only); added `<link rel="preload">` for character + frame images; added `prefers-reduced-motion` support (ambient loops pause, reward animations complete instantly); added `touch-action: manipulation` to all buttons (removes iOS 300 ms tap delay); guarded `handleComplete` against double-invocation; fixed stale `onComplete` closure in `SandTimer`; `DreamScreen` floaters stabilised via `useMemo`; countdown no longer flashes "0"; `TrophyShelf` sticker grid is now scrollable; `LudoButton` handles `onPointerCancel`; sticker-pick buttons have press-scale feedback; `aria-label` on all progress tracker buttons.
 - [x] Added Family Preview mode (`?family` URL param): hides Trophy Shelf button, skips all localStorage reads/writes so Harper's stickers and progress are never exposed or affected. Family gets a shareable link; Harper's URL is unchanged.
+- [x] Added **Dad Mode** demo preview: "🎭 Dad Mode" button on splash screen pre-loads 29 fake stickers for full preview (trophy shelf, sticker pick, full routine). Zero localStorage reads/writes — Harper's data untouched. Badge + "Exit Dad Mode" button shown when active.
 - [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
 - [x] Added **Demon Hunter** mode (K-pop Demon Hunters inspired, Rumi-styled guide character) as a third theme alongside Princess and Mermaid. Internal code key `kpop`, button label "🎤 Demon Hunter". Includes: Rumi-inspired guide character (normal/victory/sleep poses), Gothic neon stage frame, purple-mic progress-tracker icon, dedicated `NeonField` magenta/cyan starfield ambient layer, kpop-themed celebration & ambient particle sets, a 4th sticker set (`🎤⚡✨🎵💜🌟🐯💖🎀🦋`), per-task kpop icons, dream message "Couch! Couch! Couch! Sleep well, Hunter!". Splash screen theme picker reflows to a 2+1 grid (Princess/Mermaid top, Demon Hunter full-width below). Palette: electric purple `#9D4EDD` primary, magenta `#FF6EC7` accent, dark purple backgrounds.
 
