@@ -1095,7 +1095,7 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
       {showFastForward && <FastForwardButton theme={theme} onPress={() => onComplete(task.id)} />}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px", position: "relative", zIndex: 10, gap: 16 }}>
         <div key={done ? "victory" : "normal"} style={{ animation: done ? undefined : "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={112} variant={done ? "victory" : "normal"} /></div>
-        {!(isTimer && timerState.running) && !(isBabyDoll && babyDollState.running) && (
+        {!(isTimer && timerState.running) && !(isBabyDoll && babyDollState.setup) && (
           <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{task[`${theme}Icon`] || task.icon}</div>
         )}
         <div style={{ fontSize: 36, fontWeight: 700, color: t.textPrimary, textAlign: "center", animation: "fadeInUp 0.3s ease 0.2s both", textShadow: `0 2px 12px ${t.shadowColor}` }}>{task.label}</div>
