@@ -1018,13 +1018,404 @@ function DreamScreen({ theme }) {
   );
 }
 
+// ==================== BIRTHDAY FEATURE ====================
+const BIRTHDAY_CODE = "4359";
+const BIRTHDAY_CHARS = ["princess", "mermaid", "kpop"];
+const TAPS_TO_GIFT = 5;
+const BACK_TAPS_TO_EXIT = 5;
+
+// PIN Pad — 4-digit parent code gate
+function PinPad({ onSuccess, onCancel }) {
+  const [digits, setDigits] = useState([]);
+  const [shake, setShake] = useState(false);
+
+  const handleDigit = (d) => {
+    if (shake || digits.length >= 4) return;
+    const next = [...digits, d];
+    setDigits(next);
+    if (next.length === 4) {
+      if (next.join("") === BIRTHDAY_CODE) {
+        onSuccess();
+      } else {
+        setShake(true);
+        setTimeout(() => { setShake(false); setDigits([]); }, 700);
+      }
+    }
+  };
+
+  const handleDelete = () => { if (!shake) setDigits(prev => prev.slice(0, -1)); };
+
+  const KEYS = [1, 2, 3, 4, 5, 6, 7, 8, 9, null, 0, "del"];
+
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 99999,
+      background: "rgba(5,0,20,0.97)",
+      display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+      fontFamily: "'Fredoka', sans-serif",
+      animation: "fadeIn 0.25s ease",
+    }}>
+      <div style={{ fontSize: 28, color: "rgba(240,194,57,0.9)", marginBottom: 24, letterSpacing: 1 }}>🔒 Enter Code</div>
+      <div style={{ display: "flex", gap: 14, marginBottom: 36, animation: shake ? "shake 0.6s ease" : "none" }}>
+        {[0, 1, 2, 3].map(i => (
+          <div key={i} style={{
+            width: 22, height: 22, borderRadius: "50%",
+            background: i < digits.length ? (shake ? "#FF4444" : "#F0C239") : "rgba(255,255,255,0.18)",
+            boxShadow: i < digits.length && !shake ? "0 0 12px #F0C23988" : "none",
+            transition: "background 0.15s ease",
+          }} />
+        ))}
+      </div>
+      <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 10, width: 248 }}>
+        {KEYS.map((d, i) => {
+          const isEmpty = d === null;
+          const isDel = d === "del";
+          return (
+            <button key={i}
+              onClick={() => isEmpty ? null : isDel ? handleDelete() : handleDigit(String(d))}
+              style={{
+                height: 68, borderRadius: 18,
+                background: isEmpty ? "transparent" : isDel ? "rgba(255,80,80,0.18)" : "rgba(255,255,255,0.1)",
+                border: isEmpty ? "none" : `2px solid ${isDel ? "rgba(255,80,80,0.35)" : "rgba(255,255,255,0.18)"}`,
+                color: "#FFFDF5", fontSize: isDel ? 24 : 30, fontWeight: 700,
+                cursor: isEmpty ? "default" : "pointer",
+                fontFamily: "'Fredoka', sans-serif", touchAction: "manipulation",
+                pointerEvents: isEmpty ? "none" : "auto",
+              }}
+            >{isDel ? "⌫" : d === null ? "" : d}</button>
+          );
+        })}
+      </div>
+      <button onClick={onCancel} style={{
+        marginTop: 28, background: "none", border: "none",
+        color: "rgba(255,255,255,0.35)", fontSize: 22,
+        cursor: "pointer", fontFamily: "'Fredoka', sans-serif", touchAction: "manipulation",
+      }}>Cancel</button>
+    </div>
+  );
+}
+
+// Rainbow confetti using all three theme emoji sets
+function BirthdayParticles() {
+  const emojis = ["✨", "🎉", "🎊", "💖", "💎", "💜", "⭐", "🌟", "🎈", "🎁", "👑", "🐚", "🎤", "⚡", "🎵"];
+  const particles = useMemo(() =>
+    Array.from({ length: 22 }, (_, i) => ({
+      id: i, x: Math.random() * 100,
+      size: Math.random() * 14 + 10,
+      delay: Math.random() * 8, duration: Math.random() * 8 + 6,
+      emoji: emojis[i % emojis.length],
+    })), []);
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 3, overflow: "hidden" }}>
+      {particles.map(p => (
+        <div key={p.id} style={{
+          position: "absolute", left: `${p.x}%`, bottom: "-5%", fontSize: p.size,
+          animation: `floatUp ${p.duration}s ease-in-out ${p.delay}s infinite`, opacity: 0,
+        }}>{p.emoji}</div>
+      ))}
+    </div>
+  );
+}
+
+// Full-screen sticker haul reveal for one character's birthday present
+function BirthdayStickerReveal({ char, regularStickers, superStickers, onCollect }) {
+  const t = THEMES[char];
+  const [collected, setCollected] = useState(false);
+  const total = regularStickers.length + superStickers.length;
+  return (
+    <div style={{
+      position: "fixed", inset: 0, zIndex: 1000,
+      background: `radial-gradient(ellipse at 50% 20%, ${t.bg1} 0%, ${t.bg2} 60%, ${t.bg3} 100%)`,
+      display: "flex", flexDirection: "column", alignItems: "center",
+      fontFamily: "'Fredoka', sans-serif", animation: "fadeIn 0.35s ease",
+      overflowY: "auto", WebkitOverflowScrolling: "touch",
+    }}>
+      <div className="safe-top" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 20px 48px" }}>
+        <GuideCharacter theme={char} size={100} variant="victory" />
+        <div style={{ fontSize: 32, fontWeight: 700, color: t.accent, marginTop: 12, marginBottom: 4, textShadow: `0 0 20px ${t.primary}`, textAlign: "center" }}>
+          🎁 Birthday Pack!
+        </div>
+        <div style={{ fontSize: 22, color: t.textSecondary, marginBottom: 20, textAlign: "center" }}>
+          {total} new stickers for your shelf!
+        </div>
+
+        <div style={{ fontSize: 20, color: t.textMuted, marginBottom: 8, alignSelf: "flex-start" }}>✨ Theme stickers</div>
+        <div style={{
+          display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8,
+          width: "100%", padding: 12, marginBottom: 16,
+          background: `${t.primary}12`, borderRadius: 22, border: `2px solid ${t.primary}33`,
+        }}>
+          {regularStickers.map((s, i) => (
+            <div key={i} style={{
+              padding: 5, borderRadius: 12, textAlign: "center",
+              background: `${t.primary}18`,
+              animation: `gemPop 0.4s ease ${i * 0.07}s both`,
+            }}>
+              <img src={s} alt="sticker" style={{ width: 46, height: 46, objectFit: "contain", display: "block", margin: "0 auto" }} />
+            </div>
+          ))}
+        </div>
+
+        <div style={{ fontSize: 20, color: t.accent, marginBottom: 8, alignSelf: "flex-start" }}>⭐ Super stickers</div>
+        <div style={{
+          display: "flex", gap: 16, justifyContent: "center",
+          width: "100%", padding: 12, marginBottom: 28,
+          background: `${t.accent}15`, borderRadius: 22,
+          border: `2px solid ${t.accent}44`,
+          boxShadow: `0 0 20px ${t.accent}22`,
+        }}>
+          {superStickers.map((s, i) => (
+            <div key={i} style={{
+              padding: 8, borderRadius: 16, textAlign: "center",
+              background: `${t.accent}18`, border: `2px solid ${t.accent}44`,
+              boxShadow: `0 0 12px ${t.accent}33`,
+              animation: `gemPop 0.4s ease ${regularStickers.length * 0.07 + i * 0.12}s both`,
+            }}>
+              <img src={s} alt="super sticker" style={{ width: 66, height: 66, objectFit: "contain", display: "block", margin: "0 auto" }} />
+            </div>
+          ))}
+        </div>
+
+        <LudoButton theme={char} size="large" onClick={() => { if (!collected) { setCollected(true); onCollect(); } }}>
+          {collected ? "✨ Added to shelf!" : `Add ${total} stickers to shelf! ✨`}
+        </LudoButton>
+      </div>
+    </div>
+  );
+}
+
+// Main birthday experience — three characters, tap-to-gift, sticker reveals, sleep finale
+function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpenShelf }) {
+  const [tapCounts, setTapCounts] = useState({ princess: 0, mermaid: 0, kpop: 0 });
+  const [charPhase, setCharPhase] = useState({ princess: "active", mermaid: "active", kpop: "active" });
+  const [tick, setTick] = useState(0);
+  const [revealData, setRevealData] = useState(null);
+  const [backTaps, setBackTaps] = useState(0);
+  const backResetRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => setTick(t => t + 1), 2200);
+    return () => clearInterval(timer);
+  }, []);
+
+  useEffect(() => () => clearTimeout(backResetRef.current), []);
+
+  const getPose = (char) => {
+    if (charPhase[char] === "sleeping") return "sleep";
+    if (charPhase[char] === "gifted") return "normal";
+    return tick % 2 === 0 ? "normal" : "victory";
+  };
+
+  const allSleeping = BIRTHDAY_CHARS.every(c => charPhase[c] === "sleeping");
+
+  const handleCharTap = (char) => {
+    const phase = charPhase[char];
+    if (phase === "sleeping") return;
+    if (phase === "gifted") {
+      const regular = [...STICKER_IMAGES[char]].sort(() => Math.random() - 0.5).slice(0, 10);
+      const superSet = [...SUPER_STICKER_IMAGES[char]].sort(() => Math.random() - 0.5).slice(0, 2);
+      setRevealData({ char, regular, superSet });
+      return;
+    }
+    const next = tapCounts[char] + 1;
+    if (next >= TAPS_TO_GIFT) {
+      setTapCounts(prev => ({ ...prev, [char]: TAPS_TO_GIFT }));
+      setCharPhase(prev => ({ ...prev, [char]: "gifted" }));
+    } else {
+      setTapCounts(prev => ({ ...prev, [char]: next }));
+    }
+  };
+
+  const handleCollect = () => {
+    const { char, regular, superSet } = revealData;
+    onCollectStickers([...regular, ...superSet]);
+    setRevealData(null);
+    setCharPhase(prev => ({ ...prev, [char]: "sleeping" }));
+  };
+
+  const handleBackTap = () => {
+    const next = backTaps + 1;
+    clearTimeout(backResetRef.current);
+    if (next >= BACK_TAPS_TO_EXIT) {
+      setBackTaps(0);
+      onClose();
+    } else {
+      setBackTaps(next);
+      backResetRef.current = setTimeout(() => setBackTaps(0), 3000);
+    }
+  };
+
+  return (
+    <>
+      {revealData && (
+        <BirthdayStickerReveal
+          char={revealData.char}
+          regularStickers={revealData.regular}
+          superStickers={revealData.superSet}
+          onCollect={handleCollect}
+        />
+      )}
+      <div style={{
+        position: "fixed", inset: 0, zIndex: 500,
+        background: "radial-gradient(ellipse at 30% 20%, #3d2660 0%, transparent 55%), radial-gradient(ellipse at 72% 25%, #0d2847 0%, transparent 50%), radial-gradient(ellipse at 50% 80%, #1f0a3a 0%, transparent 55%), #070214",
+        display: "flex", flexDirection: "column",
+        fontFamily: "'Fredoka', sans-serif", overflow: "hidden",
+        animation: "fadeIn 0.4s ease",
+      }}>
+        <BirthdayParticles />
+        <div className="safe-top" style={{ position: "relative", zIndex: 10, flex: 1, display: "flex", flexDirection: "column" }}>
+          {/* Header: back button + trophy shelf */}
+          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px" }}>
+            <div style={{ position: "relative" }}>
+              <button onClick={handleBackTap} style={{
+                width: 48, height: 48, borderRadius: 16,
+                background: `rgba(240,194,57,${0.08 + backTaps * 0.1})`,
+                border: `2px solid rgba(240,194,57,${0.15 + backTaps * 0.12})`,
+                color: "#F0C239", fontSize: 22, cursor: "pointer",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                touchAction: "manipulation", transition: "all 0.15s ease",
+              }}>←</button>
+              {backTaps > 0 && (
+                <div style={{ position: "absolute", bottom: -14, left: "50%", transform: "translateX(-50%)", display: "flex", gap: 4 }}>
+                  {Array.from({ length: BACK_TAPS_TO_EXIT - 1 }, (_, i) => (
+                    <div key={i} style={{
+                      width: 6, height: 6, borderRadius: "50%",
+                      background: i < backTaps ? "#F0C239" : "rgba(255,255,255,0.2)",
+                    }} />
+                  ))}
+                </div>
+              )}
+            </div>
+            <button onClick={onOpenShelf} style={{
+              padding: "8px 14px", borderRadius: 16,
+              background: "rgba(155,126,216,0.25)", border: "2px solid rgba(155,126,216,0.45)",
+              color: "#FFFDF5", fontSize: 20, fontWeight: 600,
+              cursor: "pointer", fontFamily: "'Fredoka', sans-serif", touchAction: "manipulation",
+            }}>🏆 {shelfCount}</button>
+          </div>
+
+          {/* Rainbow title */}
+          <div style={{
+            fontSize: "clamp(21px, 4dvh, 30px)", fontWeight: 700,
+            background: "linear-gradient(90deg, #E84B8A, #F0C239, #1AACA8, #9D4EDD, #E84B8A)",
+            WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
+            backgroundClip: "text", backgroundSize: "200% auto",
+            animation: "shimmer 3s linear infinite",
+            textAlign: "center", padding: "2px 12px 8px",
+          }}>🎂 Happy Birthday Harper! 🎂</div>
+
+          {/* Three character zones */}
+          <div style={{
+            display: "flex", justifyContent: "space-around", alignItems: "flex-end",
+            flex: 1, padding: "4px 4px 0", gap: 3, minHeight: 0,
+          }}>
+            {BIRTHDAY_CHARS.map(char => {
+              const phase = charPhase[char];
+              const taps = tapCounts[char];
+              const pose = getPose(char);
+              const t = THEMES[char];
+              const imgSrc = pose === "sleep" ? t.guideSleep : pose === "victory" ? t.guideVictory : t.guide;
+
+              return (
+                <div key={char}
+                  onClick={() => handleCharTap(char)}
+                  style={{
+                    flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
+                    justifyContent: "flex-end", gap: 6,
+                    cursor: phase !== "sleeping" ? "pointer" : "default",
+                    padding: "6px 3px 10px",
+                    borderRadius: 20,
+                    background: phase === "gifted" ? `${t.primary}20` : "transparent",
+                    border: `2px solid ${phase === "gifted" ? t.primary + "55" : "transparent"}`,
+                    transition: "all 0.3s ease",
+                    userSelect: "none", touchAction: "manipulation",
+                    minHeight: 0,
+                  }}
+                >
+                  {/* Character image or gift */}
+                  <div style={{ flex: 1, display: "flex", alignItems: "flex-end", justifyContent: "center", minHeight: 0 }}>
+                    {phase === "gifted" ? (
+                      <div style={{
+                        fontSize: "clamp(54px, 10dvh, 78px)", lineHeight: 1,
+                        animation: "giftBounce 1s ease-in-out infinite",
+                        filter: `drop-shadow(0 0 14px ${t.primary}99)`,
+                      }}>🎁</div>
+                    ) : (
+                      <img src={imgSrc} alt={char} style={{
+                        maxHeight: "clamp(115px, 20dvh, 185px)",
+                        width: "auto", objectFit: "contain",
+                        animation: phase === "active" ? "floatGentle 3s ease-in-out infinite" : undefined,
+                        transition: "opacity 0.5s ease",
+                      }} />
+                    )}
+                  </div>
+
+                  {/* Tap progress dots */}
+                  {phase === "active" && (
+                    <div style={{ display: "flex", gap: 4 }}>
+                      {Array.from({ length: TAPS_TO_GIFT }, (_, i) => (
+                        <div key={i} style={{
+                          width: 7, height: 7, borderRadius: "50%",
+                          background: i < taps ? t.primary : `${t.textMuted}44`,
+                          boxShadow: i < taps ? `0 0 6px ${t.primary}` : "none",
+                          transition: "all 0.2s ease",
+                        }} />
+                      ))}
+                    </div>
+                  )}
+                  {phase === "gifted" && (
+                    <div style={{ fontSize: 15, color: t.accent, fontWeight: 600, textAlign: "center" }}>Tap! ✨</div>
+                  )}
+                  {phase === "sleeping" && (
+                    <div style={{ fontSize: 18, color: t.textMuted }}>💤</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
+          {/* Sleep finale — prompt to tap back 5× */}
+          {allSleeping && (
+            <div style={{ textAlign: "center", padding: "10px 24px", animation: "fadeInUp 0.5s ease" }}>
+              <div style={{ fontSize: 20, color: "rgba(240,194,57,0.8)" }}>
+                🌙 Tap ← five times to return
+              </div>
+            </div>
+          )}
+
+          <div className="safe-bottom" />
+        </div>
+      </div>
+    </>
+  );
+}
+
 // ==================== SPLASH SCREEN ====================
-function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode, demoMode, onEnterDemo, onExitDemo }) {
+function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode, demoMode, onEnterDemo, onExitDemo, onBirthdayPress, birthdayPinOpen, onBirthdayPinSuccess, onBirthdayPinCancel }) {
   const t = THEMES[theme];
   const [showResume, setShowResume] = useState(hasSavedProgress);
   return (
-    <FullScreenBackdrop theme={theme} showFrame={true}>
-      <div style={{ padding: "clamp(12px, 3dvh, 40px) 24px", textAlign: "center", width: "100%", maxWidth: 400 }}>
+    <>
+      {birthdayPinOpen && <PinPad onSuccess={onBirthdayPinSuccess} onCancel={onBirthdayPinCancel} />}
+      <FullScreenBackdrop theme={theme} showFrame={true}>
+        {!familyMode && (
+          <button
+            onClick={onBirthdayPress}
+            aria-label="Birthday surprise"
+            style={{
+              position: "fixed",
+              top: "calc(env(safe-area-inset-top, 0px) + 8px)",
+              left: 12,
+              width: 44, height: 44, borderRadius: 14,
+              background: "rgba(240,194,57,0.1)",
+              border: "1.5px solid rgba(240,194,57,0.22)",
+              fontSize: 22, display: "flex", alignItems: "center", justifyContent: "center",
+              cursor: "pointer", touchAction: "manipulation", zIndex: 50,
+              opacity: 0.55,
+            }}
+          >🎂</button>
+        )}
+        <div style={{ padding: "clamp(12px, 3dvh, 40px) 24px", textAlign: "center", width: "100%", maxWidth: 400 }}>
         <div style={{ marginBottom: "clamp(12px, 2.5dvh, 32px)", animation: "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={144} splashMode={true} /></div>
         <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "clamp(6px, 1dvh, 12px)", marginBottom: "clamp(12px, 2.5dvh, 32px)", justifyItems: "stretch" }}>
           {[
@@ -1080,6 +1471,7 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
         )}
       </div>
     </FullScreenBackdrop>
+    </>
   );
 }
 
@@ -1149,6 +1541,7 @@ export default function HarpersBedtimeApp() {
   const [savedProgress] = useState(() => { if (FAMILY_MODE) return null; try { const s = localStorage.getItem("harper-progress"); return s ? JSON.parse(s) : null; } catch { return null; } });
   const [demoMode, setDemoMode] = useState(false);
   const [demoStickers, setDemoStickers] = useState(() => [...DEMO_STICKERS]);
+  const [birthdayPinOpen, setBirthdayPinOpen] = useState(false);
   const effectiveStickers = demoMode ? demoStickers : stickers;
   const completedCount = Object.values(completedTasks).filter(Boolean).length;
 
@@ -1229,9 +1622,21 @@ export default function HarpersBedtimeApp() {
     setBabyDollState({ setup: false, running: false, paused: false, duration: 0 });
     setShowCelebration(false); setThemeLocked(false); setScreen("splash");
   };
+  const handleBirthdayCollect = (newStickers) => {
+    if (demoMode) { setDemoStickers(prev => [...prev, ...newStickers]); }
+    else if (!FAMILY_MODE) { setStickers(prev => [...prev, ...newStickers]); }
+  };
 
   if (showShelf) return <TrophyShelf stickers={effectiveStickers} onClose={() => setShowShelf(false)} theme={theme} />;
-  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!demoMode && !!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} demoMode={demoMode} onEnterDemo={handleEnterDemo} onExitDemo={handleExitDemo} />;
+  if (screen === "birthday") return (
+    <BirthdaySurpriseScreen
+      onClose={() => setScreen("splash")}
+      onCollectStickers={handleBirthdayCollect}
+      shelfCount={effectiveStickers.length}
+      onOpenShelf={() => setShowShelf(true)}
+    />
+  );
+  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!demoMode && !!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} demoMode={demoMode} onEnterDemo={handleEnterDemo} onExitDemo={handleExitDemo} onBirthdayPress={() => setBirthdayPinOpen(true)} birthdayPinOpen={birthdayPinOpen} onBirthdayPinSuccess={() => { setBirthdayPinOpen(false); setScreen("birthday"); }} onBirthdayPinCancel={() => setBirthdayPinOpen(false)} />;
   if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} />;
   if (screen === "superStickerPick") return <SuperStickerPick theme={theme} onPick={handleSuperStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
