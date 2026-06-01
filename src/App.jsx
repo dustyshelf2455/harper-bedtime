@@ -1078,7 +1078,9 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
       {showFastForward && <FastForwardButton theme={theme} onPress={() => onComplete(task.id)} />}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "0 24px", position: "relative", zIndex: 10, gap: 16 }}>
         <div key={done ? "victory" : "normal"} style={{ animation: done ? undefined : "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={112} variant={done ? "victory" : "normal"} /></div>
-        <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{task[`${theme}Icon`] || task.icon}</div>
+        {!(isTimer && timerState.running) && !(isBabyDoll && babyDollState.running) && (
+          <div style={{ fontSize: 64, marginBottom: 4, animation: "fadeInUp 0.3s ease 0.1s both" }}>{task[`${theme}Icon`] || task.icon}</div>
+        )}
         <div style={{ fontSize: 36, fontWeight: 700, color: t.textPrimary, textAlign: "center", animation: "fadeInUp 0.3s ease 0.2s both", textShadow: `0 2px 12px ${t.shadowColor}` }}>{task.label}</div>
         {task.counter && <div style={{ fontSize: 26, color: t.textSecondary, animation: "fadeInUp 0.3s ease 0.25s both" }}>📚 {task.counter}</div>}
         {isTimer && !done && (
@@ -1098,7 +1100,6 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
               <BabyDollSetup onStart={(secs) => onBabyDollStart("start", secs)} theme={theme} />
             ) : (
               <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 12 }}>
-                <div style={{ fontSize: 24, color: t.textSecondary }}>🍼 Feed salad & tuck dolls in!</div>
                 <SandTimer seconds={babyDollState.duration} theme={theme} running={true} paused={babyDollState.paused} onComplete={() => onComplete("babydolls")} onTogglePause={onTimerPause} />
               </div>
             )}
