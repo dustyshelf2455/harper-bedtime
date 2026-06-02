@@ -1098,7 +1098,7 @@ function Countdown({ theme, onDone }) {
 }
 
 // ==================== DREAM SCREEN ====================
-function DreamScreen({ theme }) {
+function DreamScreen({ theme, onBack }) {
   const t = THEMES[theme];
   const sets = {
     princess: ["⭐", "✨", "🌟", "💫", "🌙"],
@@ -1117,6 +1117,27 @@ function DreamScreen({ theme }) {
     })), []);
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
+      {/* Discreet parent control: return to the main menu once Harper is asleep */}
+      {onBack && (
+        <button
+          onClick={onBack}
+          aria-label="Back to main menu"
+          style={{
+            position: "fixed",
+            top: "calc(env(safe-area-inset-top, 0px) + 8px)",
+            left: 12,
+            minWidth: 44, height: 44, borderRadius: 14,
+            padding: "0 14px",
+            background: `${t.primary}1f`,
+            border: `1.5px solid ${t.primary}3a`,
+            color: t.textSecondary,
+            fontSize: 20, fontWeight: 600, fontFamily: "'Fredoka', sans-serif",
+            display: "flex", alignItems: "center", justifyContent: "center",
+            cursor: "pointer", touchAction: "manipulation", zIndex: 50,
+            opacity: 0.5,
+          }}
+        >← Menu</button>
+      )}
       {floaters.map(f => (
         <div key={f.id} style={{ position: "absolute", left: `${f.left}%`, bottom: "-10%", fontSize: f.size, zIndex: 3, animation: `floatUp ${f.duration}s ease-out ${f.delay}s infinite`, opacity: 0 }}>
           {f.emoji}
@@ -1858,7 +1879,7 @@ export default function HarpersBedtimeApp() {
   if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} />;
   if (screen === "superStickerPick") return <SuperStickerPick theme={theme} onPick={handleSuperStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
-  if (screen === "dream") return <DreamScreen theme={theme} />;
+  if (screen === "dream") return <DreamScreen theme={theme} onBack={handleReset} />;
 
   const currentTask = TASKS[viewingIndex];
   return (

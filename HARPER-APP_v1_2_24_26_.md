@@ -243,6 +243,10 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - Themed message: "Sweet dreams, Princess Harper!" or "Sleep tight, little mermaid!"
 - Floating stars/bubbles, themed background
 - **Stays up indefinitely** until parent resets from splash screen
+- A discreet **"← Menu"** back button sits in the upper-left corner (low
+  opacity, theme-tinted) so the parent can return to the splash screen
+  without reloading the app. Tapping it resets the routine and returns to
+  the main menu (same behavior as a manual reset).
 
 ---
 
@@ -256,7 +260,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 | **Navigating back to completed task** | Allowed freely — tapping a completed task in the progress tracker revisits it |
 | **Skipping a task** | No skip feature — parent just marks it done to continue |
 | **Theme switching mid-routine** | Not allowed — theme is locked at start from splash screen |
-| **Dream screen timeout** | None — stays up until parent resets |
+| **Dream screen timeout** | None — stays up until parent resets. A discreet "← Menu" button in the upper-left corner returns to the splash screen (resets the routine) without reloading the app. |
 | **Orientation** | **Portrait only** |
 | **Sound (v1)** | Silent — no audio. Sound design is a future phase. |
 | **Family Preview mode** | Activated via `?family` URL parameter. No localStorage reads or writes — Harper's stickers and progress are invisible and untouched. Trophy Shelf button is hidden; a "👨‍👩‍👧 Family Preview" label appears in its place. Everything else (theme picker, full routine, animations, sticker pick, dream screen) works normally. |
@@ -431,6 +435,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
 - [x] Added **Demon Hunter** mode (K-pop Demon Hunters inspired, Rumi-styled guide character) as a third theme alongside Princess and Mermaid. Internal code key `kpop`, button label "🎤 Demon Hunter". Includes: Rumi-inspired guide character (normal/victory/sleep poses), Gothic neon stage frame, purple-mic progress-tracker icon, dedicated `NeonField` magenta/cyan starfield ambient layer, kpop-themed celebration & ambient particle sets, a 4th sticker set (`🎤⚡✨🎵💜🌟🐯💖🎀🦋`), per-task kpop icons, dream message "Couch! Couch! Couch! Sleep well, Hunter!". Splash screen theme picker reflows to a 2+1 grid (Princess/Mermaid top, Demon Hunter full-width below). Palette: electric purple `#9D4EDD` primary, magenta `#FF6EC7` accent, dark purple backgrounds.
 - [x] **Trophy Shelf tiers + sticker detail view.** Reorganized the Trophy Shelf into two tiers: **super stickers** at the very top in their own accent-bordered area, rendered larger than regular stickers; **regular stickers** below in their own area. Stickers remain in earned order within each tier (split preserves original order). Tapping any sticker opens a new **enlarged detail view** (`StickerDetail`): the sticker is shown as large as possible inside a "presentation square" — a rounded, theme-colored (gold/accent for super) Ludo-style frame with an inner display mat, glow, and animated corner sparkles — with a "← Back to Shelf" button to return. The two tiers share one scroll container so the title, count, and back button stay fixed.
+- [x] Added a discreet **"← Menu"** back button to the **Dream Screen** (the character "sleeping mode" at the end of the routine). Previously there was no in-app way to return to the main menu once the dream screen appeared — the parent had to reload the app. The button sits in the upper-left corner at low opacity, theme-tinted, and on tap resets the routine and returns to the splash screen (reusing the existing `handleReset` flow, so it respects Family Preview / Dad Mode and clears `harper-progress` only in normal mode).
 - [x] Added **Birthday Surprise** hidden experience. A small 🎂 button in the upper-left corner of the splash screen (hidden in Family Preview mode) launches a 4-digit PIN gate (code: 4359). On entry, a full-screen birthday party screen appears showing all three characters (Princess, Mermaid, Demon Hunter) cycling between their normal and victory poses with rainbow fanfare and confetti. Each character has a 5-tap counter (dot progress indicator); reaching 5 taps reveals a 🎁 gift box for that character. Tapping the gift opens a sticker-haul screen: 10 randomly drawn stickers from the character's theme pack + 2 super stickers are revealed with a cascade animation and added to the shelf via an "Add to shelf!" button. Once a character's gift is collected, they enter their sleep pose (💤). After all three presents are opened and characters are sleeping, a "Tap ← five times to return" message appears; tapping the back button 5 times exits to the splash screen. Works in Dad Mode (stickers go to the in-memory demo collection only; Harper's real stickers are never touched). Flow: splash 🎂 → PIN → birthday screen → tap chars → open gifts → collect stickers → sleep finale → back ×5 → splash.
 
 ---
