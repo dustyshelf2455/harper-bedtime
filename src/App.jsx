@@ -462,13 +462,13 @@ function LudoButton({ children, onClick, theme, size = "large", disabled = false
 }
 
 // ==================== PROGRESS TRACKER ====================
-function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate }) {
+function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate, compact = false }) {
   const t = THEMES[theme];
   const completedCount = TASKS.filter(task => completedTasks[task.id]).length;
   const slotSize = 44;
 
   return (
-    <div style={{ paddingTop: 10, paddingLeft: 14, paddingRight: 14, paddingBottom: "calc(6px + env(safe-area-inset-bottom, 0px))", position: "relative", zIndex: 10 }}>
+    <div style={{ paddingTop: compact ? 4 : 10, paddingLeft: 14, paddingRight: 14, paddingBottom: "calc(6px + env(safe-area-inset-bottom, 0px))", position: "relative", zIndex: 10 }}>
       {/* Treasure tray background */}
       <div style={{
         background: t.treasuryBg,
@@ -935,7 +935,15 @@ function TrophyShelf({ stickers, onClose, theme }) {
 
   return (
     <FullScreenBackdrop theme={theme} showFrame={true}>
-      <div style={{ padding: "40px 20px", width: "100%", maxWidth: 440, textAlign: "center" }}>
+      <div style={{
+        padding: "40px 20px", width: "100%", maxWidth: 440, textAlign: "center",
+        ...(theme === "kpop" && {
+          background: "rgba(7, 2, 26, 0.72)",
+          borderRadius: 28,
+          border: "2px solid rgba(157, 78, 221, 0.28)",
+          margin: "0 12px",
+        }),
+      }}>
         <div style={{ fontSize: 36, fontWeight: 700, color: t.textPrimary, fontFamily: "'Fredoka', sans-serif", marginBottom: 8 }}>🏆 Trophy Shelf</div>
         <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 24 }}>{count} bedtime{count !== 1 ? "s" : ""} completed!</div>
         {count === 0 ? (
@@ -965,7 +973,9 @@ function TrophyShelf({ stickers, onClose, theme }) {
                 <div style={{
                   display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 12,
                   width: "100%", padding: 20,
-                  background: `${t.primary}12`, borderRadius: 28, border: `3px solid ${t.primary}33`,
+                  background: theme === "kpop" ? `${t.primary}30` : `${t.primary}12`,
+                  borderRadius: 28,
+                  border: `3px solid ${theme === "kpop" ? t.primary + "66" : t.primary + "33"}`,
                 }}>
                   {regularStickers.map((item) => stickerButton(item, false))}
                 </div>
@@ -994,7 +1004,15 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
         <div style={{ marginBottom: 16, animation: "floatGentle 2.5s ease-in-out infinite" }}><GuideCharacter theme={theme} size={120} /></div>
         <div style={{ fontSize: 32, fontWeight: 700, color: t.textPrimary, fontFamily: "'Fredoka', sans-serif", marginBottom: 8, animation: "fadeInUp 0.5s ease" }}>You did it! 🎉</div>
         <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 40, animation: "fadeInUp 0.5s ease 0.2s both" }}>Pick a sticker for your shelf!</div>
-        <div style={{ display: "flex", gap: 20, justifyContent: "center", animation: "fadeInUp 0.5s ease 0.4s both" }}>
+        <div style={{
+          display: "flex", gap: 20, justifyContent: "center", animation: "fadeInUp 0.5s ease 0.4s both",
+          ...(theme === "kpop" && {
+            background: "rgba(7, 2, 26, 0.78)",
+            borderRadius: 28,
+            padding: 16,
+            border: "2px solid rgba(157, 78, 221, 0.4)",
+          }),
+        }}>
           {options.map((sticker, i) => (
             <button
               key={i}
@@ -1005,7 +1023,8 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
               onPointerCancel={() => setPressedIdx(null)}
               style={{
                 padding: 16, borderRadius: 28,
-                border: `4px solid ${t.primary}66`, background: `${t.primary}18`,
+                border: `4px solid ${theme === "kpop" ? t.primary + "aa" : t.primary + "66"}`,
+                background: theme === "kpop" ? `${t.primary}44` : `${t.primary}18`,
                 cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
                 boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.secondary}` : t.insetShadow,
                 transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
@@ -1145,8 +1164,17 @@ function DreamScreen({ theme, onBack }) {
       ))}
       <div style={{ textAlign: "center", padding: "0 24px" }}>
         <div style={{ marginBottom: 20 }}><GuideCharacter theme={theme} size={144} variant="sleep" /></div>
-        <div style={{ fontSize: 34, fontFamily: "'Fredoka', sans-serif", color: t.accent, textShadow: `0 0 30px ${t.primary}66`, animation: "fadeInUp 1s ease-out", lineHeight: 1.3 }}>{t.dreamMsg}</div>
-        <div style={{ fontSize: 26, fontFamily: "'Fredoka', sans-serif", color: t.textMuted, marginTop: 16, animation: "fadeInUp 1s ease-out 0.3s both" }}>🌙</div>
+        <div style={{
+          ...(theme === "kpop" && {
+            background: "rgba(7, 2, 26, 0.82)",
+            borderRadius: 24,
+            border: "3px solid rgba(157, 78, 221, 0.5)",
+            padding: "20px 24px",
+          }),
+        }}>
+          <div style={{ fontSize: 34, fontFamily: "'Fredoka', sans-serif", color: t.accent, textShadow: `0 0 30px ${t.primary}66`, animation: "fadeInUp 1s ease-out", lineHeight: 1.3 }}>{t.dreamMsg}</div>
+          <div style={{ fontSize: 26, fontFamily: "'Fredoka', sans-serif", color: t.textMuted, marginTop: 16, animation: "fadeInUp 1s ease-out 0.3s both" }}>🌙</div>
+        </div>
       </div>
     </FullScreenBackdrop>
   );
@@ -1755,11 +1783,11 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
         )}
         {done && <div style={{ fontSize: 48, marginTop: 8, animation: "fadeIn 0.3s ease" }}>{ { princess: "👑", mermaid: "🐚", kpop: "🎤" }[theme] || "✨" }</div>}
       </div>
-      <div style={{ padding: "20px 24px 8px", position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: 12 }}>
-        {!done && task.type === "check" && <LudoButton theme={theme} size="large" onClick={() => onComplete(task.id)}>Done! ✨</LudoButton>}
-        {done && taskIndex < TASKS.length - 1 && <LudoButton theme={theme} size="large" onClick={() => onNavigate(currentIndex)}>Continue →</LudoButton>}
+      <div style={{ padding: theme === "kpop" ? "6px 24px 4px" : "20px 24px 8px", position: "relative", zIndex: 10, display: "flex", flexDirection: "column", gap: 12 }}>
+        {!done && task.type === "check" && <LudoButton theme={theme} size={theme === "kpop" ? "medium" : "large"} onClick={() => onComplete(task.id)}>Done! ✨</LudoButton>}
+        {done && taskIndex < TASKS.length - 1 && <LudoButton theme={theme} size={theme === "kpop" ? "medium" : "large"} onClick={() => onNavigate(currentIndex)}>Continue →</LudoButton>}
       </div>
-      <ProgressTracker completedTasks={completedTasks} currentIndex={currentIndex} theme={theme} onNavigate={onNavigate} />
+      <ProgressTracker completedTasks={completedTasks} currentIndex={currentIndex} theme={theme} onNavigate={onNavigate} compact={theme === "kpop"} />
     </SceneWrapper>
   );
 }
