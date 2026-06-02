@@ -825,42 +825,155 @@ function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 
   );
 }
 
+// ==================== ENLARGED STICKER VIEW ====================
+// Presents a single sticker as large as possible inside a cute "frame" so Harper
+// can inspect its detail. Used when a sticker on the Trophy Shelf is tapped.
+function StickerDetail({ sticker, theme, onBack }) {
+  const t = THEMES[theme];
+  const sup = isSuperSticker(sticker);
+  const frameColor = sup ? t.accent : t.primary;
+  const frameDark = sup ? t.accentDark : t.secondary;
+  const corners = [
+    { top: -16, left: -16 }, { top: -16, right: -16 },
+    { bottom: -16, left: -16 }, { bottom: -16, right: -16 },
+  ];
+  return (
+    <FullScreenBackdrop theme={theme} showFrame={true}>
+      <div style={{ padding: "40px 24px", width: "100%", maxWidth: 440, textAlign: "center", display: "flex", flexDirection: "column", alignItems: "center" }}>
+        {sup && (
+          <div style={{ fontSize: 30, fontWeight: 700, color: t.accent, fontFamily: "'Fredoka', sans-serif", marginBottom: 18, textShadow: `0 0 24px ${t.primary}`, animation: "fadeInUp 0.4s ease" }}>
+            ⭐ Super Sticker ⭐
+          </div>
+        )}
+        {/* Cute presentation square */}
+        <div style={{
+          position: "relative",
+          width: "min(80vw, 340px)", aspectRatio: "1 / 1",
+          borderRadius: 40,
+          background: `linear-gradient(160deg, ${frameColor}33 0%, ${frameColor}12 100%)`,
+          border: `6px solid ${frameColor}`,
+          boxShadow: `0 0 44px ${frameColor}66, inset 0 -6px 0 ${frameDark}, inset 0 3px 0 ${t.specularHighlight}`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          animation: "countPop 0.5s ease-out",
+        }}>
+          {/* Inner display mat */}
+          <div style={{
+            width: "82%", aspectRatio: "1 / 1", borderRadius: 30,
+            background: `radial-gradient(circle at 50% 38%, ${t.softBg}f2 0%, ${frameColor}26 100%)`,
+            border: `3px solid ${frameColor}aa`,
+            boxShadow: `inset 0 2px 14px ${frameDark}55`,
+            display: "flex", alignItems: "center", justifyContent: "center",
+          }}>
+            {isImageSticker(sticker)
+              ? <img src={sticker} alt="sticker" style={{ width: "80%", height: "80%", objectFit: "contain", display: "block", filter: `drop-shadow(0 4px 10px ${frameDark}66)` }} />
+              : <span style={{ fontSize: "clamp(90px, 32vw, 160px)", lineHeight: 1 }}>{sticker}</span>
+            }
+          </div>
+          {/* Corner sparkles */}
+          {corners.map((pos, i) => (
+            <span key={i} style={{
+              position: "absolute", ...pos, fontSize: 30,
+              filter: `drop-shadow(0 0 6px ${frameColor})`,
+              animation: `twinkle ${2 + (i % 2) * 0.6}s ease-in-out ${i * 0.3}s infinite`,
+            }}>{sup ? "⭐" : "✨"}</span>
+          ))}
+        </div>
+        <div style={{ marginTop: 44, width: "100%", maxWidth: 280 }}>
+          <LudoButton theme={theme} size="medium" onClick={onBack}>← Back to Shelf</LudoButton>
+        </div>
+      </div>
+    </FullScreenBackdrop>
+  );
+}
+
 // ==================== TROPHY SHELF ====================
 function TrophyShelf({ stickers, onClose, theme }) {
   const t = THEMES[theme];
   const count = stickers.length;
+  const [selected, setSelected] = useState(null);
+
+  // Split into tiers while preserving earned order within each tier.
+  const superStickers = [];
+  const regularStickers = [];
+  stickers.forEach((s, i) => {
+    (isSuperSticker(s) ? superStickers : regularStickers).push({ s, i });
+  });
+
+  if (selected !== null) {
+    return <StickerDetail sticker={selected} theme={theme} onBack={() => setSelected(null)} />;
+  }
+
+  // Renders one tappable sticker. `big` is used for the super-sticker tier.
+  const stickerButton = ({ s, i }, big) => {
+    const sup = isSuperSticker(s);
+    const imgSize = big ? 78 : 52;
+    return (
+      <button
+        key={i}
+        onClick={() => setSelected(s)}
+        aria-label="View sticker"
+        style={{
+          textAlign: "center", padding: big ? 10 : 8, borderRadius: 18,
+          background: sup ? `${t.accent}22` : `${t.primary}10`,
+          border: sup ? `2px solid ${t.accent}88` : `2px solid ${t.primary}22`,
+          boxShadow: sup ? `0 0 12px ${t.accent}44` : "none",
+          animation: `fadeInUp 0.3s ease ${i * 0.04}s both`,
+          display: "flex", alignItems: "center", justifyContent: "center",
+          cursor: "pointer", touchAction: "manipulation",
+          transition: "transform 0.12s ease",
+        }}
+      >
+        {isImageSticker(s)
+          ? <img src={s} alt="sticker" style={{ width: imgSize, height: imgSize, objectFit: "contain", display: "block" }} />
+          : <span style={{ fontSize: big ? 60 : 40 }}>{s}</span>
+        }
+      </button>
+    );
+  };
+
+  const tierLabelStyle = { fontSize: 22, fontWeight: 700, fontFamily: "'Fredoka', sans-serif", marginBottom: 10, textAlign: "left" };
+
   return (
     <FullScreenBackdrop theme={theme} showFrame={true}>
       <div style={{ padding: "40px 20px", width: "100%", maxWidth: 440, textAlign: "center" }}>
         <div style={{ fontSize: 36, fontWeight: 700, color: t.textPrimary, fontFamily: "'Fredoka', sans-serif", marginBottom: 8 }}>🏆 Trophy Shelf</div>
-        <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 32 }}>{count} bedtime{count !== 1 ? "s" : ""} completed!</div>
+        <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 24 }}>{count} bedtime{count !== 1 ? "s" : ""} completed!</div>
         {count === 0 ? (
           <div style={{ fontSize: 26, color: t.textMuted, marginTop: 40 }}>No stickers yet! Complete your bedtime routine to earn one. ✨</div>
         ) : (
-          <div style={{
-            display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 12,
-            width: "100%", padding: 20,
-            background: `${t.primary}12`, borderRadius: 28, border: `3px solid ${t.primary}33`,
-            maxHeight: "calc(55dvh - 100px)", overflowY: "auto", WebkitOverflowScrolling: "touch",
-          }}>
-            {stickers.map((s, i) => (
-              <div key={i} style={{
-                textAlign: "center", padding: 8, borderRadius: 16,
-                background: isSuperSticker(s) ? `${t.accent}22` : `${t.primary}10`,
-                border: isSuperSticker(s) ? `2px solid ${t.accent}88` : "none",
-                boxShadow: isSuperSticker(s) ? `0 0 10px ${t.accent}44` : "none",
-                animation: `fadeInUp 0.3s ease ${i * 0.05}s both`,
-                display: "flex", alignItems: "center", justifyContent: "center",
-              }}>
-                {isImageSticker(s)
-                  ? <img src={s} alt="sticker" style={{ width: 52, height: 52, objectFit: "contain", display: "block" }} />
-                  : <span style={{ fontSize: 40 }}>{s}</span>
-                }
+          <div style={{ maxHeight: "calc(58dvh - 40px)", overflowY: "auto", WebkitOverflowScrolling: "touch", display: "flex", flexDirection: "column", gap: 18 }}>
+            {/* Super sticker tier — top of the shelf, larger, in its own area */}
+            {superStickers.length > 0 && (
+              <div>
+                <div style={{ ...tierLabelStyle, color: t.accent, textShadow: `0 0 12px ${t.accent}55` }}>⭐ Super Stickers</div>
+                <div style={{
+                  display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(96px, 1fr))", gap: 12,
+                  width: "100%", padding: 16,
+                  background: `${t.accent}14`, borderRadius: 28, border: `3px solid ${t.accent}55`,
+                  boxShadow: `0 0 18px ${t.accent}22, inset 0 1px 0 ${t.accent}22`,
+                }}>
+                  {superStickers.map((item) => stickerButton(item, true))}
+                </div>
               </div>
-            ))}
+            )}
+            {/* Regular sticker tier — below the super stickers */}
+            {regularStickers.length > 0 && (
+              <div>
+                {superStickers.length > 0 && (
+                  <div style={{ ...tierLabelStyle, color: t.textSecondary }}>✨ My Stickers</div>
+                )}
+                <div style={{
+                  display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(70px, 1fr))", gap: 12,
+                  width: "100%", padding: 20,
+                  background: `${t.primary}12`, borderRadius: 28, border: `3px solid ${t.primary}33`,
+                }}>
+                  {regularStickers.map((item) => stickerButton(item, false))}
+                </div>
+              </div>
+            )}
           </div>
         )}
-        <div style={{ marginTop: 40 }}><LudoButton theme={theme} size="medium" onClick={onClose}>← Back</LudoButton></div>
+        <div style={{ marginTop: 32 }}><LudoButton theme={theme} size="medium" onClick={onClose}>← Back</LudoButton></div>
       </div>
     </FullScreenBackdrop>
   );

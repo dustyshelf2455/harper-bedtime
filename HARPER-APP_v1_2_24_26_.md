@@ -198,6 +198,15 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - Shows a simple count: "12 bedtimes completed!"
 - **Accessible from the splash screen** — Harper can browse her collection anytime (e.g., show grandparents the next morning)
 - Persists across sessions (localStorage, future: cloud sync)
+- **Tiered layout**: Super stickers sit at the very top of the shelf in their
+  own accent-bordered area and are displayed **larger** than regular stickers.
+  Regular stickers sit below in their own area. Within each tier, stickers are
+  always shown in the order they were earned (earliest first).
+- **Tap to inspect**: Tapping any sticker opens an enlarged detail view — the
+  sticker is shown as large as possible, centered inside a cute "presentation
+  square" frame (theme-colored for regular stickers, gold/accent for super
+  stickers, with corner sparkles) so Harper can admire the detail. A
+  "← Back to Shelf" button returns to the shelf.
 
 ### Future Enhancement
 - After reaching milestones (e.g., every 5th sticker), Harper picks a **prize** from 3 options (a little character, stuffed animal, trinket-type thing) that goes on a **digital shelf** she can view in the app
@@ -421,6 +430,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Added **Dad Mode** demo preview: "🎭 Dad Mode" button on splash screen pre-loads 29 fake stickers for full preview (trophy shelf, sticker pick, full routine). Zero localStorage reads/writes — Harper's data untouched. Badge + "Exit Dad Mode" button shown when active.
 - [x] Added fast-forward button to timer task screens (Brush Teeth, Baby Doll Bedtime): small, discreet button in the upper-right corner with a custom two-triangle SVG icon (not ⏩). Appears only while a timer is actively running. Immediately completes the timer — for parent use when demoing or moving quickly through the routine.
 - [x] Added **Demon Hunter** mode (K-pop Demon Hunters inspired, Rumi-styled guide character) as a third theme alongside Princess and Mermaid. Internal code key `kpop`, button label "🎤 Demon Hunter". Includes: Rumi-inspired guide character (normal/victory/sleep poses), Gothic neon stage frame, purple-mic progress-tracker icon, dedicated `NeonField` magenta/cyan starfield ambient layer, kpop-themed celebration & ambient particle sets, a 4th sticker set (`🎤⚡✨🎵💜🌟🐯💖🎀🦋`), per-task kpop icons, dream message "Couch! Couch! Couch! Sleep well, Hunter!". Splash screen theme picker reflows to a 2+1 grid (Princess/Mermaid top, Demon Hunter full-width below). Palette: electric purple `#9D4EDD` primary, magenta `#FF6EC7` accent, dark purple backgrounds.
+- [x] **Trophy Shelf tiers + sticker detail view.** Reorganized the Trophy Shelf into two tiers: **super stickers** at the very top in their own accent-bordered area, rendered larger than regular stickers; **regular stickers** below in their own area. Stickers remain in earned order within each tier (split preserves original order). Tapping any sticker opens a new **enlarged detail view** (`StickerDetail`): the sticker is shown as large as possible inside a "presentation square" — a rounded, theme-colored (gold/accent for super) Ludo-style frame with an inner display mat, glow, and animated corner sparkles — with a "← Back to Shelf" button to return. The two tiers share one scroll container so the title, count, and back button stay fixed.
 - [x] Added **Birthday Surprise** hidden experience. A small 🎂 button in the upper-left corner of the splash screen (hidden in Family Preview mode) launches a 4-digit PIN gate (code: 4359). On entry, a full-screen birthday party screen appears showing all three characters (Princess, Mermaid, Demon Hunter) cycling between their normal and victory poses with rainbow fanfare and confetti. Each character has a 5-tap counter (dot progress indicator); reaching 5 taps reveals a 🎁 gift box for that character. Tapping the gift opens a sticker-haul screen: 10 randomly drawn stickers from the character's theme pack + 2 super stickers are revealed with a cascade animation and added to the shelf via an "Add to shelf!" button. Once a character's gift is collected, they enter their sleep pose (💤). After all three presents are opened and characters are sleeping, a "Tap ← five times to return" message appears; tapping the back button 5 times exits to the splash screen. Works in Dad Mode (stickers go to the in-memory demo collection only; Harper's real stickers are never touched). Flow: splash 🎂 → PIN → birthday screen → tap chars → open gifts → collect stickers → sleep finale → back ×5 → splash.
 
 ---
