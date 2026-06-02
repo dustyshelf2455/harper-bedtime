@@ -1550,6 +1550,9 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
         if (x + R > W)  { x = W - R; vx = -Math.abs(vx); }
         if (y - R < 0)  { y = R;     vy =  Math.abs(vy); }
         if (y + R > H)  { y = H - R; vy = -Math.abs(vy); }
+        // Minimum speed floor — prevents stranding from near-zero post-collision drift
+        const spd = Math.sqrt(vx * vx + vy * vy);
+        if (spd < 2.5 && spd > 0.01) { vx = vx * (2.5 / spd); vy = vy * (2.5 / spd); }
         posRef.current[char] = { x, y, vx, vy };
         next[char] = { x, y };
       });
@@ -1564,20 +1567,28 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
         const dist = Math.sqrt(dx * dx + dy * dy);
         const HR = HIT_RADIUS;
         if (dist < HR * 2 && dist > 0.1) {
-          // Collision normal
+          // Collision normal (a→b)
           const nx = dx / dist, ny = dy / dist;
-          // Separate hitboxes so they no longer overlap
+          // Separate so hitboxes no longer overlap
           const overlap = (HR * 2 - dist) / 2;
           posRef.current[a] = { ...pa, x: pa.x - nx * overlap, y: pa.y - ny * overlap };
           posRef.current[b] = { ...pb, x: pb.x + nx * overlap, y: pb.y + ny * overlap };
-          // Swap velocity components along the collision normal (elastic equal-mass)
+          // Only resolve if approaching
           const relVx = pa.vx - pb.vx, relVy = pa.vy - pb.vy;
           const dot = relVx * nx + relVy * ny;
-          if (dot > 0) { // only resolve if approaching
-            posRef.current[a].vx = pa.vx - dot * nx;
-            posRef.current[a].vy = pa.vy - dot * ny;
-            posRef.current[b].vx = pb.vx + dot * nx;
-            posRef.current[b].vy = pb.vy + dot * ny;
+          if (dot > 0) {
+            // Elastic formula gives the new velocity directions
+            const speedA = Math.sqrt(pa.vx ** 2 + pa.vy ** 2);
+            const speedB = Math.sqrt(pb.vx ** 2 + pb.vy ** 2);
+            const newAvx = pa.vx - dot * nx, newAvy = pa.vy - dot * ny;
+            const newBvx = pb.vx + dot * nx, newBvy = pb.vy + dot * ny;
+            // Restore original speeds — change direction only, never lose energy
+            const nsA = Math.sqrt(newAvx ** 2 + newAvy ** 2);
+            const nsB = Math.sqrt(newBvx ** 2 + newBvy ** 2);
+            posRef.current[a].vx = nsA > 0.5 ? (newAvx / nsA) * speedA : -nx * speedA;
+            posRef.current[a].vy = nsA > 0.5 ? (newAvy / nsA) * speedA : -ny * speedA;
+            posRef.current[b].vx = nsB > 0.5 ? (newBvx / nsB) * speedB :  nx * speedB;
+            posRef.current[b].vy = nsB > 0.5 ? (newBvy / nsB) * speedB :  ny * speedB;
           }
           next[a] = { x: posRef.current[a].x, y: posRef.current[a].y };
           next[b] = { x: posRef.current[b].x, y: posRef.current[b].y };
@@ -1695,7 +1706,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
             animation: "shimmer 3s linear infinite",
             WebkitTextStroke: "2px #1a0040",
             textAlign: "center", padding: "0 8px 2px", lineHeight: 1.1,
-          }}>Happy Birthday!</div>
+          }}>Happy Birthday!<br />Harper!</div>
 
           {/* Bouncing characters zone */}
           <div ref={containerRef} style={{ flex: 1, position: "relative", overflow: "hidden", minHeight: 0 }}>
