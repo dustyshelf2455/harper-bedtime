@@ -1067,28 +1067,66 @@ function SuperStickerPick({ theme, onPick }) {
         <div style={{ fontSize: 26, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 40, animation: "fadeInUp 0.5s ease 0.15s both" }}>
           Pick a SUPER sticker!
         </div>
-        <div style={{ display: "flex", gap: 20, justifyContent: "center", animation: "fadeInUp 0.5s ease 0.35s both" }}>
-          {options.map((sticker, i) => (
-            <button
-              key={i}
-              onClick={() => onPick(sticker)}
-              onPointerDown={() => setPressedIdx(i)}
-              onPointerUp={() => setPressedIdx(null)}
-              onPointerLeave={() => setPressedIdx(null)}
-              onPointerCancel={() => setPressedIdx(null)}
-              style={{
-                padding: 16, borderRadius: 28,
-                border: `4px solid ${t.accent}88`, background: `${t.accent}18`,
-                cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
-                boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.accentDark}` : `inset 0 -4px 0 ${t.accentDark}`,
-                transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
-                animation: `fadeInUp 0.4s ease ${0.4 + i * 0.15}s both`,
-                touchAction: "manipulation",
-              }}
-            >
-              <img src={sticker} alt="super sticker" style={{ width: 96, height: 96, objectFit: "contain", display: "block" }} />
-            </button>
-          ))}
+        <div style={{
+          display: "flex", flexDirection: "column", gap: 16, alignItems: "center",
+          animation: "fadeInUp 0.5s ease 0.35s both",
+          ...(theme === "kpop" && {
+            background: "rgba(7, 2, 26, 0.78)",
+            borderRadius: 28,
+            padding: 16,
+            border: "2px solid rgba(157, 78, 221, 0.4)",
+          }),
+        }}>
+          {/* Top row: first 2 stickers */}
+          <div style={{ display: "flex", gap: 20, justifyContent: "center" }}>
+            {options.slice(0, 2).map((sticker, i) => (
+              <button
+                key={i}
+                onClick={() => onPick(sticker)}
+                onPointerDown={() => setPressedIdx(i)}
+                onPointerUp={() => setPressedIdx(null)}
+                onPointerLeave={() => setPressedIdx(null)}
+                onPointerCancel={() => setPressedIdx(null)}
+                style={{
+                  padding: 16, borderRadius: 28,
+                  border: `4px solid ${theme === "kpop" ? t.accent + "cc" : t.accent + "88"}`,
+                  background: theme === "kpop" ? `${t.accent}30` : `${t.accent}18`,
+                  cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                  boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.accentDark}` : `inset 0 -4px 0 ${t.accentDark}`,
+                  transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
+                  animation: `fadeInUp 0.4s ease ${0.4 + i * 0.15}s both`,
+                  touchAction: "manipulation",
+                }}
+              >
+                <img src={sticker} alt="super sticker" style={{ width: 96, height: 96, objectFit: "contain", display: "block" }} />
+              </button>
+            ))}
+          </div>
+          {/* Bottom row: third sticker centered */}
+          <div style={{ display: "flex", justifyContent: "center" }}>
+            {options.slice(2).map((sticker, i) => (
+              <button
+                key={i + 2}
+                onClick={() => onPick(sticker)}
+                onPointerDown={() => setPressedIdx(i + 2)}
+                onPointerUp={() => setPressedIdx(null)}
+                onPointerLeave={() => setPressedIdx(null)}
+                onPointerCancel={() => setPressedIdx(null)}
+                style={{
+                  padding: 16, borderRadius: 28,
+                  border: `4px solid ${theme === "kpop" ? t.accent + "cc" : t.accent + "88"}`,
+                  background: theme === "kpop" ? `${t.accent}30` : `${t.accent}18`,
+                  cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                  boxShadow: pressedIdx === i + 2 ? `inset 0 2px 0 ${t.accentDark}` : `inset 0 -4px 0 ${t.accentDark}`,
+                  transform: pressedIdx === i + 2 ? "scale(0.93) translateY(2px)" : "scale(1)",
+                  animation: `fadeInUp 0.4s ease ${0.7}s both`,
+                  touchAction: "manipulation",
+                }}
+              >
+                <img src={sticker} alt="super sticker" style={{ width: 96, height: 96, objectFit: "contain", display: "block" }} />
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     </FullScreenBackdrop>
