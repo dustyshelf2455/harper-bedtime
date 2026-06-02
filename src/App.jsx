@@ -1023,6 +1023,7 @@ const BIRTHDAY_CODE = "4359";
 const BIRTHDAY_CHARS = ["princess", "mermaid", "kpop"];
 const TAPS_TO_GIFT = 5;
 const BACK_TAPS_TO_EXIT = 5;
+const BUBBLE_RADIUS = 70;
 
 // PIN Pad — 4-digit parent code gate
 function PinPad({ onSuccess, onCancel }) {
@@ -1117,74 +1118,136 @@ function BirthdayParticles() {
   );
 }
 
-// Full-screen sticker haul reveal for one character's birthday present
-function BirthdayStickerReveal({ char, regularStickers, superStickers, onCollect }) {
+// Grid sticker picker: shows full pool, tap to preview enlarged, Back or Pick! to decide
+function BirthdayStickerPicker({ char, pool, neededCount, title, onDone }) {
   const t = THEMES[char];
-  const [collected, setCollected] = useState(false);
-  const total = regularStickers.length + superStickers.length;
+  const [selectedIndices, setSelectedIndices] = useState([]);
+  const [previewIdx, setPreviewIdx] = useState(null);
+  const remaining = neededCount - selectedIndices.length;
+  const isSuper = pool.length <= 5;
+  const cols = isSuper ? 2 : 4;
+
+  const handleTap = (i) => {
+    if (selectedIndices.includes(i)) return;
+    setPreviewIdx(i);
+  };
+
+  const handlePick = () => {
+    const next = [...selectedIndices, previewIdx];
+    setSelectedIndices(next);
+    setPreviewIdx(null);
+    if (next.length >= neededCount) onDone(next.map(i => pool[i]));
+  };
+
   return (
     <div style={{
       position: "fixed", inset: 0, zIndex: 1000,
-      background: `radial-gradient(ellipse at 50% 20%, ${t.bg1} 0%, ${t.bg2} 60%, ${t.bg3} 100%)`,
-      display: "flex", flexDirection: "column", alignItems: "center",
-      fontFamily: "'Fredoka', sans-serif", animation: "fadeIn 0.35s ease",
-      overflowY: "auto", WebkitOverflowScrolling: "touch",
+      background: `radial-gradient(ellipse at 50% 25%, ${t.bg1} 0%, ${t.bg2} 60%, ${t.bg3} 100%)`,
+      display: "flex", flexDirection: "column",
+      fontFamily: "'Fredoka', sans-serif", animation: "fadeIn 0.3s ease",
     }}>
-      <div className="safe-top" style={{ width: "100%", display: "flex", flexDirection: "column", alignItems: "center", padding: "16px 20px 48px" }}>
-        <GuideCharacter theme={char} size={100} variant="victory" />
-        <div style={{ fontSize: 32, fontWeight: 700, color: t.accent, marginTop: 12, marginBottom: 4, textShadow: `0 0 20px ${t.primary}`, textAlign: "center" }}>
-          🎁 Birthday Pack!
-        </div>
-        <div style={{ fontSize: 22, color: t.textSecondary, marginBottom: 20, textAlign: "center" }}>
-          {total} new stickers for your shelf!
-        </div>
-
-        <div style={{ fontSize: 20, color: t.textMuted, marginBottom: 8, alignSelf: "flex-start" }}>✨ Theme stickers</div>
+      {/* Full-screen sticker preview overlay */}
+      {previewIdx !== null && (
         <div style={{
-          display: "grid", gridTemplateColumns: "repeat(5, 1fr)", gap: 8,
-          width: "100%", padding: 12, marginBottom: 16,
-          background: `${t.primary}12`, borderRadius: 22, border: `2px solid ${t.primary}33`,
+          position: "absolute", inset: 0, zIndex: 20,
+          background: `radial-gradient(ellipse at 50% 45%, ${t.bg1} 0%, ${t.bg2} 100%)`,
+          display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+          animation: "fadeIn 0.18s ease",
+          padding: "0 32px",
         }}>
-          {regularStickers.map((s, i) => (
-            <div key={i} style={{
-              padding: 5, borderRadius: 12, textAlign: "center",
-              background: `${t.primary}18`,
-              animation: `gemPop 0.4s ease ${i * 0.07}s both`,
-            }}>
-              <img src={s} alt="sticker" style={{ width: 46, height: 46, objectFit: "contain", display: "block", margin: "0 auto" }} />
-            </div>
-          ))}
+          <div style={{ animation: "giftPop 0.35s ease" }}>
+            <img src={pool[previewIdx]} alt="sticker preview" style={{
+              width: "clamp(200px, 55vw, 260px)", height: "clamp(200px, 55vw, 260px)",
+              objectFit: "contain",
+              filter: `drop-shadow(0 0 32px ${t.primary}99)`,
+              display: "block",
+            }} />
+          </div>
+          <div style={{ display: "flex", gap: 14, marginTop: 36, width: "100%", maxWidth: 340 }}>
+            <LudoButton theme={char} size="medium" onClick={() => setPreviewIdx(null)} style={{
+              flex: 1, background: `${t.primary}28`, border: `3px solid ${t.primary}55`, boxShadow: "none",
+            }}>← Back</LudoButton>
+            <LudoButton theme={char} size="medium" onClick={handlePick} style={{ flex: 1 }}>Pick! ✨</LudoButton>
+          </div>
+        </div>
+      )}
+
+      {/* Grid view */}
+      <div className="safe-top" style={{ flex: 1, display: "flex", flexDirection: "column", overflow: "hidden" }}>
+        <div style={{ padding: "16px 20px 10px", textAlign: "center" }}>
+          <div style={{ fontSize: 28, fontWeight: 700, color: t.accent, textShadow: `0 0 18px ${t.primary}` }}>{title}</div>
+          <div style={{ fontSize: 22, color: t.textSecondary, marginTop: 2 }}>
+            {remaining > 0 ? `Pick ${remaining} more!` : "✨ All picked!"}
+          </div>
         </div>
 
-        <div style={{ fontSize: 20, color: t.accent, marginBottom: 8, alignSelf: "flex-start" }}>⭐ Super stickers</div>
-        <div style={{
-          display: "flex", gap: 16, justifyContent: "center",
-          width: "100%", padding: 12, marginBottom: 28,
-          background: `${t.accent}15`, borderRadius: 22,
-          border: `2px solid ${t.accent}44`,
-          boxShadow: `0 0 20px ${t.accent}22`,
-        }}>
-          {superStickers.map((s, i) => (
-            <div key={i} style={{
-              padding: 8, borderRadius: 16, textAlign: "center",
-              background: `${t.accent}18`, border: `2px solid ${t.accent}44`,
-              boxShadow: `0 0 12px ${t.accent}33`,
-              animation: `gemPop 0.4s ease ${regularStickers.length * 0.07 + i * 0.12}s both`,
-            }}>
-              <img src={s} alt="super sticker" style={{ width: 66, height: 66, objectFit: "contain", display: "block", margin: "0 auto" }} />
-            </div>
-          ))}
+        <div style={{ flex: 1, overflowY: "auto", WebkitOverflowScrolling: "touch", padding: "0 14px 16px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 10 }}>
+            {pool.map((sticker, i) => {
+              const isPicked = selectedIndices.includes(i);
+              return (
+                <div key={i} onClick={() => !isPicked && handleTap(i)} style={{
+                  borderRadius: isSuper ? 24 : 16,
+                  padding: isSuper ? 14 : 8,
+                  background: isPicked ? `${t.primary}12` : `${t.primary}22`,
+                  border: `2.5px solid ${isPicked ? t.accent + "55" : t.primary + "55"}`,
+                  boxShadow: isPicked ? "none" : `0 0 10px ${t.primary}28`,
+                  opacity: isPicked ? 0.38 : 1,
+                  cursor: isPicked ? "default" : "pointer",
+                  touchAction: "manipulation",
+                  position: "relative", display: "flex", alignItems: "center", justifyContent: "center",
+                  transition: "opacity 0.2s ease",
+                  animation: `gemPop 0.3s ease ${i * 0.04}s both`,
+                }}>
+                  <img src={sticker} alt="sticker" style={{
+                    width: "100%", aspectRatio: "1", objectFit: "contain", display: "block",
+                  }} />
+                  {isPicked && (
+                    <div style={{
+                      position: "absolute", inset: 0, display: "flex", alignItems: "center", justifyContent: "center",
+                      fontSize: isSuper ? 36 : 28, color: t.accent,
+                    }}>✓</div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
         </div>
-
-        <LudoButton theme={char} size="large" onClick={() => { if (!collected) { setCollected(true); onCollect(); } }}>
-          {collected ? "✨ Added to shelf!" : `Add ${total} stickers to shelf! ✨`}
-        </LudoButton>
+        <div className="safe-bottom" />
       </div>
     </div>
   );
 }
 
-// Main birthday experience — three characters, tap-to-gift, sticker reveals, sleep finale
+// Orchestrates regular-sticker pick (10 of 20) then super-sticker pick (2 of 5)
+function BirthdayStickerReveal({ char, onCollect }) {
+  const [phase, setPhase] = useState("pick-regular");
+  const [pickedRegular, setPickedRegular] = useState([]);
+  return (
+    <>
+      {phase === "pick-regular" && (
+        <BirthdayStickerPicker
+          char={char}
+          pool={STICKER_IMAGES[char] || []}
+          neededCount={10}
+          title="🎁 Birthday Pack!"
+          onDone={(stickers) => { setPickedRegular(stickers); setPhase("pick-super"); }}
+        />
+      )}
+      {phase === "pick-super" && (
+        <BirthdayStickerPicker
+          char={char}
+          pool={SUPER_STICKER_IMAGES[char] || []}
+          neededCount={2}
+          title="⭐ Super Stickers!"
+          onDone={(stickers) => onCollect([...pickedRegular, ...stickers])}
+        />
+      )}
+    </>
+  );
+}
+
+// Main birthday experience — characters bounce around screen, tap to fill, gift on completion
 function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpenShelf }) {
   const [tapCounts, setTapCounts] = useState({ princess: 0, mermaid: 0, kpop: 0 });
   const [charPhase, setCharPhase] = useState({ princess: "active", mermaid: "active", kpop: "active" });
@@ -1193,6 +1256,66 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
   const [backTaps, setBackTaps] = useState(0);
   const backResetRef = useRef(null);
 
+  const containerRef = useRef(null);
+  const posRef = useRef(null);
+  const charPhaseRef = useRef(charPhase);
+  const [positions, setPositions] = useState({
+    princess: { x: 90,  y: 110 },
+    mermaid:  { x: 240, y: 150 },
+    kpop:     { x: 170, y: 290 },
+  });
+
+  useEffect(() => { charPhaseRef.current = charPhase; }, [charPhase]);
+
+  // Set initial spread positions after container renders
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
+    const W = el.offsetWidth  || 360;
+    const H = el.offsetHeight || 420;
+    const R = BUBBLE_RADIUS;
+    posRef.current = {
+      princess: { x: R + 15,     y: R + 20,     vx:  1.8, vy:  1.3 },
+      mermaid:  { x: W - R - 15, y: R + 50,     vx: -1.6, vy:  1.7 },
+      kpop:     { x: W / 2,      y: H - R - 20, vx:  1.3, vy: -1.9 },
+    };
+    setPositions({
+      princess: { x: posRef.current.princess.x, y: posRef.current.princess.y },
+      mermaid:  { x: posRef.current.mermaid.x,  y: posRef.current.mermaid.y  },
+      kpop:     { x: posRef.current.kpop.x,     y: posRef.current.kpop.y     },
+    });
+  }, []);
+
+  // Physics loop — bounces active characters off container walls
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const el = containerRef.current;
+      if (!el || !posRef.current) return;
+      const W = el.offsetWidth;
+      const H = el.offsetHeight;
+      const R = BUBBLE_RADIUS;
+      const next = {};
+      BIRTHDAY_CHARS.forEach(char => {
+        const phase = charPhaseRef.current[char];
+        if (phase !== "active") {
+          next[char] = { x: posRef.current[char].x, y: posRef.current[char].y };
+          return;
+        }
+        let { x, y, vx, vy } = posRef.current[char];
+        x += vx; y += vy;
+        if (x - R < 0)  { x = R;     vx =  Math.abs(vx); }
+        if (x + R > W)  { x = W - R; vx = -Math.abs(vx); }
+        if (y - R < 0)  { y = R;     vy =  Math.abs(vy); }
+        if (y + R > H)  { y = H - R; vy = -Math.abs(vy); }
+        posRef.current[char] = { x, y, vx, vy };
+        next[char] = { x, y };
+      });
+      setPositions(next);
+    }, 33);
+    return () => clearInterval(interval);
+  }, []);
+
+  // Pose cycling for active characters
   useEffect(() => {
     const timer = setInterval(() => setTick(t => t + 1), 2200);
     return () => clearInterval(timer);
@@ -1202,7 +1325,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
 
   const getPose = (char) => {
     if (charPhase[char] === "sleeping") return "sleep";
-    if (charPhase[char] === "gifted") return "normal";
+    if (charPhase[char] === "gifted")   return "normal";
     return tick % 2 === 0 ? "normal" : "victory";
   };
 
@@ -1211,12 +1334,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
   const handleCharTap = (char) => {
     const phase = charPhase[char];
     if (phase === "sleeping") return;
-    if (phase === "gifted") {
-      const regular = [...STICKER_IMAGES[char]].sort(() => Math.random() - 0.5).slice(0, 10);
-      const superSet = [...SUPER_STICKER_IMAGES[char]].sort(() => Math.random() - 0.5).slice(0, 2);
-      setRevealData({ char, regular, superSet });
-      return;
-    }
+    if (phase === "gifted") { setRevealData({ char }); return; }
     const next = tapCounts[char] + 1;
     if (next >= TAPS_TO_GIFT) {
       setTapCounts(prev => ({ ...prev, [char]: TAPS_TO_GIFT }));
@@ -1226,9 +1344,8 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
     }
   };
 
-  const handleCollect = () => {
-    const { char, regular, superSet } = revealData;
-    onCollectStickers([...regular, ...superSet]);
+  const handleCollect = (char, stickers) => {
+    onCollectStickers(stickers);
     setRevealData(null);
     setCharPhase(prev => ({ ...prev, [char]: "sleeping" }));
   };
@@ -1236,10 +1353,8 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
   const handleBackTap = () => {
     const next = backTaps + 1;
     clearTimeout(backResetRef.current);
-    if (next >= BACK_TAPS_TO_EXIT) {
-      setBackTaps(0);
-      onClose();
-    } else {
+    if (next >= BACK_TAPS_TO_EXIT) { setBackTaps(0); onClose(); }
+    else {
       setBackTaps(next);
       backResetRef.current = setTimeout(() => setBackTaps(0), 3000);
     }
@@ -1250,9 +1365,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
       {revealData && (
         <BirthdayStickerReveal
           char={revealData.char}
-          regularStickers={revealData.regular}
-          superStickers={revealData.superSet}
-          onCollect={handleCollect}
+          onCollect={(stickers) => handleCollect(revealData.char, stickers)}
         />
       )}
       <div style={{
@@ -1264,7 +1377,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
       }}>
         <BirthdayParticles />
         <div className="safe-top" style={{ position: "relative", zIndex: 10, flex: 1, display: "flex", flexDirection: "column" }}>
-          {/* Header: back button + trophy shelf */}
+          {/* Header */}
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "8px 12px" }}>
             <div style={{ position: "relative" }}>
               <button onClick={handleBackTap} style={{
@@ -1294,95 +1407,87 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
             }}>🏆 {shelfCount}</button>
           </div>
 
-          {/* Rainbow title */}
+          {/* Large rainbow title with dark outline */}
           <div style={{
-            fontSize: "clamp(21px, 4dvh, 30px)", fontWeight: 700,
+            fontSize: "clamp(38px, 7.5dvh, 58px)", fontWeight: 700,
             background: "linear-gradient(90deg, #E84B8A, #F0C239, #1AACA8, #9D4EDD, #E84B8A)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text", backgroundSize: "200% auto",
             animation: "shimmer 3s linear infinite",
-            textAlign: "center", padding: "2px 12px 8px",
+            textShadow: "-3px -3px 0 #160038, -3px 0 0 #160038, -3px 3px 0 #160038, 0 -3px 0 #160038, 0 3px 0 #160038, 3px -3px 0 #160038, 3px 0 0 #160038, 3px 3px 0 #160038, -2px -2px 0 #160038, 2px -2px 0 #160038, -2px 2px 0 #160038, 2px 2px 0 #160038",
+            textAlign: "center", padding: "2px 8px 4px", lineHeight: 1.1,
           }}>🎂 Happy Birthday Harper! 🎂</div>
 
-          {/* Three character zones */}
-          <div style={{
-            display: "flex", justifyContent: "space-around", alignItems: "flex-end",
-            flex: 1, padding: "4px 4px 0", gap: 3, minHeight: 0,
-          }}>
+          {/* Bouncing characters zone */}
+          <div ref={containerRef} style={{ flex: 1, position: "relative", overflow: "hidden", minHeight: 0 }}>
             {BIRTHDAY_CHARS.map(char => {
               const phase = charPhase[char];
-              const taps = tapCounts[char];
-              const pose = getPose(char);
-              const t = THEMES[char];
+              const pose  = getPose(char);
+              const t     = THEMES[char];
+              const pos   = positions[char];
               const imgSrc = pose === "sleep" ? t.guideSleep : pose === "victory" ? t.guideVictory : t.guide;
+              const taps  = tapCounts[char];
 
               return (
-                <div key={char}
-                  onClick={() => handleCharTap(char)}
-                  style={{
-                    flex: 1, display: "flex", flexDirection: "column", alignItems: "center",
-                    justifyContent: "flex-end", gap: 6,
-                    cursor: phase !== "sleeping" ? "pointer" : "default",
-                    padding: "6px 3px 10px",
-                    borderRadius: 20,
-                    background: phase === "gifted" ? `${t.primary}20` : "transparent",
-                    border: `2px solid ${phase === "gifted" ? t.primary + "55" : "transparent"}`,
-                    transition: "all 0.3s ease",
-                    userSelect: "none", touchAction: "manipulation",
-                    minHeight: 0,
-                  }}
-                >
-                  {/* Character image or gift */}
-                  <div style={{ flex: 1, display: "flex", alignItems: "flex-end", justifyContent: "center", minHeight: 0 }}>
-                    {phase === "gifted" ? (
-                      <div style={{
-                        fontSize: "clamp(54px, 10dvh, 78px)", lineHeight: 1,
-                        animation: "giftBounce 1s ease-in-out infinite",
-                        filter: `drop-shadow(0 0 14px ${t.primary}99)`,
-                      }}>🎁</div>
-                    ) : (
-                      <img src={imgSrc} alt={char} style={{
-                        maxHeight: "clamp(115px, 20dvh, 185px)",
-                        width: "auto", objectFit: "contain",
-                        animation: phase === "active" ? "floatGentle 3s ease-in-out infinite" : undefined,
-                        transition: "opacity 0.5s ease",
-                      }} />
-                    )}
-                  </div>
-
-                  {/* Tap progress dots */}
-                  {phase === "active" && (
-                    <div style={{ display: "flex", gap: 4 }}>
+                <div key={char} onClick={() => handleCharTap(char)} style={{
+                  position: "absolute",
+                  left: pos.x - BUBBLE_RADIUS,
+                  top:  pos.y - BUBBLE_RADIUS,
+                  width:  BUBBLE_RADIUS * 2,
+                  height: BUBBLE_RADIUS * 2,
+                  borderRadius: "50%",
+                  background: phase === "gifted"
+                    ? `radial-gradient(circle, ${t.primary}55 0%, ${t.primary}22 100%)`
+                    : `radial-gradient(circle, ${t.primary}38 0%, ${t.primary}14 100%)`,
+                  border: `3px solid ${t.primary}${phase === "gifted" ? "aa" : "77"}`,
+                  boxShadow: `0 0 ${phase === "gifted" ? 30 : 18}px ${t.primary}${phase === "gifted" ? "66" : "44"}`,
+                  display: "flex", flexDirection: "column",
+                  alignItems: "center", justifyContent: "center",
+                  overflow: "hidden",
+                  cursor: phase !== "sleeping" ? "pointer" : "default",
+                  touchAction: "manipulation", userSelect: "none",
+                  animation: phase === "gifted" ? "pulse 1.5s ease-in-out infinite" : undefined,
+                }}>
+                  {phase === "gifted" ? (
+                    <div style={{
+                      fontSize: 54, lineHeight: 1,
+                      animation: "giftBounce 1s ease-in-out infinite",
+                      filter: `drop-shadow(0 0 12px ${t.primary}bb)`,
+                    }}>🎁</div>
+                  ) : (
+                    <img src={imgSrc} alt={char} style={{
+                      height: BUBBLE_RADIUS * 1.8, width: "auto", objectFit: "contain",
+                      transition: "opacity 0.4s ease", flexShrink: 0,
+                    }} />
+                  )}
+                  {phase === "active" && taps > 0 && (
+                    <div style={{ position: "absolute", bottom: 7, display: "flex", gap: 3 }}>
                       {Array.from({ length: TAPS_TO_GIFT }, (_, i) => (
                         <div key={i} style={{
-                          width: 7, height: 7, borderRadius: "50%",
-                          background: i < taps ? t.primary : `${t.textMuted}44`,
-                          boxShadow: i < taps ? `0 0 6px ${t.primary}` : "none",
+                          width: 6, height: 6, borderRadius: "50%",
+                          background: i < taps ? t.accent : "rgba(255,255,255,0.25)",
+                          boxShadow: i < taps ? `0 0 5px ${t.accent}` : "none",
                           transition: "all 0.2s ease",
                         }} />
                       ))}
                     </div>
                   )}
                   {phase === "gifted" && (
-                    <div style={{ fontSize: 15, color: t.accent, fontWeight: 600, textAlign: "center" }}>Tap! ✨</div>
+                    <div style={{ position: "absolute", bottom: 5, fontSize: 13, color: t.accent, fontWeight: 600, fontFamily: "'Fredoka', sans-serif" }}>Tap! ✨</div>
                   )}
                   {phase === "sleeping" && (
-                    <div style={{ fontSize: 18, color: t.textMuted }}>💤</div>
+                    <div style={{ position: "absolute", top: 6, right: 8, fontSize: 16 }}>💤</div>
                   )}
                 </div>
               );
             })}
           </div>
 
-          {/* Sleep finale — prompt to tap back 5× */}
           {allSleeping && (
             <div style={{ textAlign: "center", padding: "10px 24px", animation: "fadeInUp 0.5s ease" }}>
-              <div style={{ fontSize: 20, color: "rgba(240,194,57,0.8)" }}>
-                🌙 Tap ← five times to return
-              </div>
+              <div style={{ fontSize: 20, color: "rgba(240,194,57,0.8)" }}>🌙 Tap ← five times to return</div>
             </div>
           )}
-
           <div className="safe-bottom" />
         </div>
       </div>
