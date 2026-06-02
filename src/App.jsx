@@ -1157,6 +1157,7 @@ function Countdown({ theme, onDone }) {
 // ==================== DREAM SCREEN ====================
 function DreamScreen({ theme, onBack }) {
   const t = THEMES[theme];
+  const [textVisible, setTextVisible] = useState(true);
   const sets = {
     princess: ["⭐", "✨", "🌟", "💫", "🌙"],
     mermaid:  ["🫧", "💙", "🌊", "✨", "🌙"],
@@ -1172,6 +1173,13 @@ function DreamScreen({ theme, onBack }) {
       delay: Math.random() * 3,
       emoji: emojis[Math.floor(Math.random() * emojis.length)],
     })), []);
+
+  useEffect(() => {
+    if (theme !== "kpop") return;
+    const timer = setTimeout(() => setTextVisible(false), 5000);
+    return () => clearTimeout(timer);
+  }, [theme]);
+
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
       {/* Discreet parent control: return to the main menu once Harper is asleep */}
@@ -1200,7 +1208,12 @@ function DreamScreen({ theme, onBack }) {
           {f.emoji}
         </div>
       ))}
-      <div style={{ textAlign: "center", padding: "0 24px" }}>
+      <div style={{
+        textAlign: "center", padding: "0 24px",
+        opacity: textVisible ? 1 : 0,
+        transition: "opacity 1.5s ease",
+        pointerEvents: textVisible ? "auto" : "none",
+      }}>
         <div style={{ marginBottom: 20 }}><GuideCharacter theme={theme} size={144} variant="sleep" /></div>
         <div style={{
           ...(theme === "kpop" && {
