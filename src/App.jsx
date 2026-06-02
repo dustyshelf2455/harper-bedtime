@@ -1229,7 +1229,7 @@ function BirthdayStickerReveal({ char, onCollect }) {
         <BirthdayStickerPicker
           char={char}
           pool={STICKER_IMAGES[char] || []}
-          neededCount={10}
+          neededCount={5}
           title="🎁 Birthday Pack!"
           onDone={(stickers) => { setPickedRegular(stickers); setPhase("pick-super"); }}
         />
@@ -1238,7 +1238,7 @@ function BirthdayStickerReveal({ char, onCollect }) {
         <BirthdayStickerPicker
           char={char}
           pool={SUPER_STICKER_IMAGES[char] || []}
-          neededCount={2}
+          neededCount={1}
           title="⭐ Super Stickers!"
           onDone={(stickers) => onCollect([...pickedRegular, ...stickers])}
         />
