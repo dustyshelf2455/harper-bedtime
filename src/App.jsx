@@ -1236,7 +1236,8 @@ const BIRTHDAY_CODE = "4359";
 const BIRTHDAY_CHARS = ["princess", "mermaid", "kpop"];
 const TAPS_TO_GIFT = 5;
 const BACK_TAPS_TO_EXIT = 5;
-const BUBBLE_RADIUS = 70;
+const BUBBLE_RADIUS = 58;
+const HIT_RADIUS = 44;
 
 // PIN Pad — 4-digit parent code gate
 function PinPad({ onSuccess, onCancel }) {
@@ -1545,11 +1546,12 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
         const pa = posRef.current[a], pb = posRef.current[b];
         const dx = pb.x - pa.x, dy = pb.y - pa.y;
         const dist = Math.sqrt(dx * dx + dy * dy);
-        if (dist < R * 2 && dist > 0.1) {
+        const HR = HIT_RADIUS;
+        if (dist < HR * 2 && dist > 0.1) {
           // Collision normal
           const nx = dx / dist, ny = dy / dist;
-          // Separate circles so they no longer overlap
-          const overlap = (R * 2 - dist) / 2;
+          // Separate hitboxes so they no longer overlap
+          const overlap = (HR * 2 - dist) / 2;
           posRef.current[a] = { ...pa, x: pa.x - nx * overlap, y: pa.y - ny * overlap };
           posRef.current[b] = { ...pb, x: pb.x + nx * overlap, y: pb.y + ny * overlap };
           // Swap velocity components along the collision normal (elastic equal-mass)
@@ -1668,16 +1670,16 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
             }}>🏆 {shelfCount}</button>
           </div>
 
-          {/* Large rainbow title with dark outline */}
+          {/* Rainbow title with dark outline */}
           <div style={{
-            fontSize: "clamp(38px, 7.5dvh, 58px)", fontWeight: 700,
+            fontSize: "clamp(28px, 5.5dvh, 42px)", fontWeight: 700,
             background: "linear-gradient(90deg, #E84B8A, #F0C239, #1AACA8, #9D4EDD, #E84B8A)",
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text", backgroundSize: "200% auto",
             animation: "shimmer 3s linear infinite",
-            WebkitTextStroke: "3px #1a0040",
-            textAlign: "center", padding: "2px 8px 4px", lineHeight: 1.1,
-          }}>🎂 Happy Birthday Harper! 🎂</div>
+            WebkitTextStroke: "2px #1a0040",
+            textAlign: "center", padding: "0 8px 2px", lineHeight: 1.1,
+          }}>Happy Birthday!</div>
 
           {/* Bouncing characters zone */}
           <div ref={containerRef} style={{ flex: 1, position: "relative", overflow: "hidden", minHeight: 0 }}>
