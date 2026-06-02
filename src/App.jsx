@@ -828,7 +828,7 @@ function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 
 // ==================== ENLARGED STICKER VIEW ====================
 // Presents a single sticker as large as possible inside a cute "frame" so Harper
 // can inspect its detail. Used when a sticker on the Trophy Shelf is tapped.
-function StickerDetail({ sticker, theme, onBack }) {
+function StickerDetail({ sticker, theme, onBack, onPick }) {
   const t = THEMES[theme];
   const sup = isSuperSticker(sticker);
   const frameColor = sup ? t.accent : t.primary;
@@ -878,8 +878,13 @@ function StickerDetail({ sticker, theme, onBack }) {
             }}>{sup ? "⭐" : "✨"}</span>
           ))}
         </div>
-        <div style={{ marginTop: 44, width: "100%", maxWidth: 280 }}>
-          <LudoButton theme={theme} size="medium" onClick={onBack}>← Back to Shelf</LudoButton>
+        <div style={{ marginTop: 44, width: "100%", maxWidth: 320, display: "flex", gap: 12 }}>
+          <LudoButton theme={theme} size="medium" onClick={onBack} style={{ background: `${t.primary}30`, border: `3px solid ${t.primary}55`, boxShadow: "none", animation: "none" }}>
+            {onPick ? "← Back" : "← Back to Shelf"}
+          </LudoButton>
+          {onPick && (
+            <LudoButton theme={theme} size="medium" onClick={onPick}>Pick This! ✨</LudoButton>
+          )}
         </div>
       </div>
     </FullScreenBackdrop>
@@ -917,7 +922,6 @@ function TrophyShelf({ stickers, onClose, theme }) {
           background: sup ? `${t.accent}22` : `${t.primary}10`,
           border: sup ? `2px solid ${t.accent}88` : `2px solid ${t.primary}22`,
           boxShadow: sup ? `0 0 12px ${t.accent}44` : "none",
-          animation: `fadeInUp 0.3s ease ${i * 0.04}s both`,
           display: "flex", alignItems: "center", justifyContent: "center",
           cursor: "pointer", touchAction: "manipulation",
           transition: "transform 0.12s ease",
@@ -993,10 +997,16 @@ function TrophyShelf({ stickers, onClose, theme }) {
 function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
   const t = THEMES[theme];
   const [pressedIdx, setPressedIdx] = useState(null);
+  const [previewing, setPreviewing] = useState(null);
   const [options] = useState(() => {
     const pool = STICKER_IMAGES[theme] || STICKER_IMAGES.princess;
     return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   });
+
+  if (previewing !== null) {
+    return <StickerDetail sticker={previewing} theme={theme} onBack={() => setPreviewing(null)} onPick={() => onPick(previewing)} />;
+  }
+
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
       <CelebrationParticles theme={theme} active={true} />
@@ -1016,7 +1026,7 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
           {options.map((sticker, i) => (
             <button
               key={i}
-              onClick={() => onPick(sticker)}
+              onClick={() => setPreviewing(sticker)}
               onPointerDown={() => setPressedIdx(i)}
               onPointerUp={() => setPressedIdx(null)}
               onPointerLeave={() => setPressedIdx(null)}
@@ -1052,10 +1062,16 @@ function StickerPick({ theme, onPick, stickers = [], onOpenShelf }) {
 function SuperStickerPick({ theme, onPick }) {
   const t = THEMES[theme];
   const [pressedIdx, setPressedIdx] = useState(null);
+  const [previewing, setPreviewing] = useState(null);
   const [options] = useState(() => {
     const pool = SUPER_STICKER_IMAGES[theme] || SUPER_STICKER_IMAGES.princess;
     return [...pool].sort(() => Math.random() - 0.5).slice(0, 3);
   });
+
+  if (previewing !== null) {
+    return <StickerDetail sticker={previewing} theme={theme} onBack={() => setPreviewing(null)} onPick={() => onPick(previewing)} />;
+  }
+
   return (
     <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
       <CelebrationParticles theme={theme} active={true} />
@@ -1082,7 +1098,7 @@ function SuperStickerPick({ theme, onPick }) {
             {options.slice(0, 2).map((sticker, i) => (
               <button
                 key={i}
-                onClick={() => onPick(sticker)}
+                onClick={() => setPreviewing(sticker)}
                 onPointerDown={() => setPressedIdx(i)}
                 onPointerUp={() => setPressedIdx(null)}
                 onPointerLeave={() => setPressedIdx(null)}
@@ -1107,7 +1123,7 @@ function SuperStickerPick({ theme, onPick }) {
             {options.slice(2).map((sticker, i) => (
               <button
                 key={i + 2}
-                onClick={() => onPick(sticker)}
+                onClick={() => setPreviewing(sticker)}
                 onPointerDown={() => setPressedIdx(i + 2)}
                 onPointerUp={() => setPressedIdx(null)}
                 onPointerLeave={() => setPressedIdx(null)}
