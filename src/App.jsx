@@ -1467,6 +1467,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
   const [tick, setTick] = useState(0);
   const [revealData, setRevealData] = useState(null);
   const [backTaps, setBackTaps] = useState(0);
+  const [collisionFlash, setCollisionFlash] = useState([]);
   const backResetRef = useRef(null);
 
   const containerRef = useRef(null);
@@ -1480,6 +1481,16 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
 
   useEffect(() => { charPhaseRef.current = charPhase; }, [charPhase]);
 
+  // Auto-expire collision sparkles after 700ms
+  useEffect(() => {
+    if (collisionFlash.length === 0) return;
+    const timer = setTimeout(() => {
+      const now = Date.now();
+      setCollisionFlash(prev => prev.filter(f => now - f.time < 700));
+    }, 700);
+    return () => clearTimeout(timer);
+  }, [collisionFlash]);
+
   // Set initial spread positions after container renders
   useEffect(() => {
     const el = containerRef.current;
@@ -1488,9 +1499,9 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
     const H = el.offsetHeight || 420;
     const R = BUBBLE_RADIUS;
     posRef.current = {
-      princess: { x: R + 15,     y: R + 20,     vx:  1.8, vy:  1.3 },
-      mermaid:  { x: W - R - 15, y: R + 50,     vx: -1.6, vy:  1.7 },
-      kpop:     { x: W / 2,      y: H - R - 20, vx:  1.3, vy: -1.9 },
+      princess: { x: R + 15,     y: R + 20,     vx:  3.2, vy:  2.5 },
+      mermaid:  { x: W - R - 15, y: R + 50,     vx: -2.8, vy:  3.1 },
+      kpop:     { x: W / 2,      y: H - R - 20, vx:  2.4, vy: -3.4 },
     };
     setPositions({
       princess: { x: posRef.current.princess.x, y: posRef.current.princess.y },
@@ -1499,7 +1510,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
     });
   }, []);
 
-  // Physics loop — bounces active characters off container walls
+  // Physics loop — wall bounce + elastic bubble-bubble collisions
   useEffect(() => {
     const interval = setInterval(() => {
       const el = containerRef.current;
@@ -1508,6 +1519,8 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
       const H = el.offsetHeight;
       const R = BUBBLE_RADIUS;
       const next = {};
+
+      // Step 1: move each active bubble and resolve wall collisions
       BIRTHDAY_CHARS.forEach(char => {
         const phase = charPhaseRef.current[char];
         if (phase !== "active") {
@@ -1523,7 +1536,42 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
         posRef.current[char] = { x, y, vx, vy };
         next[char] = { x, y };
       });
+
+      // Step 2: elastic bubble-bubble collisions (equal mass)
+      const pairs = [["princess","mermaid"],["princess","kpop"],["mermaid","kpop"]];
+      const newFlashes = [];
+      pairs.forEach(([a, b]) => {
+        if (charPhaseRef.current[a] !== "active" || charPhaseRef.current[b] !== "active") return;
+        const pa = posRef.current[a], pb = posRef.current[b];
+        const dx = pb.x - pa.x, dy = pb.y - pa.y;
+        const dist = Math.sqrt(dx * dx + dy * dy);
+        if (dist < R * 2 && dist > 0.1) {
+          // Collision normal
+          const nx = dx / dist, ny = dy / dist;
+          // Separate circles so they no longer overlap
+          const overlap = (R * 2 - dist) / 2;
+          posRef.current[a] = { ...pa, x: pa.x - nx * overlap, y: pa.y - ny * overlap };
+          posRef.current[b] = { ...pb, x: pb.x + nx * overlap, y: pb.y + ny * overlap };
+          // Swap velocity components along the collision normal (elastic equal-mass)
+          const relVx = pa.vx - pb.vx, relVy = pa.vy - pb.vy;
+          const dot = relVx * nx + relVy * ny;
+          if (dot > 0) { // only resolve if approaching
+            posRef.current[a].vx = pa.vx - dot * nx;
+            posRef.current[a].vy = pa.vy - dot * ny;
+            posRef.current[b].vx = pb.vx + dot * nx;
+            posRef.current[b].vy = pb.vy + dot * ny;
+          }
+          next[a] = { x: posRef.current[a].x, y: posRef.current[a].y };
+          next[b] = { x: posRef.current[b].x, y: posRef.current[b].y };
+          // Sparkle at midpoint
+          newFlashes.push({ id: Date.now() + Math.random(), x: (pa.x + pb.x) / 2, y: (pa.y + pb.y) / 2, time: Date.now() });
+        }
+      });
+
       setPositions(next);
+      if (newFlashes.length > 0) {
+        setCollisionFlash(prev => [...prev, ...newFlashes].slice(-8));
+      }
     }, 33);
     return () => clearInterval(interval);
   }, []);
@@ -1627,7 +1675,7 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
             WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent",
             backgroundClip: "text", backgroundSize: "200% auto",
             animation: "shimmer 3s linear infinite",
-            textShadow: "-3px -3px 0 #160038, -3px 0 0 #160038, -3px 3px 0 #160038, 0 -3px 0 #160038, 0 3px 0 #160038, 3px -3px 0 #160038, 3px 0 0 #160038, 3px 3px 0 #160038, -2px -2px 0 #160038, 2px -2px 0 #160038, -2px 2px 0 #160038, 2px 2px 0 #160038",
+            WebkitTextStroke: "3px #1a0040",
             textAlign: "center", padding: "2px 8px 4px", lineHeight: 1.1,
           }}>🎂 Happy Birthday Harper! 🎂</div>
 
@@ -1694,6 +1742,17 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
                 </div>
               );
             })}
+            {/* Collision sparkles */}
+            {collisionFlash.map(f => (
+              <div key={f.id} style={{
+                position: "absolute",
+                left: f.x - 28, top: f.y - 28,
+                width: 56, height: 56,
+                fontSize: 36, textAlign: "center", lineHeight: "56px",
+                animation: "collisionBurst 0.7s ease-out forwards",
+                pointerEvents: "none", zIndex: 5,
+              }}>✨</div>
+            ))}
           </div>
 
           {allSleeping && (

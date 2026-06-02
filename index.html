@@ -137,6 +137,11 @@
         75%  { transform: scale(0.9) rotate(-3deg); }
         100% { transform: scale(1) rotate(0deg);    opacity: 1; }
       }
+      @keyframes collisionBurst {
+        0%   { transform: scale(0.2); opacity: 1; }
+        60%  { transform: scale(1.8); opacity: 0.9; }
+        100% { transform: scale(3.0); opacity: 0; }
+      }
 
       .safe-top    { padding-top:    env(safe-area-inset-top,    0px); }
       .safe-bottom { padding-bottom: env(safe-area-inset-bottom, 0px); }
