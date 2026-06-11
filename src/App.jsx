@@ -8,6 +8,7 @@ const TASKS = [
   { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", kpopIcon: "💜", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall", kpop: "🎤 Magic Stage Entry" }, bgHue: { princess: 280, mermaid: 210, kpop: 285 } },
   { id: "pajamas", label: "Put on Pajamas", icon: "👗", princessIcon: "👸", mermaidIcon: "🧜‍♀️", kpopIcon: "🎀", type: "check", scene: { princess: "👗 Royal Dressing Chamber", mermaid: "🐠 Underwater Wardrobe", kpop: "🌟 Hunter Dressing Room" }, bgHue: { princess: 290, mermaid: 200, kpop: 290 } },
   { id: "clothes", label: "Pick Out Clothes", icon: "👚", princessIcon: "👗", mermaidIcon: "👚", kpopIcon: "✨", type: "check", scene: { princess: "✨ Princess Closet", mermaid: "🌊 Shell Wardrobe", kpop: "✨ Stage Closet" }, bgHue: { princess: 300, mermaid: 195, kpop: 295 } },
+  { id: "medicine", label: "Take Medicine", icon: "💊", princessIcon: "💊", mermaidIcon: "💊", kpopIcon: "💊", type: "check", scene: { princess: "💊 Royal Apothecary", mermaid: "💊 Healing Kelp Grotto", kpop: "💊 Backstage Wellness Room" }, bgHue: { princess: 288, mermaid: 208, kpop: 288 } },
   { id: "teeth", label: "Brush Teeth", icon: "🪥", princessIcon: "✨", mermaidIcon: "💎", kpopIcon: "⚡", type: "timer", duration: 60, scene: { princess: "🪥 Royal Bathroom", mermaid: "🫧 Coral Cave Bathroom", kpop: "⚡ Lightning Bathroom" }, bgHue: { princess: 285, mermaid: 205, kpop: 280 } },
   { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", kpopIcon: "💫", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs", kpop: "💫 Sparkle Vanity" }, bgHue: { princess: 275, mermaid: 215, kpop: 275 } },
   { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", kpopIcon: "💖", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror", kpop: "💖 Idol Mirror" }, bgHue: { princess: 295, mermaid: 190, kpop: 300 } },
@@ -487,7 +488,7 @@ function ProgressTracker({ completedTasks, currentIndex, theme, onNavigate, comp
           pointerEvents: "none",
         }} />
 
-        {/* Icon grid — 6 top, 5 bottom centered */}
+        {/* Icon grid — wraps to two centered rows (6 + 6) */}
         <div style={{ display: "flex", flexWrap: "wrap", justifyContent: "center", gap: "6px 6px", position: "relative" }}>
           {TASKS.map((task, i) => {
             const done = completedTasks[task.id];

@@ -73,7 +73,7 @@ The single highest-impact visual upgrade is a **themed frame/border illustration
 - **Mermaid theme**: A coral cave opening or underwater grotto border, with shells, seaweed, and coral framing the task content.
 
 **Why frames first, not per-task backgrounds:**
-- One frame per theme = 2 assets to maintain. Per-task backgrounds = 22 (11 tasks × 2 themes), and if any single image is off-style it breaks visual cohesion.
+- One frame per theme = 2 assets to maintain. Per-task backgrounds = 24 (12 tasks × 2 themes), and if any single image is off-style it breaks visual cohesion.
 - A reusable frame gives every screen an immersive "I'm inside the world" feeling without per-scene art.
 - The frame is layered *on top of* the CSS atmospheric backgrounds (gradient shifts, floating particles, subtle patterns), so both systems work together.
 
@@ -150,14 +150,15 @@ These rules apply to ALL tappable elements — task completion buttons, timer co
 | 1 | Say goodnight to family | Checkmark | |
 | 2 | Put on pajamas | Checkmark | |
 | 3 | Pick out clothes for tomorrow | Checkmark | |
-| 4 | Brush teeth | **1-minute sand timer** | Themed: sparkles (princess) or gems (mermaid) falling in timer |
-| 5 | Mouthwash | Checkmark | |
-| 6 | Comb hair | Checkmark | |
-| 7 | Try to go pee | Checkmark | Simple check — no pressure, it's a "try" |
-| 8 | Turn on nightlight/sound machine | Checkmark | |
-| 9 | Baby doll bedtime | **Parent-set timer (1–10 min)** | Includes feeding salad + tucking dolls into bed. Parent taps +/− to set minutes before starting |
-| 10 | Read Book 1 | Checkmark | Shows "1 of 2" counter |
-| 11 | Read Book 2 | Checkmark | Shows "2 of 2" counter |
+| 4 | Take medicine | Checkmark | Breathing medicine — label just says "Take Medicine" |
+| 5 | Brush teeth | **1-minute sand timer** | Themed: sparkles (princess) or gems (mermaid) falling in timer |
+| 6 | Mouthwash | Checkmark | |
+| 7 | Comb hair | Checkmark | |
+| 8 | Try to go pee | Checkmark | Simple check — no pressure, it's a "try" |
+| 9 | Turn on nightlight/sound machine | Checkmark | |
+| 10 | Baby doll bedtime | **Parent-set timer (1–10 min)** | Includes feeding salad + tucking dolls into bed. Parent taps +/− to set minutes before starting |
+| 11 | Read Book 1 | Checkmark | Shows "1 of 2" counter |
+| 12 | Read Book 2 | Checkmark | Shows "2 of 2" counter |
 
 **Order is fixed** but navigation is free — Harper can tap back to revisit any completed task. The current task is visually prominent; future (incomplete) tasks are dimmed/locked.
 
@@ -171,7 +172,7 @@ These rules apply to ALL tappable elements — task completion buttons, timer co
 - No separate jingle or sound in v1 (silent app for now)
 
 ### Progress Tracker
-- **Horizontal row at the top of each scene** showing one icon per task (11 total)
+- **Horizontal row at the top of each scene** showing one icon per task (12 total)
 - Icons: **💎 gems for princess** / **🐚 shells for mermaid**
 - Completed tasks show a filled, glowing icon; incomplete tasks show a dimmed/empty outline
 - This is purely a progress indicator — the *reward* is the sticker system below
@@ -187,7 +188,7 @@ These rules apply to ALL tappable elements — task completion buttons, timer co
 Harper's reward for completing the full routine is picking a sticker for her trophy shelf. This replaces the old streak counter — it works better for a child who uses the app every other night.
 
 ### How it works
-1. After completing all 11 tasks, Harper is presented with **2–3 sticker options** to pick from
+1. After completing all 12 tasks, Harper is presented with **2–3 sticker options** to pick from
 2. She taps her choice → the sticker animates onto the shelf with a celebration
 3. Then the **countdown** plays: "Sleepy time in 5... 4... 3... 2... 1..."
 4. Then the **dream screen** appears with themed message and floating particles
@@ -222,7 +223,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - **Parent controls**: reset routine, future settings
 - Start button to begin the routine
 
-### 2. Task Scenes (×11)
+### 2. Task Scenes (×12)
 - Full-screen immersive scene per task (not a scrollable list)
 - One clear action per screen (checkmark button, timer, etc.)
 - Progress tracker (gem/shell row) at top
@@ -232,7 +233,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 - Each task has a themed scene name (e.g., "Royal Throne Room" / "Coral Greeting Hall") stored in data for internal reference and background styling — **these names are not displayed as visible text on screen**
 
 ### 3. Sticker Pick Screen
-- Appears after task 11 is completed
+- Appears after task 12 is completed
 - Shows 2–3 sticker options for Harper to choose from
 - Selected sticker animates onto the shelf
 
@@ -276,7 +277,7 @@ To share a view-only link with family that doesn't expose Harper's trophy shelf 
 https://dustyshelf2455.github.io/harper-bedtime/?family
 ```
 
-- Family members can pick a theme, walk through all 11 tasks, and see the full experience
+- Family members can pick a theme, walk through all 12 tasks, and see the full experience
 - Harper's stickers and in-progress routine are never read or written
 - Sticker picks during a family session are discarded (not saved)
 
@@ -288,7 +289,7 @@ Accessible from the splash screen via the "🎭 Dad Mode" button (below the Trop
 
 - Pre-loads 29 fake stickers across all three sticker sets so the trophy shelf looks full
 - Trophy Shelf button is visible and shows the fake stickers
-- The full routine (all 11 tasks, timers, sticker pick, countdown, dream screen) works normally
+- The full routine (all 12 tasks, timers, sticker pick, countdown, dream screen) works normally
 - Any sticker picked during a Dad Mode run is added in-memory only and lost on exit
 - A "🎭 Dad Mode — changes not saved" badge and "✕ Exit Dad Mode" button appear on the splash screen
 - Exiting resets all routine state cleanly without touching localStorage
@@ -437,6 +438,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] **Trophy Shelf tiers + sticker detail view.** Reorganized the Trophy Shelf into two tiers: **super stickers** at the very top in their own accent-bordered area, rendered larger than regular stickers; **regular stickers** below in their own area. Stickers remain in earned order within each tier (split preserves original order). Tapping any sticker opens a new **enlarged detail view** (`StickerDetail`): the sticker is shown as large as possible inside a "presentation square" — a rounded, theme-colored (gold/accent for super) Ludo-style frame with an inner display mat, glow, and animated corner sparkles — with a "← Back to Shelf" button to return. The two tiers share one scroll container so the title, count, and back button stay fixed.
 - [x] Added a discreet **"← Menu"** back button to the **Dream Screen** (the character "sleeping mode" at the end of the routine). Previously there was no in-app way to return to the main menu once the dream screen appeared — the parent had to reload the app. The button sits in the upper-left corner at low opacity, theme-tinted, and on tap resets the routine and returns to the splash screen (reusing the existing `handleReset` flow, so it respects Family Preview / Dad Mode and clears `harper-progress` only in normal mode).
 - [x] Demon Hunter task icon emoji shrunk to 36px (vs 64px for Princess/Mermaid) so the task label sits higher and clears the three-girl crew visible in the kpop frame. The kpop per-task icons are generic placeholders (🐯 for baby dolls, etc.) — future work: replace with custom per-task illustrations that match the kpop/concert aesthetic.
+- [x] Added a **Take Medicine** step (Harper's breathing medicine) to the routine, just before Brush Teeth — task list is now 12 steps. Simple checkmark task, 💊 icon in all themes, internal id `medicine`. Progress tracker, sticker trigger, free navigation, and resume all pick it up automatically from the shared task list. Label intentionally says just "Take Medicine" (not "breathing medicine").
 - [x] Added **Birthday Surprise** hidden experience. A small 🎂 button in the upper-left corner of the splash screen (hidden in Family Preview mode) launches a 4-digit PIN gate (code: 4359). On entry, a full-screen birthday party screen appears showing all three characters (Princess, Mermaid, Demon Hunter) cycling between their normal and victory poses with rainbow fanfare and confetti. Each character has a 5-tap counter (dot progress indicator); reaching 5 taps reveals a 🎁 gift box for that character. Tapping the gift opens a sticker-haul screen: 10 randomly drawn stickers from the character's theme pack + 2 super stickers are revealed with a cascade animation and added to the shelf via an "Add to shelf!" button. Once a character's gift is collected, they enter their sleep pose (💤). After all three presents are opened and characters are sleeping, a "Tap ← five times to return" message appears; tapping the back button 5 times exits to the splash screen. Works in Dad Mode (stickers go to the in-memory demo collection only; Harper's real stickers are never touched). Flow: splash 🎂 → PIN → birthday screen → tap chars → open gifts → collect stickers → sleep finale → back ×5 → splash.
 
 ---
