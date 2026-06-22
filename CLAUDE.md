@@ -22,9 +22,11 @@ font sizes under 24px, neutral gray shadows, landscape orientation, etc.).
 - **Themes:** Princess / Mermaid. Harper picks on the splash screen and
   the choice is locked for the routine.
 - **Persistence:** `localStorage` (keys: `harper-stickers`,
-  `harper-progress`, `harper-seed-v1`). The seed key gates a one-time
-  backfill of 10 historical stickers in `src/main.jsx` — do not remove
-  the gate.
+  `harper-progress`, `harper-seed-v1`, `harper-super-event-v1`). The seed
+  key gates a one-time backfill of 10 historical stickers in
+  `src/main.jsx` — do not remove the gate. The `harper-super-event-v1`
+  key gates the one-time Super Sticker Event (see spec) — do not remove
+  it or the event would re-fire.
 
 ## Spec maintenance (mandatory)
 

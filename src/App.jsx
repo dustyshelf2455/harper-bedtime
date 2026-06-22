@@ -3,6 +3,11 @@ import { useState, useEffect, useRef, useCallback, useMemo } from "react";
 const ASSETS = import.meta.env.BASE_URL + "assets/";
 const FAMILY_MODE = new URLSearchParams(window.location.search).has("family");
 
+// One-time "Super Sticker Event" gate. When unset, the app opens straight into a
+// special pick-me-up screen where Harper claims one not-yet-owned super sticker.
+// Set once she picks so the event never fires again.
+const SUPER_EVENT_KEY = "harper-super-event-v1";
+
 // ==================== TASK LIST (Fixed Order per Spec) ====================
 const TASKS = [
   { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", kpopIcon: "💜", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall", kpop: "🎤 Magic Stage Entry" }, bgHue: { princess: 280, mermaid: 210, kpop: 285 } },
@@ -33,6 +38,14 @@ const SUPER_STICKER_IMAGES = {
   mermaid:  Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 5).padStart(2, "0")}.png`),
   kpop:     Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 10).padStart(2, "0")}.png`),
 };
+
+// Every super sticker across all themes — used by the one-time Super Sticker Event
+// so it can offer 6 options (no single theme has more than 5).
+const ALL_SUPER_STICKERS = [
+  ...SUPER_STICKER_IMAGES.princess,
+  ...SUPER_STICKER_IMAGES.mermaid,
+  ...SUPER_STICKER_IMAGES.kpop,
+];
 
 // True for new image stickers; false for legacy emoji strings already on Harper's shelf
 const isImageSticker = (s) => typeof s === "string" && s.startsWith("/");
@@ -1150,6 +1163,71 @@ function SuperStickerPick({ theme, onPick }) {
   );
 }
 
+// ==================== SUPER STICKER EVENT (one-time pick-me-up) ====================
+// Shown once (gated by SUPER_EVENT_KEY) the next time the app opens. Harper claims
+// one super sticker she doesn't own yet from 6 options. Always presented in Demon
+// Hunter (kpop) style — neon stage, Rumi in her victory pose — to make it an event.
+// The pool spans all themes because no single theme has 6 super stickers.
+function SuperEventScreen({ onPick, owned }) {
+  const theme = "kpop";
+  const t = THEMES[theme];
+  const [pressedIdx, setPressedIdx] = useState(null);
+  const [previewing, setPreviewing] = useState(null);
+  const [options] = useState(() => {
+    const pool = ALL_SUPER_STICKERS.filter(s => !owned.includes(s));
+    return [...pool].sort(() => Math.random() - 0.5).slice(0, 6);
+  });
+
+  if (previewing !== null) {
+    return <StickerDetail sticker={previewing} theme={theme} onBack={() => setPreviewing(null)} onPick={() => onPick(previewing)} />;
+  }
+
+  return (
+    <FullScreenBackdrop theme={theme} showFrame={true} taskIndex={TASKS.length}>
+      <CelebrationParticles theme={theme} active={true} />
+      <div style={{ padding: 20, textAlign: "center", width: "100%", maxWidth: 460 }}>
+        <div style={{ marginBottom: 10 }}><GuideCharacter theme={theme} size={88} variant="victory" /></div>
+        <div style={{ fontSize: 34, fontWeight: 700, color: t.accent, fontFamily: "'Fredoka', sans-serif", marginBottom: 6, animation: "fadeInUp 0.5s ease", textShadow: `0 0 24px ${t.primary}` }}>
+          ✨ Special Surprise! ✨
+        </div>
+        <div style={{ fontSize: 24, color: t.textSecondary, fontFamily: "'Fredoka', sans-serif", marginBottom: 22, lineHeight: 1.3, animation: "fadeInUp 0.5s ease 0.15s both" }}>
+          Just for you, Harper! 💜<br />Pick a SUPER sticker!
+        </div>
+        <div style={{
+          display: "grid", gridTemplateColumns: "1fr 1fr", gap: 14, justifyItems: "center",
+          background: "rgba(7, 2, 26, 0.78)", borderRadius: 28, padding: 16,
+          border: "2px solid rgba(157, 78, 221, 0.4)",
+          animation: "fadeInUp 0.5s ease 0.35s both",
+        }}>
+          {options.map((sticker, i) => (
+            <button
+              key={i}
+              onClick={() => setPreviewing(sticker)}
+              onPointerDown={() => setPressedIdx(i)}
+              onPointerUp={() => setPressedIdx(null)}
+              onPointerLeave={() => setPressedIdx(null)}
+              onPointerCancel={() => setPressedIdx(null)}
+              style={{
+                padding: 12, borderRadius: 24, width: "100%",
+                display: "flex", alignItems: "center", justifyContent: "center",
+                border: `4px solid ${t.accent}cc`,
+                background: `${t.accent}30`,
+                cursor: "pointer", transition: "transform 0.12s ease, box-shadow 0.12s ease",
+                boxShadow: pressedIdx === i ? `inset 0 2px 0 ${t.accentDark}` : `inset 0 -4px 0 ${t.accentDark}`,
+                transform: pressedIdx === i ? "scale(0.93) translateY(2px)" : "scale(1)",
+                animation: `fadeInUp 0.4s ease ${0.4 + i * 0.08}s both`,
+                touchAction: "manipulation",
+              }}
+            >
+              <img src={sticker} alt="super sticker" style={{ width: 76, height: 76, objectFit: "contain", display: "block" }} />
+            </button>
+          ))}
+        </div>
+      </div>
+    </FullScreenBackdrop>
+  );
+}
+
 // ==================== COUNTDOWN ====================
 function Countdown({ theme, onDone }) {
   const [count, setCount] = useState(5);
@@ -1934,7 +2012,18 @@ function TaskScene({ task, taskIndex, theme, completedTasks, currentIndex, onCom
 
 // ==================== MAIN APP ====================
 export default function HarpersBedtimeApp() {
-  const [screen, setScreen] = useState("splash");
+  const [screen, setScreen] = useState(() => {
+    // One-time Super Sticker Event: fire on the next open if it hasn't run yet and
+    // there's at least one super sticker Harper doesn't own. Skipped in Family mode.
+    if (FAMILY_MODE) return "splash";
+    try {
+      if (!localStorage.getItem(SUPER_EVENT_KEY)) {
+        const owned = JSON.parse(localStorage.getItem("harper-stickers") || "[]");
+        if (ALL_SUPER_STICKERS.some(s => !owned.includes(s))) return "superEvent";
+      }
+    } catch {}
+    return "splash";
+  });
   const [theme, setTheme] = useState("princess");
   const [themeLocked, setThemeLocked] = useState(false);
   const [completedTasks, setCompletedTasks] = useState({});
@@ -2018,6 +2107,14 @@ export default function HarpersBedtimeApp() {
     else if (!FAMILY_MODE) { setStickers(prev => [...prev, sticker]); }
     setScreen("countdown");
   };
+  const handleSuperEventPick = (sticker) => {
+    // Event only ever fires in normal mode; add to the real shelf and close the gate.
+    if (!FAMILY_MODE) {
+      setStickers(prev => [...prev, sticker]);
+      try { localStorage.setItem(SUPER_EVENT_KEY, "1"); } catch {}
+    }
+    setScreen("splash");
+  };
   const handleTimerStart = () => setTimerState({ running: true, paused: false });
   const handleTimerPause = () => { setTimerState(prev => ({ ...prev, paused: !prev.paused })); setBabyDollState(prev => prev.running ? { ...prev, paused: !prev.paused } : prev); };
   const handleBabyDollStart = (action, seconds) => { if (action === "setup") setBabyDollState(prev => ({ ...prev, setup: true })); else if (action === "start") setBabyDollState({ setup: true, running: true, paused: false, duration: seconds }); };
@@ -2034,6 +2131,7 @@ export default function HarpersBedtimeApp() {
     else if (!FAMILY_MODE) { setStickers(prev => [...prev, ...newStickers]); }
   };
 
+  if (screen === "superEvent") return <SuperEventScreen owned={stickers} onPick={handleSuperEventPick} />;
   if (showShelf) return <TrophyShelf stickers={effectiveStickers} onClose={() => setShowShelf(false)} theme={theme} />;
   if (screen === "birthday") return (
     <BirthdaySurpriseScreen
