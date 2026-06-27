@@ -1979,6 +1979,130 @@ function BirthdaySurpriseScreen({ onClose, onCollectStickers, shelfCount, onOpen
   );
 }
 
+// ==================== NYC STICKER-PACK SURPRISE ====================
+// A hidden, PIN-gated gift from Dad. Reached from the splash 🗽 button + code.
+// Harper picks 4 of the new NYC stickers and 2 NYC super stickers; both go to
+// her real shelf. Always NYC-themed regardless of the splash theme selection.
+const NYC_SURPRISE_MSG = "I love you so much, Harper.";
+function NYCSurpriseScreen({ onClose, onCollectStickers }) {
+  const theme = "nyc";
+  const t = THEMES[theme];
+  const REG_POOL = STICKER_IMAGES.nyc.slice(10);   // the 10 newest NYC stickers
+  const SUP_POOL = SUPER_STICKER_IMAGES.nyc;        // the 5 NYC supers
+  const REG_NEED = 4, SUP_NEED = 2;
+  const [stage, setStage] = useState("intro");      // intro → pickReg → pickSup → done
+  const [regSel, setRegSel] = useState([]);
+  const [supSel, setSupSel] = useState([]);
+
+  const toggle = (val, sel, setSel, max) => {
+    if (sel.includes(val)) setSel(sel.filter(x => x !== val));
+    else if (sel.length < max) setSel([...sel, val]);
+  };
+
+  const finish = () => {
+    onCollectStickers([...regSel, ...supSel]);
+    setStage("done");
+  };
+
+  const DadNote = ({ small }) => (
+    <div style={{ marginTop: small ? 10 : 18, animation: "fadeInUp 0.5s ease 0.2s both" }}>
+      <div style={{ fontSize: small ? 22 : 26, color: t.textPrimary, fontWeight: 600 }}>{NYC_SURPRISE_MSG}</div>
+      <div style={{ fontSize: small ? 20 : 24, color: t.accent, marginTop: 4 }}>💙 Love, Dad</div>
+    </div>
+  );
+
+  const StickerGrid = ({ pool, sel, setSel, max, cols }) => (
+    <div style={{
+      display: "grid", gridTemplateColumns: `repeat(${cols}, 1fr)`, gap: 12,
+      width: "100%", maxWidth: 380, margin: "0 auto",
+      maxHeight: "46dvh", overflowY: "auto", padding: 4,
+    }}>
+      {pool.map((src) => {
+        const picked = sel.includes(src);
+        const sup = isSuperSticker(src);
+        const ring = sup ? t.accent : t.primary;
+        return (
+          <button key={src} onClick={() => toggle(src, sel, setSel, max)} style={{
+            position: "relative", aspectRatio: "1", borderRadius: 18,
+            border: `4px solid ${picked ? ring : "transparent"}`,
+            background: picked ? `${ring}22` : "rgba(255,255,255,0.06)",
+            boxShadow: picked ? `0 0 16px ${ring}88` : "none",
+            cursor: "pointer", touchAction: "manipulation",
+            transform: picked ? "scale(1.04)" : "scale(1)", transition: "all 0.15s ease",
+            display: "flex", alignItems: "center", justifyContent: "center", padding: 6,
+          }}>
+            <img src={src} alt="" style={{ width: "100%", height: "100%", objectFit: "contain" }} />
+            {picked && (
+              <div style={{
+                position: "absolute", top: -8, right: -8, width: 30, height: 30, borderRadius: "50%",
+                background: ring, color: "#FFFDF5", fontSize: 18, fontWeight: 700,
+                display: "flex", alignItems: "center", justifyContent: "center",
+                boxShadow: `0 2px 6px ${t.shadowColor}`,
+              }}>✓</div>
+            )}
+          </button>
+        );
+      })}
+    </div>
+  );
+
+  return (
+    <FullScreenBackdrop theme={theme} showFrame={stage === "intro" || stage === "done"} taskIndex={0}>
+      {(stage === "intro" || stage === "done") && <CelebrationParticles theme={theme} active={true} />}
+      <div style={{ padding: "clamp(12px, 2.5dvh, 28px) 20px", textAlign: "center", width: "100%", maxWidth: 420 }}>
+        {stage === "intro" && (
+          <>
+            <div style={{ marginBottom: 8 }}><GuideCharacter theme={theme} size={120} variant="victory" /></div>
+            <div style={{ fontSize: 34, fontWeight: 700, color: t.textPrimary, marginBottom: 6, animation: "fadeInUp 0.4s ease" }}>A New York Surprise! 🗽</div>
+            <DadNote />
+            <div style={{ marginTop: 24 }}>
+              <LudoButton theme={theme} size="large" onClick={() => setStage("pickReg")}>Open the Pack! 🎁</LudoButton>
+            </div>
+          </>
+        )}
+
+        {stage === "pickReg" && (
+          <>
+            <div style={{ fontSize: 30, fontWeight: 700, color: t.textPrimary, marginBottom: 4 }}>Pick 4 stickers!</div>
+            <div style={{ fontSize: 24, color: t.accent, marginBottom: 14 }}>{regSel.length} / {REG_NEED}</div>
+            <StickerGrid pool={REG_POOL} sel={regSel} setSel={setRegSel} max={REG_NEED} cols={3} />
+            <div style={{ marginTop: 18, minHeight: 70 }}>
+              {regSel.length === REG_NEED && (
+                <LudoButton theme={theme} size="medium" onClick={() => setStage("pickSup")}>Next → ✨</LudoButton>
+              )}
+            </div>
+          </>
+        )}
+
+        {stage === "pickSup" && (
+          <>
+            <div style={{ fontSize: 30, fontWeight: 700, color: t.textPrimary, marginBottom: 4 }}>Now pick 2 SUPER stickers! ✨</div>
+            <div style={{ fontSize: 24, color: t.accent, marginBottom: 14 }}>{supSel.length} / {SUP_NEED}</div>
+            <StickerGrid pool={SUP_POOL} sel={supSel} setSel={setSupSel} max={SUP_NEED} cols={3} />
+            <div style={{ marginTop: 18, minHeight: 70 }}>
+              {supSel.length === SUP_NEED && (
+                <LudoButton theme={theme} size="medium" onClick={finish}>Add to my shelf! 💙</LudoButton>
+              )}
+            </div>
+          </>
+        )}
+
+        {stage === "done" && (
+          <>
+            <div style={{ marginBottom: 8 }}><GuideCharacter theme={theme} size={120} variant="victory" /></div>
+            <div style={{ fontSize: 32, fontWeight: 700, color: t.textPrimary, marginBottom: 6 }}>Yay! All yours! 🎉</div>
+            <div style={{ fontSize: 24, color: t.textSecondary }}>6 stickers added to your shelf!</div>
+            <DadNote small />
+            <div style={{ marginTop: 24 }}>
+              <LudoButton theme={theme} size="large" onClick={onClose}>Back to Menu 🌙</LudoButton>
+            </div>
+          </>
+        )}
+      </div>
+    </FullScreenBackdrop>
+  );
+}
+
 // ==================== SPLASH SCREEN ====================
 function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset, hasSavedProgress, familyMode, demoMode, onEnterDemo, onExitDemo, onBirthdayPress, birthdayPinOpen, onBirthdayPinSuccess, onBirthdayPinCancel }) {
   const t = THEMES[theme];
@@ -1990,7 +2114,7 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
         {!familyMode && (
           <button
             onClick={onBirthdayPress}
-            aria-label="Birthday surprise"
+            aria-label="New York surprise"
             style={{
               position: "fixed",
               top: "calc(env(safe-area-inset-top, 0px) + 8px)",
@@ -2002,7 +2126,7 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
               cursor: "pointer", touchAction: "manipulation", zIndex: 50,
               opacity: 0.55,
             }}
-          >🎂</button>
+          >🗽</button>
         )}
         <div style={{ padding: "clamp(12px, 3dvh, 40px) 24px", textAlign: "center", width: "100%", maxWidth: 400 }}>
         <div style={{ marginBottom: "clamp(12px, 2.5dvh, 32px)", animation: "floatGentle 3s ease-in-out infinite" }}><GuideCharacter theme={theme} size={144} splashMode={true} /></div>
@@ -2238,6 +2362,12 @@ export default function HarpersBedtimeApp() {
 
   if (screen === "superEvent") return <SuperEventScreen owned={stickers} onPick={handleSuperEventPick} />;
   if (showShelf) return <TrophyShelf stickers={effectiveStickers} onClose={() => setShowShelf(false)} theme={theme} />;
+  if (screen === "nycSurprise") return (
+    <NYCSurpriseScreen
+      onClose={() => setScreen("splash")}
+      onCollectStickers={handleBirthdayCollect}
+    />
+  );
   if (screen === "birthday") return (
     <BirthdaySurpriseScreen
       onClose={() => setScreen("splash")}
@@ -2246,7 +2376,7 @@ export default function HarpersBedtimeApp() {
       onOpenShelf={() => setShowShelf(true)}
     />
   );
-  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!demoMode && !!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} demoMode={demoMode} onEnterDemo={handleEnterDemo} onExitDemo={handleExitDemo} onBirthdayPress={() => setBirthdayPinOpen(true)} birthdayPinOpen={birthdayPinOpen} onBirthdayPinSuccess={() => { setBirthdayPinOpen(false); setScreen("birthday"); }} onBirthdayPinCancel={() => setBirthdayPinOpen(false)} />;
+  if (screen === "splash") return <SplashScreen theme={theme} setTheme={setTheme} onStart={handleStartRoutine} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} onReset={handleReset} hasSavedProgress={!demoMode && !!savedProgress && Object.keys(savedProgress.completedTasks || {}).length > 0} familyMode={FAMILY_MODE} demoMode={demoMode} onEnterDemo={handleEnterDemo} onExitDemo={handleExitDemo} onBirthdayPress={() => setBirthdayPinOpen(true)} birthdayPinOpen={birthdayPinOpen} onBirthdayPinSuccess={() => { setBirthdayPinOpen(false); setScreen("nycSurprise"); }} onBirthdayPinCancel={() => setBirthdayPinOpen(false)} />;
   if (screen === "stickerPick") return <StickerPick theme={theme} onPick={handleStickerPick} stickers={effectiveStickers} onOpenShelf={() => setShowShelf(true)} />;
   if (screen === "superStickerPick") return <SuperStickerPick theme={theme} onPick={handleSuperStickerPick} />;
   if (screen === "countdown") return <Countdown theme={theme} onDone={() => setScreen("dream")} />;
