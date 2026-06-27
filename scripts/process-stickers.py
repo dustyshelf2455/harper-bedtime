@@ -13,13 +13,21 @@ Place the four source sheets in public/assets/ before running:
                                    row 0 = princess supers 00–04
                                    row 1 = mermaid supers  05–09
                                    row 2 = kpop supers     10–14)
-    nyc-stickerpack.png        — 5 cols × 2 rows (10 nyc stickers)
+    nyc-stickerpack.png        — 5 cols × 2 rows (10 nyc stickers,  nyc-00..09)
+    nyc-stickerpack2.png       — 5 cols × 2 rows (10 nyc stickers,  nyc-10..19)
+    nyc-superstickerpack.png   — 5 cols × 1 row  (5 nyc supers,    super-15..19)
 
 Output goes to public/assets/stickers/.
 
-NOTE: the nyc sheet's source cells are larger than the others, so its 10
-outputs were resized to the standard 280×280 (alpha-trimmed, centered) after
-slicing to match the other packs' file sizes — see the NYC punch-list entry.
+NOTES:
+- The nyc sheets' source cells are larger than the others, so regular nyc
+  outputs are resized to the standard 280×280 (alpha-trimmed, centered) and
+  nyc supers to 400×400 after slicing.
+- nyc-stickerpack2.png (nyc-10..19) and nyc-superstickerpack.png (super-15..19)
+  use offset output numbering and were processed inline rather than via the
+  SHEETS table below (which numbers each prefix from 00). The supers are also
+  filtered to their largest connected blob to drop neighbor slivers. See the
+  NYC punch-list entries in the spec.
 """
 
 from PIL import Image

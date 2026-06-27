@@ -25,19 +25,20 @@ const TASKS = [
 ];
 
 // ==================== STICKER IMAGES ====================
-// 20 per theme (princess-00..19, mermaid-00..19, kpop-00..19)
-// 15 super stickers: rows 0/1/2 → princess/mermaid/kpop (super-00..14)
+// 20 per theme (princess-00..19, mermaid-00..19, kpop-00..19, nyc-00..19)
+// 20 super stickers: princess/mermaid/kpop/nyc → super-00..04 / 05..09 / 10..14 / 15..19
 const STICKER_IMAGES = {
   princess: Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/princess-${String(i).padStart(2, "0")}.png`),
   mermaid:  Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/mermaid-${String(i).padStart(2, "0")}.png`),
   kpop:     Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/kpop-${String(i).padStart(2, "0")}.png`),
-  nyc:      Array.from({ length: 10 }, (_, i) => ASSETS + `stickers/nyc-${String(i).padStart(2, "0")}.png`),
+  nyc:      Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/nyc-${String(i).padStart(2, "0")}.png`),
 };
 
 const SUPER_STICKER_IMAGES = {
   princess: Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i).padStart(2, "0")}.png`),
   mermaid:  Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 5).padStart(2, "0")}.png`),
   kpop:     Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 10).padStart(2, "0")}.png`),
+  nyc:      Array.from({ length: 5 }, (_, i) => ASSETS + `stickers/super-${String(i + 15).padStart(2, "0")}.png`),
 };
 
 // Every super sticker across all themes — used by the one-time Super Sticker Event
@@ -46,6 +47,7 @@ const ALL_SUPER_STICKERS = [
   ...SUPER_STICKER_IMAGES.princess,
   ...SUPER_STICKER_IMAGES.mermaid,
   ...SUPER_STICKER_IMAGES.kpop,
+  ...SUPER_STICKER_IMAGES.nyc,
 ];
 
 // True for new image stickers; false for legacy emoji strings already on Harper's shelf
@@ -176,11 +178,10 @@ const THEMES = {
     textMuted: "#8AAAD0",
     shadowColor: "rgba(10, 30, 70, 0.5)",
     glowColor: "#2E72C444",
-    // No custom character art for NYC — uses an emoji guide (🗽). Setting all three
-    // pose slots to the same emoji keeps GuideCharacter's image/emoji branch happy.
-    guide: "🗽",
-    guideVictory: "🗽",
-    guideSleep: "🗽",
+    // Custom cartoon Statue of Liberty guide (normal / victory / sleep poses).
+    guide: ASSETS + "nyc-character.webp",
+    guideVictory: ASSETS + "nyc-victory.webp",
+    guideSleep: ASSETS + "nyc-sleep.webp",
     progressIcon: "🗽",
     progressIconEmpty: "○",
     particle: "⭐",
