@@ -2011,12 +2011,12 @@ function NYCSurpriseScreen({ onClose, onCollectStickers }) {
     </div>
   );
 
-  // Single-column vertical stack — stickers are always stacked top-to-bottom,
-  // scrolling only up/down, never side-to-side.
+  // 2x2 tile grid — wraps to additional rows below, scrolling only up/down,
+  // never side-to-side.
   const StickerGrid = ({ pool, sel, setSel, max }) => (
     <div style={{
-      display: "flex", flexDirection: "column", alignItems: "center", gap: 12,
-      width: "100%", maxWidth: 340, margin: "0 auto",
+      display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: 12,
+      width: "100%", maxWidth: 300, margin: "0 auto",
       maxHeight: "46dvh", overflowY: "auto", overflowX: "hidden",
       WebkitOverflowScrolling: "touch", padding: 4,
     }}>
@@ -2026,7 +2026,7 @@ function NYCSurpriseScreen({ onClose, onCollectStickers }) {
         const ring = sup ? t.accent : t.primary;
         return (
           <button key={src} onClick={() => toggle(src, sel, setSel, max)} style={{
-            position: "relative", width: 128, aspectRatio: "1", flexShrink: 0, borderRadius: 18,
+            position: "relative", width: "100%", aspectRatio: "1", borderRadius: 18,
             border: `4px solid ${picked ? ring : "transparent"}`,
             background: picked ? `${ring}22` : "rgba(255,255,255,0.06)",
             boxShadow: picked ? `0 0 16px ${ring}88` : "none",
