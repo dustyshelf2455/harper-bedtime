@@ -13,8 +13,13 @@ Place the four source sheets in public/assets/ before running:
                                    row 0 = princess supers 00–04
                                    row 1 = mermaid supers  05–09
                                    row 2 = kpop supers     10–14)
+    nyc-stickerpack.png        — 5 cols × 2 rows (10 nyc stickers)
 
 Output goes to public/assets/stickers/.
+
+NOTE: the nyc sheet's source cells are larger than the others, so its 10
+outputs were resized to the standard 280×280 (alpha-trimmed, centered) after
+slicing to match the other packs' file sizes — see the NYC punch-list entry.
 """
 
 from PIL import Image
@@ -31,6 +36,7 @@ SHEETS = [
     {"file": "mermaid-stickerpack.png",     "cols": 5, "rows": 4, "prefix": "mermaid"},
     {"file": "kpop-stickerpack.png",        "cols": 5, "rows": 4, "prefix": "kpop"},
     {"file": "kpop-superstickerpack.png",   "cols": 5, "rows": 3, "prefix": "super"},
+    {"file": "nyc-stickerpack.png",         "cols": 5, "rows": 2, "prefix": "nyc"},
 ]
 
 

@@ -10,18 +10,18 @@ const SUPER_EVENT_KEY = "harper-super-event-v1";
 
 // ==================== TASK LIST (Fixed Order per Spec) ====================
 const TASKS = [
-  { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", kpopIcon: "💜", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall", kpop: "🎤 Magic Stage Entry" }, bgHue: { princess: 280, mermaid: 210, kpop: 285 } },
-  { id: "pajamas", label: "Put on Pajamas", icon: "👗", princessIcon: "👸", mermaidIcon: "🧜‍♀️", kpopIcon: "🎀", type: "check", scene: { princess: "👗 Royal Dressing Chamber", mermaid: "🐠 Underwater Wardrobe", kpop: "🌟 Hunter Dressing Room" }, bgHue: { princess: 290, mermaid: 200, kpop: 290 } },
-  { id: "clothes", label: "Pick Out Clothes", icon: "👚", princessIcon: "👗", mermaidIcon: "👚", kpopIcon: "✨", type: "check", scene: { princess: "✨ Princess Closet", mermaid: "🌊 Shell Wardrobe", kpop: "✨ Stage Closet" }, bgHue: { princess: 300, mermaid: 195, kpop: 295 } },
-  { id: "medicine", label: "Take Medicine", icon: "💊", princessIcon: "💊", mermaidIcon: "💊", kpopIcon: "💊", type: "check", scene: { princess: "💊 Royal Apothecary", mermaid: "💊 Healing Kelp Grotto", kpop: "💊 Backstage Wellness Room" }, bgHue: { princess: 288, mermaid: 208, kpop: 288 } },
-  { id: "teeth", label: "Brush Teeth", icon: "🪥", princessIcon: "✨", mermaidIcon: "💎", kpopIcon: "⚡", type: "timer", duration: 60, scene: { princess: "🪥 Royal Bathroom", mermaid: "🫧 Coral Cave Bathroom", kpop: "⚡ Lightning Bathroom" }, bgHue: { princess: 285, mermaid: 205, kpop: 280 } },
-  { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", kpopIcon: "💫", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs", kpop: "💫 Sparkle Vanity" }, bgHue: { princess: 275, mermaid: 215, kpop: 275 } },
-  { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", kpopIcon: "💖", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror", kpop: "💖 Idol Mirror" }, bgHue: { princess: 295, mermaid: 190, kpop: 300 } },
-  { id: "pee", label: "Try to Go Pee", icon: "🚽", princessIcon: "🏰", mermaidIcon: "🐠", kpopIcon: "🌙", type: "check", scene: { princess: "🏰 Castle Restroom", mermaid: "🐠 Quiet Lagoon", kpop: "🌙 Backstage Restroom" }, bgHue: { princess: 270, mermaid: 220, kpop: 270 } },
-  { id: "nightlight", label: "Nightlight & Sound", icon: "🌙", princessIcon: "⭐", mermaidIcon: "🌊", kpopIcon: "🌠", type: "check", scene: { princess: "⭐ Starlit Tower", mermaid: "🌙 Moonlit Grotto", kpop: "🌠 Honmoon Tower" }, bgHue: { princess: 260, mermaid: 225, kpop: 265 } },
-  { id: "babydolls", label: "Baby Doll Bedtime", icon: "🎎", princessIcon: "👶", mermaidIcon: "👶", kpopIcon: "🐯", type: "babydoll", scene: { princess: "👶 Royal Nursery", mermaid: "🍼 Sea Cradle Cove", kpop: "🐯 Tiger Cub Nursery" }, bgHue: { princess: 310, mermaid: 200, kpop: 310 } },
-  { id: "book1", label: "Read Book 1", icon: "📖", princessIcon: "📖", mermaidIcon: "📖", kpopIcon: "📖", type: "check", counter: "1 of 2", scene: { princess: "📖 Castle Library", mermaid: "📚 Sunken Library", kpop: "📖 Honmoon Library" }, bgHue: { princess: 265, mermaid: 218, kpop: 260 } },
-  { id: "book2", label: "Read Book 2", icon: "📚", princessIcon: "📚", mermaidIcon: "📚", kpopIcon: "📚", type: "check", counter: "2 of 2", scene: { princess: "📚 Enchanted Reading Nook", mermaid: "🌟 Deep Sea Story Cave", kpop: "📚 Hunter Bedtime Story" }, bgHue: { princess: 255, mermaid: 230, kpop: 255 } },
+  { id: "goodnight", label: "Say Goodnight", icon: "💕", princessIcon: "💖", mermaidIcon: "💙", kpopIcon: "💜", nycIcon: "💙", type: "check", scene: { princess: "🏰 Royal Throne Room", mermaid: "🐚 Coral Greeting Hall", kpop: "🎤 Magic Stage Entry", nyc: "🗽 Liberty Welcome" }, bgHue: { princess: 280, mermaid: 210, kpop: 285, nyc: 215 } },
+  { id: "pajamas", label: "Put on Pajamas", icon: "👗", princessIcon: "👸", mermaidIcon: "🧜‍♀️", kpopIcon: "🎀", nycIcon: "🌃", type: "check", scene: { princess: "👗 Royal Dressing Chamber", mermaid: "🐠 Underwater Wardrobe", kpop: "🌟 Hunter Dressing Room", nyc: "🌃 Skyline Dressing Room" }, bgHue: { princess: 290, mermaid: 200, kpop: 290, nyc: 218 } },
+  { id: "clothes", label: "Pick Out Clothes", icon: "👚", princessIcon: "👗", mermaidIcon: "👚", kpopIcon: "✨", nycIcon: "👕", type: "check", scene: { princess: "✨ Princess Closet", mermaid: "🌊 Shell Wardrobe", kpop: "✨ Stage Closet", nyc: "👕 City Closet" }, bgHue: { princess: 300, mermaid: 195, kpop: 295, nyc: 212 } },
+  { id: "medicine", label: "Take Medicine", icon: "💊", princessIcon: "💊", mermaidIcon: "💊", kpopIcon: "💊", nycIcon: "💊", type: "check", scene: { princess: "💊 Royal Apothecary", mermaid: "💊 Healing Kelp Grotto", kpop: "💊 Backstage Wellness Room", nyc: "💊 Corner Pharmacy" }, bgHue: { princess: 288, mermaid: 208, kpop: 288, nyc: 216 } },
+  { id: "teeth", label: "Brush Teeth", icon: "🪥", princessIcon: "✨", mermaidIcon: "💎", kpopIcon: "⚡", nycIcon: "⭐", type: "timer", duration: 60, scene: { princess: "🪥 Royal Bathroom", mermaid: "🫧 Coral Cave Bathroom", kpop: "⚡ Lightning Bathroom", nyc: "⭐ City Washroom" }, bgHue: { princess: 285, mermaid: 205, kpop: 280, nyc: 210 } },
+  { id: "mouthwash", label: "Mouthwash", icon: "🫧", princessIcon: "🌟", mermaidIcon: "🫧", kpopIcon: "💫", nycIcon: "💧", type: "check", scene: { princess: "🌟 Sparkling Vanity", mermaid: "💎 Crystal Springs", kpop: "💫 Sparkle Vanity", nyc: "💧 City Vanity" }, bgHue: { princess: 275, mermaid: 215, kpop: 275, nyc: 220 } },
+  { id: "hair", label: "Comb Hair", icon: "💇‍♀️", princessIcon: "👑", mermaidIcon: "🐚", kpopIcon: "💖", nycIcon: "💈", type: "check", scene: { princess: "👑 Royal Mirror", mermaid: "🪞 Tide Pool Mirror", kpop: "💖 Idol Mirror", nyc: "💈 City Barber Mirror" }, bgHue: { princess: 295, mermaid: 190, kpop: 300, nyc: 208 } },
+  { id: "pee", label: "Try to Go Pee", icon: "🚽", princessIcon: "🏰", mermaidIcon: "🐠", kpopIcon: "🌙", nycIcon: "🚖", type: "check", scene: { princess: "🏰 Castle Restroom", mermaid: "🐠 Quiet Lagoon", kpop: "🌙 Backstage Restroom", nyc: "🚖 Cab Stop Restroom" }, bgHue: { princess: 270, mermaid: 220, kpop: 270, nyc: 222 } },
+  { id: "nightlight", label: "Nightlight & Sound", icon: "🌙", princessIcon: "⭐", mermaidIcon: "🌊", kpopIcon: "🌠", nycIcon: "🌃", type: "check", scene: { princess: "⭐ Starlit Tower", mermaid: "🌙 Moonlit Grotto", kpop: "🌠 Honmoon Tower", nyc: "🌃 City Lights Window" }, bgHue: { princess: 260, mermaid: 225, kpop: 265, nyc: 225 } },
+  { id: "babydolls", label: "Baby Doll Bedtime", icon: "🎎", princessIcon: "👶", mermaidIcon: "👶", kpopIcon: "🐯", nycIcon: "🧸", type: "babydoll", scene: { princess: "👶 Royal Nursery", mermaid: "🍼 Sea Cradle Cove", kpop: "🐯 Tiger Cub Nursery", nyc: "🧸 City Nursery" }, bgHue: { princess: 310, mermaid: 200, kpop: 310, nyc: 213 } },
+  { id: "book1", label: "Read Book 1", icon: "📖", princessIcon: "📖", mermaidIcon: "📖", kpopIcon: "📖", nycIcon: "📖", type: "check", counter: "1 of 2", scene: { princess: "📖 Castle Library", mermaid: "📚 Sunken Library", kpop: "📖 Honmoon Library", nyc: "📖 City Library" }, bgHue: { princess: 265, mermaid: 218, kpop: 260, nyc: 217 } },
+  { id: "book2", label: "Read Book 2", icon: "📚", princessIcon: "📚", mermaidIcon: "📚", kpopIcon: "📚", nycIcon: "📚", type: "check", counter: "2 of 2", scene: { princess: "📚 Enchanted Reading Nook", mermaid: "🌟 Deep Sea Story Cave", kpop: "📚 Hunter Bedtime Story", nyc: "📚 City Reading Nook" }, bgHue: { princess: 255, mermaid: 230, kpop: 255, nyc: 228 } },
 ];
 
 // ==================== STICKER IMAGES ====================
@@ -31,6 +31,7 @@ const STICKER_IMAGES = {
   princess: Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/princess-${String(i).padStart(2, "0")}.png`),
   mermaid:  Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/mermaid-${String(i).padStart(2, "0")}.png`),
   kpop:     Array.from({ length: 20 }, (_, i) => ASSETS + `stickers/kpop-${String(i).padStart(2, "0")}.png`),
+  nyc:      Array.from({ length: 10 }, (_, i) => ASSETS + `stickers/nyc-${String(i).padStart(2, "0")}.png`),
 };
 
 const SUPER_STICKER_IMAGES = {
@@ -159,6 +160,39 @@ const THEMES = {
     treasuryBg: "linear-gradient(180deg, rgba(31, 10, 58, 0.88) 0%, rgba(7, 2, 26, 0.92) 100%)",
     treasuryBorder: "rgba(157, 78, 221, 0.35)",
   },
+  nyc: {
+    primary: "#2E72C4",
+    secondary: "#1E5499",
+    accent: "#F4C430",
+    accentDark: "#D4A52A",
+    highlight: "#7FC5E8",
+    bg1: "#102a52",
+    bg2: "#0a1a36",
+    bg3: "#13325f",
+    softBg: "#EAF3FF",
+    softBorder: "#9CC4E8",
+    textPrimary: "#EAF3FF",
+    textSecondary: "#B8D4F0",
+    textMuted: "#8AAAD0",
+    shadowColor: "rgba(10, 30, 70, 0.5)",
+    glowColor: "#2E72C444",
+    // No custom character art for NYC — uses an emoji guide (🗽). Setting all three
+    // pose slots to the same emoji keeps GuideCharacter's image/emoji branch happy.
+    guide: "🗽",
+    guideVictory: "🗽",
+    guideSleep: "🗽",
+    progressIcon: "🗽",
+    progressIconEmpty: "○",
+    particle: "⭐",
+    dreamMsg: "Sweet dreams in the big city, Harper!",
+    timerParticle: "⭐",
+    gradientBtn: "linear-gradient(180deg, #2E72C4 0%, #1E5499 100%)",
+    insetShadow: "inset 0 -4px 0 #163E73",
+    specularHighlight: "rgba(200, 225, 255, 0.5)",
+    progressGlow: "rgba(46, 114, 196, 0.5)",
+    treasuryBg: "linear-gradient(180deg, rgba(16, 42, 82, 0.88) 0%, rgba(10, 26, 54, 0.92) 100%)",
+    treasuryBorder: "rgba(46, 114, 196, 0.35)",
+  },
 };
 
 // ==================== PNG CASTLE FRAME (PRINCESS) ====================
@@ -225,6 +259,32 @@ function KpopFrame({ taskIndex = 0 }) {
     }}>
       <img
         src={ASSETS + "kpop-frame.webp"}
+        alt=""
+        style={{
+          position: "absolute",
+          inset: 0,
+          width: "100%",
+          height: "100%",
+          objectFit: "fill",
+          opacity: dim,
+        }}
+      />
+    </div>
+  );
+}
+
+// ==================== PNG NYC SKYLINE FRAME (NYC) ====================
+function SkylineFrame({ taskIndex = 0 }) {
+  const dim = 1 - ((taskIndex || 0) / TASKS.length) * 0.2;
+  return (
+    <div style={{
+      position: "absolute",
+      inset: 0,
+      pointerEvents: "none",
+      zIndex: 1,
+    }}>
+      <img
+        src={ASSETS + "nyc-frame.webp"}
         alt=""
         style={{
           position: "absolute",
@@ -312,6 +372,32 @@ function NeonField({ count = 30, taskIndex = 0 }) {
   );
 }
 
+// ==================== CITY LIGHTS (NYC) ====================
+// Warm gold twinkles evoking distant skyline windows + a few cool-blue accents.
+function CityLights({ count = 32, taskIndex = 0 }) {
+  const lights = useMemo(() =>
+    Array.from({ length: count }, (_, i) => ({
+      id: i, x: Math.random() * 100, y: Math.random() * 80,
+      size: Math.random() * 2.5 + 1.5, delay: Math.random() * 5, duration: Math.random() * 3 + 2,
+      tint: i % 4 === 0 ? "rgba(127, 197, 232, 0.7)" : "rgba(244, 196, 48, 0.8)",
+    })), [count]);
+  const visibleCount = Math.floor(count * (0.4 + ((taskIndex || 0) / TASKS.length) * 0.6));
+  return (
+    <div style={{ position: "absolute", inset: 0, pointerEvents: "none", zIndex: 0 }}>
+      {lights.slice(0, visibleCount).map(s => (
+        <div key={s.id} style={{
+          position: "absolute", left: `${s.x}%`, top: `${s.y}%`,
+          width: s.size, height: s.size, borderRadius: "50%",
+          background: s.tint,
+          boxShadow: `0 0 ${s.size * 3}px ${s.tint}`,
+          animation: `twinkle ${s.duration}s ease-in-out ${s.delay}s infinite`,
+          willChange: "transform, opacity",
+        }} />
+      ))}
+    </div>
+  );
+}
+
 // ==================== PATTERN OVERLAY ====================
 function PatternOverlay({ theme }) {
   const patterns = {
@@ -336,6 +422,13 @@ function PatternOverlay({ theme }) {
               radial-gradient(circle at 82% 12%, #9D4EDD 0.8px, transparent 0.8px)`,
       size: "85px 85px, 115px 105px, 65px 95px, 105px 75px",
     },
+    nyc: {
+      image: `radial-gradient(circle at 24% 26%, #F4C430 1.2px, transparent 1.2px),
+              radial-gradient(circle at 66% 56%, #2E72C4 1px, transparent 1px),
+              radial-gradient(circle at 44% 84%, #F4C430 0.8px, transparent 0.8px),
+              radial-gradient(circle at 84% 14%, #7FC5E8 0.8px, transparent 0.8px)`,
+      size: "88px 88px, 112px 108px, 66px 96px, 102px 78px",
+    },
   };
   const p = patterns[theme] || patterns.princess;
   return (
@@ -353,6 +446,7 @@ function Vignette({ intensity = 0.5, theme = "princess" }) {
     princess: `rgba(45, 10, 60, ${intensity})`,
     mermaid:  `rgba(5, 15, 40, ${intensity})`,
     kpop:     `rgba(25, 5, 55, ${intensity})`,
+    nyc:      `rgba(6, 18, 42, ${intensity})`,
   };
   const color = tints[theme] || tints.princess;
   return (
@@ -369,6 +463,7 @@ function AmbientParticles({ theme }) {
     princess: ["✨", "⭐", "🌟"],
     mermaid:  ["🫧", "✨", "🌊"],
     kpop:     ["💜", "✨", "🎵"],
+    nyc:      ["⭐", "✨", "🌃"],
   };
   const emojis = sets[theme] || sets.princess;
   const particles = useMemo(() =>
@@ -689,7 +784,9 @@ function SandTimer({ seconds, theme, running, paused, onComplete, onTogglePause 
           ? "linear-gradient(180deg, #FFF5F5 0%, #FFE4EC 100%)"
           : theme === "mermaid"
             ? "linear-gradient(180deg, #E0FFFF 0%, #B0E0E6 100%)"
-            : "linear-gradient(180deg, #F8EEFF 0%, #E8D4FF 100%)",
+            : theme === "nyc"
+              ? "linear-gradient(180deg, #EAF3FF 0%, #C7E0F5 100%)"
+              : "linear-gradient(180deg, #F8EEFF 0%, #E8D4FF 100%)",
         borderRadius: "42% 42% 42% 42% / 22% 22% 22% 22%",
         border: `4px solid ${t.secondary}`, overflow: "hidden",
         boxShadow: `0 0 24px ${t.glowColor}, ${t.insetShadow}`,
@@ -764,6 +861,7 @@ function CelebrationParticles({ theme, active }) {
       princess: ["✨", "⭐", "💖", "🌟", "👑", "💎"],
       mermaid:  ["💎", "🫧", "🐚", "🌊", "💙", "✨"],
       kpop:     ["🎤", "⚡", "✨", "🎵", "💜", "🌟", "💖"],
+      nyc:      ["⭐", "✨", "🗽", "🚕", "🌃", "🎉"],
     };
     const emojis = emojiSets[theme] || emojiSets.princess;
     setParticles(Array.from({ length: 30 }, (_, i) => ({
@@ -791,6 +889,7 @@ function SceneWrapper({ theme, children, taskIndex }) {
     princess: `linear-gradient(170deg, hsl(${hue}, 45%, 18%) 0%, hsl(${hue}, 50%, 10%) 35%, hsl(${hue + 10}, 40%, 14%) 65%, hsl(${hue}, 55%, 8%) 100%)`,
     mermaid:  `linear-gradient(170deg, hsl(${hue}, 55%, 14%) 0%, hsl(${hue}, 60%, 8%) 35%, hsl(${hue + 10}, 50%, 12%) 65%, hsl(${hue}, 65%, 5%) 100%)`,
     kpop:     `linear-gradient(170deg, hsl(${hue}, 60%, 16%) 0%, hsl(${hue}, 65%, 9%) 35%, hsl(${hue + 15}, 55%, 13%) 65%, hsl(${hue}, 70%, 6%) 100%)`,
+    nyc:      `linear-gradient(170deg, hsl(${hue}, 55%, 17%) 0%, hsl(${hue}, 60%, 9%) 35%, hsl(${hue + 8}, 50%, 13%) 65%, hsl(${hue}, 65%, 6%) 100%)`,
   };
   return (
     <div style={{
@@ -803,6 +902,7 @@ function SceneWrapper({ theme, children, taskIndex }) {
       {theme === "princess" && <><Starfield count={35} taskIndex={taskIndex} /><CastleFrame taskIndex={taskIndex} /></>}
       {theme === "mermaid"  && <><BubbleField count={15} taskIndex={taskIndex} /><UnderwaterFrame taskIndex={taskIndex} /></>}
       {theme === "kpop"     && <><NeonField count={40} taskIndex={taskIndex} /><KpopFrame taskIndex={taskIndex} /></>}
+      {theme === "nyc"      && <><CityLights count={34} taskIndex={taskIndex} /><SkylineFrame taskIndex={taskIndex} /></>}
       <Vignette intensity={0.3 + (taskIndex / TASKS.length) * 0.15} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, flex: 1, display: "flex", flexDirection: "column" }}>{children}</div>
@@ -816,6 +916,7 @@ function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 
     princess: "radial-gradient(ellipse at 50% 30%, #3d2660 0%, #1a0a2e 60%, #0d0521 100%)",
     mermaid:  "radial-gradient(ellipse at 50% 30%, #0d2847 0%, #0a1628 60%, #050d1a 100%)",
     kpop:     "radial-gradient(ellipse at 50% 30%, #3a1265 0%, #1a0533 60%, #0a0220 100%)",
+    nyc:      "radial-gradient(ellipse at 50% 30%, #15396b 0%, #0a1d3a 60%, #050f22 100%)",
   };
   return (
     <div style={{
@@ -829,9 +930,11 @@ function FullScreenBackdrop({ theme, children, showFrame = false, taskIndex = 0 
       {theme === "princess" && <Starfield count={25} taskIndex={taskIndex} />}
       {theme === "mermaid"  && <BubbleField count={10} taskIndex={taskIndex} />}
       {theme === "kpop"     && <NeonField count={30} taskIndex={taskIndex} />}
+      {theme === "nyc"      && <CityLights count={26} taskIndex={taskIndex} />}
       {showFrame && theme === "princess" && <CastleFrame taskIndex={0} />}
       {showFrame && theme === "mermaid"  && <UnderwaterFrame taskIndex={0} />}
       {showFrame && theme === "kpop"     && <KpopFrame taskIndex={0} />}
+      {showFrame && theme === "nyc"      && <SkylineFrame taskIndex={0} />}
       <Vignette intensity={0.35} theme={theme} />
       <AmbientParticles theme={theme} />
       <div className="safe-top" style={{ position: "relative", zIndex: 5, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>{children}</div>
@@ -1906,7 +2009,8 @@ function SplashScreen({ theme, setTheme, onStart, stickers, onOpenShelf, onReset
           {[
             { key: "princess", label: "👸 Princess" },
             { key: "mermaid",  label: "🧜‍♀️ Mermaid" },
-            { key: "kpop",     label: "🎤 Demon Hunter", full: true },
+            { key: "kpop",     label: "🎤 Demon Hunter" },
+            { key: "nyc",      label: "🗽 New York" },
           ].map(({ key: th, label, full }) => {
             const active = theme === th;
             const tc = THEMES[th];

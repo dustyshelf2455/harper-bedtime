@@ -1,24 +1,26 @@
 # Harper's Bedtime Adventure — App Spec
 
 ## Overview
-A bedtime routine app for Harper (almost 5 years old) with three themes: **Princess Castle**, **Mermaid World**, and **Demon Hunter** (K-pop Demon Hunters inspired). The app guides her through her nightly tasks with themed full-screen scenes, animated celebrations, and a sticker collection reward system.
+A bedtime routine app for Harper (almost 5 years old) with four themes: **Princess Castle**, **Mermaid World**, **Demon Hunter** (K-pop Demon Hunters inspired), and **New York City**. The app guides her through her nightly tasks with themed full-screen scenes, animated celebrations, and a sticker collection reward system.
 
 ---
 
 ## Themes
 
-| | Princess Castle | Mermaid World | Demon Hunter |
-|---|---|---|---|
-| **Colors** | Pink, purple, gold | Teal, blue, silver | Electric purple, magenta, cyan |
-| **Guide character** | Princess 👸 | Mermaid 🧜‍♀️ | K-pop Demon Hunter 🎤 (Rumi-inspired) |
-| **Timer particles** | Sparkles ✨ | Gems 💎 | Purple hearts 💜 |
-| **Progress tracker icon** | Gems 💎 | Shells 🐚 | Magic mic 🎤 |
-| **Dream screen message** | "Sweet dreams, Princess Harper!" | "Sleep tight, little mermaid!" | "Couch! Couch! Couch! Sleep well, Hunter!" |
-| **Selection** | Harper picks on the splash screen each night. **Locked once routine starts.** Splash uses a 2+1 layout (Princess/Mermaid on top row, Demon Hunter full-width below). |
+| | Princess Castle | Mermaid World | Demon Hunter | New York City |
+|---|---|---|---|---|
+| **Colors** | Pink, purple, gold | Teal, blue, silver | Electric purple, magenta, cyan | Navy blue, taxi gold, Liberty teal |
+| **Guide character** | Princess 👸 | Mermaid 🧜‍♀️ | K-pop Demon Hunter 🎤 (Rumi-inspired) | Statue of Liberty 🗽 (emoji guide — no custom art) |
+| **Timer particles** | Sparkles ✨ | Gems 💎 | Purple hearts 💜 | Gold stars ⭐ |
+| **Progress tracker icon** | Gems 💎 | Shells 🐚 | Magic mic 🎤 | Statue of Liberty 🗽 |
+| **Dream screen message** | "Sweet dreams, Princess Harper!" | "Sleep tight, little mermaid!" | "Couch! Couch! Couch! Sleep well, Hunter!" | "Sweet dreams in the big city, Harper!" |
+| **Selection** | Harper picks on the splash screen each night. **Locked once routine starts.** Splash uses a 2×2 grid (Princess/Mermaid on top row, Demon Hunter/New York on bottom row). |
 
-All three themes share the same task list, timers, and logic — only visuals/colors/icons change.
+All four themes share the same task list, timers, and logic — only visuals/colors/icons change.
 
 **Demon Hunter tone:** K-pop concert + magical-girl energy. Saja Boys / Jinu / Gwi-Ma references are welcome as flavor; explicit scary demon imagery is not. Internal code key is `kpop`; visible label is "Demon Hunter."
+
+**New York City tone:** A friendly, storybook Big Apple at night — yellow cabs, the Brooklyn Bridge, a glowing skyline, and a cute cartoon Statue of Liberty. Warm and cozy, never gritty. Internal code key is `nyc`; visible label is "New York." This theme is a **minimal reskin** (Phase 1 level): it has its own AI-generated scene frame and a 10-sticker pack, but reuses the emoji guide/progress-icon pattern instead of custom character art (the way Princess/Mermaid worked before Phase 2 art). It has no super-sticker set of its own — a 3-of-a-kind unlock in NYC mode falls back to the Princess super stickers. Custom Liberty character poses and NYC super stickers are future work.
 
 ---
 
@@ -218,7 +220,7 @@ Harper's reward for completing the full routine is picking a sticker for her tro
 
 ### 1. Splash Screen
 - App title / branding
-- **Theme picker**: Harper taps Princess or Mermaid (locked once routine starts)
+- **Theme picker**: Harper taps Princess, Mermaid, Demon Hunter, or New York (2×2 grid; locked once routine starts)
 - **Trophy Shelf button**: browse sticker collection
 - **Parent controls**: reset routine, future settings
 - Start button to begin the routine
@@ -441,6 +443,7 @@ _Add items here as Harper and Ben test the app:_
 - [x] Demon Hunter task icon emoji shrunk to 36px (vs 64px for Princess/Mermaid) so the task label sits higher and clears the three-girl crew visible in the kpop frame. The kpop per-task icons are generic placeholders (🐯 for baby dolls, etc.) — future work: replace with custom per-task illustrations that match the kpop/concert aesthetic.
 - [x] Added a **Take Medicine** step (Harper's breathing medicine) to the routine, just before Brush Teeth — task list is now 12 steps. Simple checkmark task, 💊 icon in all themes, internal id `medicine`. Progress tracker, sticker trigger, free navigation, and resume all pick it up automatically from the shared task list. Label intentionally says just "Take Medicine" (not "breathing medicine").
 - [x] Added a **one-time Super Sticker Event** (pick-me-up for Harper). Gated by a new `harper-super-event-v1` localStorage key (same pattern as the seed gate): on app open, if the key is unset and at least one super sticker is unowned, the app boots straight into `SuperEventScreen` instead of the splash. The screen is always Demon Hunter (kpop) themed — neon stage frame, Rumi in her victory pose, celebration particles — and offers **6** randomly drawn not-yet-owned super stickers (pool spans all three themes, since no single theme has 6). Tapping one opens the existing `StickerDetail` preview with a "Pick This!" button; picking adds the super sticker to Harper's real shelf, sets the gate, and returns to the splash screen. No skip button (re-fires next open if she leaves without picking). Skipped in Family Preview mode; cannot occur in Dad Mode (entered manually from the splash, after the event check). Reuses `StickerDetail`/`FullScreenBackdrop`/`CelebrationParticles`; no new assets needed (uses existing `super-00..14`).
+- [x] Added **New York City** mode as a fourth theme (internal code key `nyc`, button label "🗽 New York") alongside Princess, Mermaid, and Demon Hunter. Built as a **minimal reskin** entirely from two phone-generated images (ChatGPT on iPhone → attached in chat → background cut on the build side, no desktop/Photopea step): (1) a storybook NYC scene frame (`nyc-frame.webp`) — cartoon Statue of Liberty, yellow cab, Brooklyn Bridge, glowing skyline, gold/navy/teal palette — flood-filled to a transparent center the same way the kpop frame was; (2) a 10-sticker pack (`nyc-stickerpack.png` → `stickers/nyc-00..09.png`, sliced 5×2 and background-removed via the same flood-fill, resized to the standard 280×280). Palette: NYC blue `#2E72C4` primary, taxi gold `#F4C430` accent, deep navy night backgrounds, cool-navy-tinted shadows. Uses the **emoji-guide pattern** (🗽) instead of custom character art — no character poses — and **🗽** as the progress-tracker icon, **⭐** timer/celebration particles, dream message "Sweet dreams in the big city, Harper!". New `SkylineFrame` component + `CityLights` ambient layer (gold/blue twinkles). Splash theme picker reflowed from a 2+1 grid to a **2×2** grid (Princess/Mermaid top, Demon Hunter/New York bottom). No NYC super-sticker set — a 3-of-a-kind unlock in NYC mode falls back to Princess super stickers. Future work: custom Liberty character poses, per-task NYC backgrounds, a dedicated NYC super-sticker pack.
 - [x] Added **Birthday Surprise** hidden experience. A small 🎂 button in the upper-left corner of the splash screen (hidden in Family Preview mode) launches a 4-digit PIN gate (code: 4359). On entry, a full-screen birthday party screen appears showing all three characters (Princess, Mermaid, Demon Hunter) cycling between their normal and victory poses with rainbow fanfare and confetti. Each character has a 5-tap counter (dot progress indicator); reaching 5 taps reveals a 🎁 gift box for that character. Tapping the gift opens a sticker-haul screen: 10 randomly drawn stickers from the character's theme pack + 2 super stickers are revealed with a cascade animation and added to the shelf via an "Add to shelf!" button. Once a character's gift is collected, they enter their sleep pose (💤). After all three presents are opened and characters are sleeping, a "Tap ← five times to return" message appears; tapping the back button 5 times exits to the splash screen. Works in Dad Mode (stickers go to the in-memory demo collection only; Harper's real stickers are never touched). Flow: splash 🎂 → PIN → birthday screen → tap chars → open gifts → collect stickers → sleep finale → back ×5 → splash.
 
 ---
